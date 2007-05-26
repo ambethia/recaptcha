@@ -14,6 +14,9 @@ module Ambethia
         error = options[:error] ||= session[:recaptcha_error]
         uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
         xhtml = Builder::XmlMarkup.new :target => out=(''), :indent => 2 # Because I can.
+        if options[:display] 
+          xhtml.script(:type => "text/javascript"){ xhtml.text! "var RecaptchaOptions = #{options[:display].to_json};\n"}
+        end
         xhtml.script :type => "text/javascript", :src => "#{uri}/challenge?k=#{key}&error=#{error}"
         unless options[:noscript] == false
           xhtml.noscript do

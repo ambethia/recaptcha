@@ -10,20 +10,24 @@ with +verify_recaptcha+.
 
 You'll want to add your public and private API keys in the environment variables RECAPTCHA_PUBLIC_KEY
 and RECAPTCHA_PRIVATE_KEY, respectively. You could also specify them in config/environment.rb if you
-are so inclined.
+are so inclined. Exceptions will be raised if you call these methods and the keys can't be found.
 
 == +recaptcha_tags+
 
 Some of the options available:
 
-<tt>:ssl</tt>:: Uses secure http for captcha widget (default +false+)
-<tt>:noscript</tt>:: Include <noscript> content (default +true+)
+<tt>:ssl</tt>:: 				Uses secure http for captcha widget (default +false+)
+<tt>:noscript</tt>::		Include <noscript> content (default +true+)
+<tt>:display</tt>:: 		Takes a hash containing the +theme+ and +tabindex+ options per the API. (default +nil+)
+<tt>:public_key</tt>::	Your public API key, takes precedence over the ENV variable (default +nil+).
+<tt>:error</tt>::				Override the error in +session[:recaptcha_error]+ (default +nil+).
 
 == +verify_recaptcha+
 
 This method returns +true+ or +false+ after processing the parameters from the ReCAPTCHA widget. Why
-isn't this a model validation? Because that violates MVC. Use can use it like this, or how ever you like. Passing in the ActiveRecord object is optional, if you do--and the captcha fails to
-verify--an error will be added to the object for you to use.
+isn't this a model validation? Because that violates MVC. Use can use it like this, or how ever you
+like. Passing in the ActiveRecord object is optional, if you do--and the captcha fails to verify--an
+error will be added to the object for you to use.
 
 	respond_to do |format|
 	  if verify_recaptcha(@post) && @post.save
@@ -35,5 +39,4 @@ verify--an error will be added to the object for you to use.
 	
 == TODO
 * Add some helpers to use in before_filter and what not
-* Add support for themes and tabindex
 * Better documentation
