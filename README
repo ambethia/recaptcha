@@ -3,6 +3,7 @@
 Author:: 		Jason L Perry (http://ambethia.com)
 Copyright:: Copyright (c) 2007 Jason L Perry
 License::   MIT
+URI::				http://svn.ambethia.com/pub/rails/plugins/recaptcha/
 
 This plugin adds helpers for the ReCAPTCHA API (http://recaptcha.net/). In your views you can use
 the +recaptcha_tags+ method to embed the needed javascript, and you can validate in your controllers
