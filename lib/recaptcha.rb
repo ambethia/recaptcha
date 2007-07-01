@@ -19,7 +19,7 @@ module Ambethia
         if options[:display] 
           xhtml.script(:type => "text/javascript"){ xhtml.text! "var RecaptchaOptions = #{options[:display].to_json};\n"}
         end
-        xhtml.script :type => "text/javascript", :src => "#{uri}/challenge?k=#{key}&error=#{error}"
+        xhtml.script(:type => "text/javascript", :src => "#{uri}/challenge?k=#{key}&error=#{error}") {}
         unless options[:noscript] == false
           xhtml.noscript do
             xhtml.iframe(:src => "#{uri}/noscript?k=#{key}",
