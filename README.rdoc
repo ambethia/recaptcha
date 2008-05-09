@@ -1,9 +1,11 @@
 = ReCAPTCHA
 
-Author:: 		Jason L Perry (http://ambethia.com)
+Author::    Jason L Perry (http://ambethia.com)
 Copyright:: Copyright (c) 2007 Jason L Perry
 License::   MIT
-URI::				http://svn.ambethia.com/pub/rails/plugins/recaptcha/
+RDOC::      http://ambethia.com/recaptcha/
+Git::       http://github.com/ambethia/recaptcha/tree/master
+Bugs::      http://ambethia.lighthouseapp.com/projects/11072-recaptcha/overview
 
 This plugin adds helpers for the ReCAPTCHA API (http://recaptcha.net/). In your views you can use
 the +recaptcha_tags+ method to embed the needed javascript, and you can validate in your controllers
@@ -17,11 +19,11 @@ are so inclined. Exceptions will be raised if you call these methods and the key
 
 Some of the options available:
 
-<tt>:ssl</tt>:: 				Uses secure http for captcha widget (default +false+)
-<tt>:noscript</tt>::		Include <noscript> content (default +true+)
-<tt>:display</tt>:: 		Takes a hash containing the +theme+ and +tabindex+ options per the API. (default +nil+)
-<tt>:public_key</tt>::	Your public API key, takes precedence over the ENV variable (default +nil+).
-<tt>:error</tt>::				Override the error in +session[:recaptcha_error]+ (default +nil+).
+<tt>:ssl</tt>::         Uses secure http for captcha widget (default +false+)
+<tt>:noscript</tt>::    Include <noscript> content (default +true+)
+<tt>:display</tt>::     Takes a hash containing the +theme+ and +tabindex+ options per the API. (default +nil+)
+<tt>:public_key</tt>::  Your public API key, takes precedence over the ENV variable (default +nil+).
+<tt>:error</tt>::       Override the error in +session[:recaptcha_error]+ (default +nil+).
 
 == +verify_recaptcha+
 
@@ -30,14 +32,16 @@ isn't this a model validation? Because that violates MVC. Use can use it like th
 like. Passing in the ActiveRecord object is optional, if you do--and the captcha fails to verify--an
 error will be added to the object for you to use.
 
-	respond_to do |format|
-	  if verify_recaptcha(@post) && @post.save
-	    # ...
-	  else
-	    # ...
-	  end
-	end
-	
+  respond_to do |format|
+    if verify_recaptcha(@post) && @post.save
+      # ...
+    else
+      # ...
+    end
+  end
+  
 == TODO
+* Remove Rails/ActionController dependencies
+* Framework agnostic
 * Add some helpers to use in before_filter and what not
 * Better documentation

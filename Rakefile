@@ -12,12 +12,18 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-desc 'Generate documentation for the recaptcha plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'reCAPTCHA'
-  rdoc.template = 'jamis'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+ALLISON = "/Library/Ruby/Gems/1.8/gems/allison-2.0.3/lib/allison.rb"  
+  
+Rake::RDocTask.new do |rd|  
+  rd.main = "README.rdoc"  
+  rd.rdoc_files.include "README.rdoc", "LICENSE", "lib/**/*.rb"
+  rd.title = "ReCAPTCHA"  
+  rd.options << '-N' # line numbers  
+  rd.options << '-S' # inline source  
+  rd.template = ALLISON if File.exist?(ALLISON)  
+end
+
+desc "Upload the rdoc to ambethia.com"
+task "publish" do
+  sh "scp -r html/* ambethia.com:~/www/ambethia.com/recaptcha"
 end
