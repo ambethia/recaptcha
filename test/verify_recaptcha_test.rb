@@ -37,6 +37,20 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     assert_nil @controller.session[:recaptcha_error]
   end
   
+  def test_failure_with_model
+    Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response_with_body("false\nbad-news"))
+    
+    errors = mock
+    errors.expects(:add_to_base).with("Captcha response is incorrect, please try again.")
+    
+    model = mock
+    model.expects(:valid?)
+    model.expects(:errors).returns(errors)
+
+    assert !@controller.verify_recaptcha(model)
+    assert_equal "bad-news", @controller.session[:recaptcha_error]
+  end
+  
   private
   
   class TestController < Struct.new(:request, :params, :session)
