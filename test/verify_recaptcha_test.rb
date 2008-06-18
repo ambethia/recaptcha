@@ -11,6 +11,10 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     include Ambethia::ReCaptcha::Controller
     
     attr_accessor :request, :params, :session
+    
+    def initialize
+      @session = {}
+    end
   end
 
   def setup
@@ -23,7 +27,6 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     controller = TestController.new
     controller.request = stub(:remote_ip => "1.1.1.1")
     controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
-    controller.session = {}
 
     post_data = {}
     post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
@@ -43,7 +46,6 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     controller = TestController.new
     controller.request = stub(:remote_ip => "1.1.1.1")
     controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
-    controller.session = {}
 
     post_data = {}
     post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
