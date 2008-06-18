@@ -18,50 +18,38 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   end
 
   def setup
-    @session = {}
     ENV['RECAPTCHA_PUBLIC_KEY']  = '0000000000000000000000000000000000000000'
     ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+
+    @controller = TestController.new
+    @controller.request = stub(:remote_ip => "1.1.1.1")
+    @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
+
+    @post_data = {}
+    @post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
+    @post_data[:remoteip] = @controller.request.remote_ip
+    @post_data[:challenge] = "challenge"
+    @post_data[:response] = "response"
+    
+    @uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
   end
   
   def test_invalid_private_key
-    controller = TestController.new
-    controller.request = stub(:remote_ip => "1.1.1.1")
-    controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
+    response = response_with_body("false\ninvalid-site-private-key")
+    Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response)
 
-    post_data = {}
-    post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
-    post_data[:remoteip] = controller.request.remote_ip
-    post_data[:challenge] = "challenge"
-    post_data[:response] = "response"
-    
-    response = stub(:body => "false\ninvalid-site-private-key")
-    Net::HTTP.expects(:post_form).with(expected_uri, post_data).returns(response)
-
-    assert !controller.verify_recaptcha
-    
-    assert_equal "invalid-site-private-key", controller.session[:recaptcha_error]
+    assert !@controller.verify_recaptcha    
+    assert_equal "invalid-site-private-key", @controller.session[:recaptcha_error]
   end
   
   def test_success
-    controller = TestController.new
-    controller.request = stub(:remote_ip => "1.1.1.1")
-    controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
+    Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response_with_body("true\n"))
 
-    post_data = {}
-    post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
-    post_data[:remoteip] = controller.request.remote_ip
-    post_data[:challenge] = "challenge"
-    post_data[:response] = "response"
-    
-    response = stub(:body => "true\n")
-    Net::HTTP.expects(:post_form).with(expected_uri, post_data).returns(response)
-
-    assert controller.verify_recaptcha
-    
-    assert_nil controller.session[:recaptcha_error]
+    assert @controller.verify_recaptcha
+    assert_nil @controller.session[:recaptcha_error]
   end
   
-  def expected_uri
-    URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
-  end    
+  def response_with_body(body)
+    stub(:body => body)
+  end
 end
