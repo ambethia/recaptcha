@@ -6,20 +6,19 @@ require File.dirname(__FILE__) + '/../lib/recaptcha'
 
 class VerifyReCaptchaTest < Test::Unit::TestCase
   def setup
-    ENV['RECAPTCHA_PUBLIC_KEY']  = '0000000000000000000000000000000000000000'
     ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
     @controller = TestController.new
     @controller.request = stub(:remote_ip => "1.1.1.1")
     @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
 
-    @post_data = {}
-    @post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
-    @post_data[:remoteip] = @controller.request.remote_ip
-    @post_data[:challenge] = "challenge"
-    @post_data[:response] = "response"
+    @expected_post_data = {}
+    @expected_post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
+    @expected_post_data[:remoteip] = @controller.request.remote_ip
+    @expected_post_data[:challenge] = "challenge"
+    @expected_post_data[:response] = "response"
     
-    @uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
+    @expected_uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
   end
   
   def test_should_raise_exception_without_private_key
@@ -29,23 +28,25 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     end
   end
 
-  def test_invalid_private_key
+  def test_should_return_false_when_key_is_invalid
     response = response_with_body("false\ninvalid-site-private-key")
-    Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response)
+    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
 
     assert !@controller.verify_recaptcha    
     assert_equal "invalid-site-private-key", @controller.session[:recaptcha_error]
   end
   
-  def test_success
-    Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response_with_body("true\n"))
+  def test_returns_true_on_success
+    @controller.session[:recaptcha_error] = "previous error that should be cleared"    
+    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response_with_body("true\n"))
 
     assert @controller.verify_recaptcha
     assert_nil @controller.session[:recaptcha_error]
   end
   
-  def test_failure_with_model
-    Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response_with_body("false\nbad-news"))
+  def test_errors_should_be_added_to_model
+    response = response_with_body("false\nbad-news")
+    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
     
     errors = mock
     errors.expects(:add_to_base).with("Captcha response is incorrect, please try again.")
@@ -60,11 +61,8 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   
   private
   
-  class TestController < Struct.new(:request, :params, :session)
-    include Ambethia::ReCaptcha
-    include Ambethia::ReCaptcha::Helper
-    include Ambethia::ReCaptcha::Controller
-    
+  class TestController
+    include Ambethia::ReCaptcha::Controller    
     attr_accessor :request, :params, :session
     
     def initialize
