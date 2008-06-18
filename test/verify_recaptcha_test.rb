@@ -29,8 +29,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   end
 
   def test_should_return_false_when_key_is_invalid
-    response = response_with_body("false\ninvalid-site-private-key")
-    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
+    expect_http_post(response_with_body("false\ninvalid-site-private-key"))
 
     assert !@controller.verify_recaptcha    
     assert_equal "invalid-site-private-key", @controller.session[:recaptcha_error]
@@ -38,15 +37,14 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   
   def test_returns_true_on_success
     @controller.session[:recaptcha_error] = "previous error that should be cleared"    
-    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response_with_body("true\n"))
+    expect_http_post(response_with_body("true\n"))
 
     assert @controller.verify_recaptcha
     assert_nil @controller.session[:recaptcha_error]
   end
   
   def test_errors_should_be_added_to_model
-    response = response_with_body("false\nbad-news")
-    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
+    expect_http_post(response_with_body("false\nbad-news"))
     
     errors = mock
     errors.expects(:add_to_base).with("Captcha response is incorrect, please try again.")
@@ -68,6 +66,10 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     def initialize
       @session = {}
     end
+  end
+  
+  def expect_http_post(response)
+    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
   end
   
   def response_with_body(body)
