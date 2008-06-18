@@ -22,6 +22,13 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     @uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
   end
   
+  def test_should_raise_exception_without_private_key
+    assert_raise ReCaptchaError do
+      ENV['RECAPTCHA_PRIVATE_KEY'] = nil
+      @controller.verify_recaptcha
+    end
+  end
+
   def test_invalid_private_key
     response = response_with_body("false\ninvalid-site-private-key")
     Net::HTTP.expects(:post_form).with(@uri, @post_data).returns(response)
