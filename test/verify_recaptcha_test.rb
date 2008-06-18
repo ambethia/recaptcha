@@ -23,7 +23,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   end
   
   def test_should_raise_exception_without_private_key
-    assert_raise ReCaptchaError do
+    assert_raise Ambethia::ReCaptcha::ReCaptchaError do
       ENV['RECAPTCHA_PRIVATE_KEY'] = nil
       @controller.verify_recaptcha
     end
