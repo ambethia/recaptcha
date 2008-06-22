@@ -48,7 +48,7 @@ module Ambethia
             :challenge  => params[:recaptcha_challenge_field],
             :response   => params[:recaptcha_response_field]
           }
-          answer, error = recaptcha.body.split.map(&:chomp)
+          answer, error = recaptcha.body.split.map { |s| s.chomp }
           unless answer == 'true'
             session[:recaptcha_error] = error
             model.valid? if model

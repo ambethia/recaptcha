@@ -35,16 +35,4 @@ class ReCaptchaTest < Test::Unit::TestCase
       recaptcha_tags
     end
   end
-
-  def test_should_raise_exception_without_private_key
-    assert_raise ReCaptchaError do
-      ENV['RECAPTCHA_PRIVATE_KEY'] = nil
-      verify_recaptcha
-    end
-  end
-    
-  def test_should_verify_recaptcha
-    # TODO Mock this, or figure something out...
-  end
-    
 end
