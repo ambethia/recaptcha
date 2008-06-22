@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'rubygems'
 require 'builder'
 require File.dirname(__FILE__) + '/../lib/recaptcha'
 

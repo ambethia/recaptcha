@@ -51,6 +51,7 @@ module Ambethia
           answer, error = recaptcha.body.split.map(&:chomp)
           unless answer == 'true'
             session[:recaptcha_error] = error
+            model.valid? if model
             model.errors.add_to_base "Captcha response is incorrect, please try again." if model
             return false
           else
