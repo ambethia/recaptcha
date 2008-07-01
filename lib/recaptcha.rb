@@ -19,16 +19,24 @@ module Ambethia
         if options[:display] 
           xhtml.script(:type => "text/javascript"){ xhtml.text! "var RecaptchaOptions = #{options[:display].to_json};\n"}
         end
-        xhtml.script(:type => "text/javascript", :src => "#{uri}/challenge?k=#{key}&error=#{error}") {}
-        unless options[:noscript] == false
-          xhtml.noscript do
-            xhtml.iframe(:src => "#{uri}/noscript?k=#{key}",
-                         :height => options[:iframe_height] ||= 300,
-                         :width  => options[:iframe_width]  ||= 500,
-                         :frameborder => 0) {}; xhtml.br
-            xhtml.textarea(:name => "recaptcha_challenge_field", :rows => 3, :cols => 40) {}
-            xhtml.input :name => "recaptcha_response_field",
-                        :type => "hidden", :value => "manual_challenge"
+        if options[:ajax]
+         xhtml.div(:id => 'dynamic_recaptcha') {}
+         xhtml.script(:type => "text/javascript", :src => "#{uri}/js/recaptcha_ajax.js") {}
+         xhtml.script(:type => "text/javascript") do
+           xhtml.text! "Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha') );"
+         end
+        else
+          xhtml.script(:type => "text/javascript", :src => "#{uri}/challenge?k=#{key}&error=#{error}") {}
+          unless options[:noscript] == false
+            xhtml.noscript do
+              xhtml.iframe(:src => "#{uri}/noscript?k=#{key}",
+                           :height => options[:iframe_height] ||= 300,
+                           :width  => options[:iframe_width]  ||= 500,
+                           :frameborder => 0) {}; xhtml.br
+              xhtml.textarea(:name => "recaptcha_challenge_field", :rows => 3, :cols => 40) {}
+              xhtml.input :name => "recaptcha_response_field",
+                          :type => "hidden", :value => "manual_challenge"
+            end
           end
         end
         raise ReCaptchaError, "No public key specified." unless key
