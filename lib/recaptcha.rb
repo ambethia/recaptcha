@@ -17,7 +17,7 @@ module Ambethia
         uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
         xhtml = Builder::XmlMarkup.new :target => out=(''), :indent => 2 # Because I can.
         if options[:display] 
-          xhtml.script(:type => "text/javascript"){ xhtml.text! "var RecaptchaOptions = #{options[:display].to_json};\n"}
+          xhtml.script(:type => "text/javascript"){ "var RecaptchaOptions = #{options[:display].to_json};\n" }
         end
         if options[:ajax]
          xhtml.div(:id => 'dynamic_recaptcha') {}
