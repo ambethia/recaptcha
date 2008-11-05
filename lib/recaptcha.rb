@@ -38,6 +38,7 @@ module Ambethia
                                   :cols => options[:textarea_cols] ||= 40
               xhtml.input :name => "recaptcha_response_field",
                           :type => "hidden", :value => "manual_challenge"
+                          :type => "hidden", :value => "manual_challenge"
             end
           end
         end
