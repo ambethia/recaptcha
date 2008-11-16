@@ -33,7 +33,7 @@ module Ambethia
                            :height => options[:iframe_height] ||= 300,
                            :width  => options[:iframe_width]  ||= 500,
                            :frameborder => 0) {}; xhtml.br
-              xhtml.textarea(:name => "recaptcha_challenge_field", :rows => 3, :cols => 40) {}
+              xhtml.textarea(nil, :name => "recaptcha_challenge_field", :rows => 3, :cols => 40)
               xhtml.input :name => "recaptcha_response_field",
                           :type => "hidden", :value => "manual_challenge"
             end
