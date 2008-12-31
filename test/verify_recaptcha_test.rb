@@ -53,7 +53,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     model.expects(:valid?)
     model.expects(:errors).returns(errors)
 
-    assert !@controller.verify_recaptcha(model)
+    assert !@controller.verify_recaptcha(:model => model)
     assert_equal "bad-news", @controller.session[:recaptcha_error]
   end
   
