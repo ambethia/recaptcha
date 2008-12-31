@@ -26,7 +26,7 @@ module Ambethia
            xhtml.text! "Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha') );"
          end
         else
-          xhtml.script(:type => "text/javascript", :src => "#{uri}/challenge?k=#{key}&error=#{error}") {}
+          xhtml.script(:type => "text/javascript", :src => :"#{uri}/challenge?k=#{key}&error=#{error}") {}
           unless options[:noscript] == false
             xhtml.noscript do
               xhtml.iframe(:src => "#{uri}/noscript?k=#{key}",
@@ -46,12 +46,13 @@ module Ambethia
     
     module Controller
       # Your private API key must be specified in the environment variable +RECAPTCHA_PRIVATE_KEY+
-      def verify_recaptcha(model = nil)
+      def verify_recaptcha(model = nil, options = {})
         return true if SKIP_VERIFY_ENV.include? ENV['RAILS_ENV']
-        raise ReCaptchaError, "No private key specified." unless ENV['RECAPTCHA_PRIVATE_KEY']
+        private_key   = options[:private_key] ||= ENV['RECAPTCHA_PRIVATE_KEY']
+        raise ReCaptchaError, "No private key specified." unless private_key
         begin
           recaptcha = Net::HTTP.post_form URI.parse("http://#{RECAPTCHA_VERIFY_SERVER}/verify"), {
-            :privatekey => ENV['RECAPTCHA_PRIVATE_KEY'],
+            :privatekey => private_key,
             :remoteip   => request.remote_ip,
             :challenge  => params[:recaptcha_challenge_field],
             :response   => params[:recaptcha_response_field]
@@ -60,7 +61,8 @@ module Ambethia
           unless answer == 'true'
             session[:recaptcha_error] = error
             model.valid? if model
-            model.errors.add_to_base "Captcha response is incorrect, please try again." if model
+            error_msg = options[:error_msg] ||= "Captcha response is incorrect, please try again."
+            model.errors.add_to_base error_msg if model
             return false
           else
             session[:recaptcha_error] = nil
