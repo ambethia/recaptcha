@@ -45,10 +45,11 @@ module Ambethia
     end # Helpers
     
     module Controller
-      # Your private API key must be specified in the environment variable +RECAPTCHA_PRIVATE_KEY+
+      # Your private API can be specified in the +options+ hash or preferably the environment
+      # variable +RECAPTCHA_PUBLIC_KEY+.
       def verify_recaptcha(options = {})
         return true if SKIP_VERIFY_ENV.include? ENV['RAILS_ENV']
-        private_key   = options[:private_key] ||= ENV['RECAPTCHA_PRIVATE_KEY']
+        private_key = options[:private_key] ||= ENV['RECAPTCHA_PRIVATE_KEY']
         raise ReCaptchaError, "No private key specified." unless private_key
         begin
           recaptcha = Net::HTTP.post_form URI.parse("http://#{RECAPTCHA_VERIFY_SERVER}/verify"), {

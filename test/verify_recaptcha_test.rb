@@ -56,6 +56,16 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     assert !@controller.verify_recaptcha(:model => model)
     assert_equal "bad-news", @controller.session[:recaptcha_error]
   end
+
+  def test_returns_true_on_success_with_optional_key
+    @controller.session[:recaptcha_error] = "previous error that should be cleared"
+    # reset private key
+    @expected_post_data[:privatekey] =  'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
+    expect_http_post(response_with_body("true\n"))
+
+    assert @controller.verify_recaptcha(:private_key => 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX')
+    assert_nil @controller.session[:recaptcha_error]
+  end
   
   private
   
