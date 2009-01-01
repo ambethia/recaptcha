@@ -7,7 +7,7 @@ module Ambethia
 
     SKIP_VERIFY_ENV = ['test']
 
-    module Helper 
+    module Helper
       # Your public API can be specified in the +options+ hash or preferably the environment
       # variable +RECAPTCHA_PUBLIC_KEY+.
       def recaptcha_tags(options = {})
@@ -16,7 +16,7 @@ module Ambethia
         error = options[:error] ||= session[:recaptcha_error]
         uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
         xhtml = Builder::XmlMarkup.new :target => out=(''), :indent => 2 # Because I can.
-        if options[:display] 
+        if options[:display]
           xhtml.script(:type => "text/javascript"){ |x| x << "var RecaptchaOptions = #{options[:display].to_json};\n"}
         end
         if options[:ajax]
@@ -29,11 +29,13 @@ module Ambethia
           xhtml.script(:type => "text/javascript", :src => :"#{uri}/challenge?k=#{key}&error=#{error}") {}
           unless options[:noscript] == false
             xhtml.noscript do
-              xhtml.iframe(:src => "#{uri}/noscript?k=#{key}",
+              xhtml.iframe(:src    => "#{uri}/noscript?k=#{key}",
                            :height => options[:iframe_height] ||= 300,
                            :width  => options[:iframe_width]  ||= 500,
                            :frameborder => 0) {}; xhtml.br
-              xhtml.textarea(nil, :name => "recaptcha_challenge_field", :rows => 3, :cols => 40)
+              xhtml.textarea nil, :name => "recaptcha_challenge_field",
+                                  :rows => options[:textarea_rows] ||= 3,
+                                  :cols => options[:textarea_cols] ||= 40
               xhtml.input :name => "recaptcha_response_field",
                           :type => "hidden", :value => "manual_challenge"
             end
@@ -43,7 +45,7 @@ module Ambethia
         return out
       end # recaptcha_tags
     end # Helpers
-    
+
     module Controller
       # Your private API can be specified in the +options+ hash or preferably the environment
       # variable +RECAPTCHA_PUBLIC_KEY+.
@@ -72,11 +74,11 @@ module Ambethia
           end
         rescue Exception => e
           raise ReCaptchaError, e
-        end    
+        end
       end # verify_recaptcha
     end # ControllerHelpers
 
     class ReCaptchaError < StandardError; end
-    
+
   end # ReCaptcha
 end # Ambethia
