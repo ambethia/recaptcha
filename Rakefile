@@ -1,6 +1,17 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
+require 'echoe'
+
+Echoe.new('recaptcha', '0.1.0') do |p|
+  p.description    = "This plugin adds helpers for the ReCAPTCHA API "
+  p.url            = "http://github.com/ambethia/recaptcha/tree/master"
+  p.author         = "Jason L. Perry"
+  p.email          = "jasper@ambethia.com"
+  p.ignore_pattern = ["pkg/**/*"]
+  p.development_dependencies = []
+end
+
 
 desc 'Default: run unit tests.'
 task :default => :test
