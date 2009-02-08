@@ -1,12 +1,12 @@
+CHANGELOG
 init.rb
-install.rb
 lib/recaptcha/recaptcha.rb
 lib/recaptcha.rb
 LICENSE
 Manifest
 Rakefile
 README.rdoc
+recaptcha.gemspec
 tasks/recaptcha_tasks.rake
 test/recaptcha_test.rb
 test/verify_recaptcha_test.rb
-uninstall.rb
