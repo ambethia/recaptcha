@@ -51,6 +51,7 @@ module Ambethia
       # variable +RECAPTCHA_PUBLIC_KEY+.
       def verify_recaptcha(options = {})
         return true if SKIP_VERIFY_ENV.include? ENV['RAILS_ENV']
+        model = options.is_a?(::ActiveRecord::Base)? options : options[:model]
         private_key = options[:private_key] ||= ENV['RECAPTCHA_PRIVATE_KEY']
         raise ReCaptchaError, "No private key specified." unless private_key
         begin
@@ -63,9 +64,13 @@ module Ambethia
           answer, error = recaptcha.body.split.map { |s| s.chomp }
           unless answer == 'true'
             session[:recaptcha_error] = error
-            if model = options[:model]
+            if model
               model.valid?
-              model.errors.add_to_base "Captcha response is incorrect, please try again."
+              if Rails::VERSION::MAJOR == 2 and Rails::VERSION::MINOR >= 2
+                model.errors.add_to_base I18n.translate("#{model.class.name.underscore}.captcha", :scope => %w(activerecord errors models), :default => "Captcha response is incorrect, please try again.")
+              else
+                model.errors.add_to_base "Captcha response is incorrect, please try again."
+              end
             end
             return false
           else
