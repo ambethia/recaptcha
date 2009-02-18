@@ -26,7 +26,7 @@ module Ambethia
            x << "Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha') );"
          end
         else
-          xhtml.script(:type => "text/javascript", :src => :"#{uri}/challenge?k=#{key}&error=#{error}") {}
+          xhtml.script(:type => "text/javascript", :src => CGI::escapeHTML("#{uri}/challenge?k=#{key}&error=#{error}")) {}
           unless options[:noscript] == false
             xhtml.noscript do
               xhtml.iframe(:src    => "#{uri}/noscript?k=#{key}",
