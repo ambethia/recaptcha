@@ -33,7 +33,7 @@ like. Passing in the ActiveRecord object is optional, if you do--and the captcha
 error will be added to the object for you to use.
 
   respond_to do |format|
-    if verify_recaptcha(@post) && @post.save
+    if verify_recaptcha(:model => @post) && @post.save
       # ...
     else
       # ...
