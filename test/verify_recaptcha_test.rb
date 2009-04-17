@@ -1,13 +1,15 @@
 require 'test/unit'
 require 'rubygems'
+require 'rails/version'	# For getting the rails version constants
+require 'active_support/vendor' # For loading I18n
 require 'mocha'
 require 'net/http'
 require File.dirname(__FILE__) + '/../lib/recaptcha'
 
 class VerifyReCaptchaTest < Test::Unit::TestCase
   def setup
-    ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
+    ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     @controller = TestController.new
     @controller.request = stub(:remote_ip => "1.1.1.1")
     @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
@@ -20,7 +22,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     
     @expected_uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
   end
-  
+
   def test_should_raise_exception_without_private_key
     assert_raise Ambethia::ReCaptcha::ReCaptchaError do
       ENV['RECAPTCHA_PRIVATE_KEY'] = nil
@@ -47,9 +49,9 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     expect_http_post(response_with_body("false\nbad-news"))
     
     errors = mock
-    errors.expects(:add_to_base).with("Captcha response is incorrect, please try again.")
+    errors.expects(:add).with(:base, "Captcha response is incorrect, please try again.")
     
-    model = mock
+    model = mock(:class => mock(:name => mock(:underscore => 'foo')))
     model.expects(:valid?)
     model.expects(:errors).returns(errors)
 
@@ -68,7 +70,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   end
   
   private
-  
+
   class TestController
     include Ambethia::ReCaptcha::Controller    
     attr_accessor :request, :params, :session
