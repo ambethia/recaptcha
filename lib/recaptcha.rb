@@ -56,10 +56,10 @@ module Ambethia
         raise ReCaptchaError, "No private key specified." unless private_key
         begin
           recaptcha = Net::HTTP.post_form URI.parse("http://#{RECAPTCHA_VERIFY_SERVER}/verify"), {
-            :privatekey => private_key,
-            :remoteip   => request.remote_ip,
-            :challenge  => params[:recaptcha_challenge_field],
-            :response   => params[:recaptcha_response_field]
+            "privatekey" => private_key,
+            "remoteip"   => request.remote_ip,
+            "challenge"  => params[:recaptcha_challenge_field],
+            "response"   => params[:recaptcha_response_field]
           }
           answer, error = recaptcha.body.split.map { |s| s.chomp }
           unless answer == 'true'
