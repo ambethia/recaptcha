@@ -69,7 +69,7 @@ module Ambethia
               if Rails::VERSION::MAJOR == 2 and Rails::VERSION::MINOR >= 2
                 model.errors.add_to_base I18n.translate("#{model.class.name.underscore}.captcha", :scope => %w(activerecord errors models), :default => options[:message] ||= "Captcha response is incorrect, please try again.")
               else
-                model.errors.add_to_base options[:message] ||= "Captcha response is incorrect, please try again."
+                model.errors.add_to_base options[:message] || "Captcha response is incorrect, please try again."
               end
             end
             return false
