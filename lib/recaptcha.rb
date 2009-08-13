@@ -5,7 +5,7 @@ module Ambethia
     RECAPTCHA_API_SECURE_SERVER = 'https://api-secure.recaptcha.net';
     RECAPTCHA_VERIFY_SERVER     = 'api-verify.recaptcha.net';
 
-    SKIP_VERIFY_ENV = ['test']
+    SKIP_VERIFY_ENV = ['test', 'cucumber']
 
     module Helper
       # Your public API can be specified in the +options+ hash or preferably the environment
