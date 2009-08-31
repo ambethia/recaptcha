@@ -1,0 +1,76 @@
+@import url('http://ambethia.com/stylesheets/droid.css');
+
+body {
+  font-family: 'Droid Serif', Georgia, serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Droid Sans', Helvetica, sans-serif;
+}
+
+code, pre, tt {
+  font-family: 'Droid Mono', monospace;
+}
+
+body {
+  margin-top: 1.0em;
+}
+
+#container {
+  margin: 0 auto;
+  width: 700px;
+}
+
+h1 {
+  font-size: 3.8em;
+  margin-bottom: 3px;
+}
+
+h1 .small {
+  font-size: 0.4em;
+}
+
+h1 a {
+  text-decoration: none
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  text-align: center;
+}
+
+a {
+  color: #999999;
+}
+
+.description {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  font-style: italic;
+}
+
+.download {
+  float: right;
+}
+
+pre {
+  background: #000;
+  color: #fff;
+  padding: 15px;
+}
+
+hr {
+  border: 0;
+  width: 80%;
+  border-bottom: 1px solid #333
+}
+
+.footer {
+  text-align: center;
+  padding-top: 30px;
+  font-style: italic;
+}
