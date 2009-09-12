@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: README.rdoc</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>README.rdoc</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>README.rdoc
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Sat Sep 12 19:29:19 -0400 2009</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1>ReCAPTCHA</h1>
+<table>
+<tr><td valign="top">Author:</td><td>Jason L Perry (<a href="http://ambethia.com">ambethia.com</a>)
+
+</td></tr>
+<tr><td valign="top">Copyright:</td><td>Copyright (c) 2007 Jason L Perry
+
+</td></tr>
+<tr><td valign="top">License:</td><td>MIT
+
+</td></tr>
+<tr><td valign="top">Info:</td><td><a href="http://ambethia.com/recaptcha">ambethia.com/recaptcha</a>/
+
+</td></tr>
+<tr><td valign="top">Git:</td><td><a
+href="http://github.com/ambethia/recaptcha/tree/master">github.com/ambethia/recaptcha/tree/master</a>
+
+</td></tr>
+<tr><td valign="top">Bugs:</td><td><a
+href="http://github.com/ambethia/recaptcha/issues">github.com/ambethia/recaptcha/issues</a>
+
+</td></tr>
+</table>
+<p>
+This plugin adds helpers for the ReCAPTCHA API (<a
+href="http://recaptcha.net">recaptcha.net</a>/). In your views you can use
+the <tt>recaptcha_tags</tt> method to embed the needed javascript, and you
+can validate in your controllers with <tt>verify_recaptcha</tt>.
+</p>
+<p>
+You&#8216;ll want to add your public and private API keys in the
+environment variables RECAPTCHA_PUBLIC_KEY and RECAPTCHA_PRIVATE_KEY,
+respectively. You could also specify them in config/environment.rb if you
+are so inclined. Exceptions will be raised if you call these methods and
+the keys can&#8216;t be found.
+</p>
+<h2><tt>recaptcha_tags</tt></h2>
+<p>
+Some of the options available:
+</p>
+<table>
+<tr><td valign="top"><tt>:ssl</tt>:</td><td>Uses secure http for captcha widget (default <tt>false</tt>)
+
+</td></tr>
+<tr><td valign="top"><tt>:noscript</tt>:</td><td>Include &lt;noscript&gt; content (default <tt>true</tt>)
+
+</td></tr>
+<tr><td valign="top"><tt>:display</tt>:</td><td>Takes a hash containing the <tt>theme</tt> and <tt>tabindex</tt> options
+per the API. (default <tt>nil</tt>)
+
+</td></tr>
+<tr><td valign="top"><tt>:public_key</tt>:</td><td>Your public API key, takes precedence over the ENV variable (default
+<tt>nil</tt>).
+
+</td></tr>
+<tr><td valign="top"><tt>:error</tt>:</td><td>Override the error in +session[:recaptcha_error]+ (default <tt>nil</tt>).
+
+</td></tr>
+</table>
+<h2><tt>verify_recaptcha</tt></h2>
+<p>
+This method returns <tt>true</tt> or <tt>false</tt> after processing the
+parameters from the ReCAPTCHA widget. Why isn&#8216;t this a model
+validation? Because that violates MVC. Use can use it like this, or how
+ever you like. Passing in the ActiveRecord object is optional, if you
+do&#8212;and the captcha fails to verify&#8212;an error will be added to
+the object for you to use.
+</p>
+<p>
+Some of the options available:
+</p>
+<table>
+<tr><td valign="top"><tt>:model</tt>:</td><td>Model to set errors
+
+</td></tr>
+<tr><td valign="top"><tt>:message</tt>:</td><td>Custom error message
+
+</td></tr>
+</table>
+<pre>
+  respond_to do |format|
+    if verify_recaptcha(:model =&gt; @post, :message =&gt; 'Oh! It's error with ReCaptcha!') &amp;&amp; @post.save
+      # ...
+    else
+      # ...
+    end
+  end
+</pre>
+<h2>TODO</h2>
+<ul>
+<li>Remove Rails/ActionController dependencies
+
+</li>
+<li>Framework agnostic
+
+</li>
+<li>Add some helpers to use in before_filter and what not
+
+</li>
+<li>Better documentation
+
+</li>
+</ul>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
