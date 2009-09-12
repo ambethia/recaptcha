@@ -68,9 +68,9 @@ module Ambethia
             if model
               model.valid?
               if Rails::VERSION::MAJOR == 2 and Rails::VERSION::MINOR >= 2
-                model.errors.add :base, I18n.translate("#{model.class.name.underscore}.captcha", :scope => %w(errors models), :default => "Captcha response is incorrect, please try again.")
+                model.errors.add :base, I18n.translate("#{model.class.name.underscore}.captcha", :scope => %w(errors models), :default => (options[:message] || "Captcha response is incorrect, please try again."))
               else
-                model.errors.add :base, "Captcha response is incorrect, please try again."
+                model.errors.add :base, options[:message] || "Captcha response is incorrect, please try again."
               end
             end
             return false

@@ -32,8 +32,13 @@ isn't this a model validation? Because that violates MVC. Use can use it like th
 like. Passing in the ActiveRecord object is optional, if you do--and the captcha fails to verify--an
 error will be added to the object for you to use.
 
+Some of the options available:
+
+<tt>:model</tt>::      Model to set errors
+<tt>:message</tt>::    Custom error message
+
   respond_to do |format|
-    if verify_recaptcha(:model => @post) && @post.save
+    if verify_recaptcha(:model => @post, :message => 'Oh! It's error with ReCaptcha!') && @post.save
       # ...
     else
       # ...
