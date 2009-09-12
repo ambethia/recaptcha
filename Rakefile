@@ -1,40 +1,55 @@
 require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-require 'echoe'
 
-Echoe.new('recaptcha', '0.1.0') do |p|
-  p.description    = "This plugin adds helpers for the ReCAPTCHA API "
-  p.url            = "http://github.com/ambethia/recaptcha/tree/master"
-  p.author         = "Jason L. Perry"
-  p.email          = "jasper@ambethia.com"
-  p.ignore_pattern = ["pkg/**/*"]
-  p.development_dependencies = []
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name           = "recaptcha"
+    gem.description    = "This plugin adds helpers for the ReCAPTCHA API "
+    gem.homepage       = "http://github.com/ambethia/recaptcha"
+    gem.authors        = ["Jason L. Perry"]
+    gem.email          = "jasper@ambethia.com"
+  end
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rd|
+  if File.exist?('VERSION.yml')
+    config = YAML.load(File.read('VERSION.yml'))
+    version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
+  else
+    version = ""
+  end
 
-desc 'Default: run unit tests.'
+  rd.main = "README.rdoc"
+  rd.rdoc_files.include "README.rdoc", "LICENSE", "lib/**/*.rb"
+  rd.rdoc_dir = 'rdoc'
+  rd.options << '-N' # line numbers
+  rd.options << '-S' # inline source
+end
+
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/*_test.rb'
+  test.verbose = true
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |test|
+    test.libs << 'test'
+    test.pattern = 'test/**/*_test.rb'
+    test.verbose = true
+  end
+rescue LoadError
+  task :rcov do
+    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
+  end
+end
+
 task :default => :test
 
-desc 'Test the recaptcha plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
-end
 
-ALLISON = "/Library/Ruby/Gems/1.8/gems/allison-2.0.3/lib/allison.rb"  
-  
-Rake::RDocTask.new do |rd|  
-  rd.main = "README.rdoc"  
-  rd.rdoc_files.include "README.rdoc", "LICENSE", "lib/**/*.rb"
-  rd.title = "ReCAPTCHA"  
-  rd.options << '-N' # line numbers  
-  rd.options << '-S' # inline source  
-  rd.template = ALLISON if File.exist?(ALLISON)  
-end
 
-desc "Upload the rdoc to ambethia.com"
-task "publish" do
-  sh "scp -r html/* ambethia.com:~/www/ambethia.com/recaptcha"
-end

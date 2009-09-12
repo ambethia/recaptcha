@@ -1,17 +1,11 @@
 = ReCAPTCHA
 
 Author::    Jason L Perry (http://ambethia.com)
-
 Copyright:: Copyright (c) 2007 Jason L Perry
-
 License::   MIT
-
-RDOC::      http://ambethia.com/recaptcha/
-
+Info::      http://ambethia.com/recaptcha/
 Git::       http://github.com/ambethia/recaptcha/tree/master
-
-Bugs::      http://ambethia.lighthouseapp.com/projects/11072-recaptcha/overview
-
+Bugs::      http://github.com/ambethia/recaptcha/issues
 
 This plugin adds helpers for the ReCAPTCHA API (http://recaptcha.net/). In your views you can use
 the +recaptcha_tags+ method to embed the needed javascript, and you can validate in your controllers
