@@ -15,10 +15,10 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
 
     @expected_post_data = {}
-    @expected_post_data[:privatekey] = ENV['RECAPTCHA_PRIVATE_KEY']
-    @expected_post_data[:remoteip] = @controller.request.remote_ip
-    @expected_post_data[:challenge] = "challenge"
-    @expected_post_data[:response] = "response"
+    @expected_post_data["privatekey"] = ENV['RECAPTCHA_PRIVATE_KEY']
+    @expected_post_data["remoteip"]   = @controller.request.remote_ip
+    @expected_post_data["challenge"]  = "challenge"
+    @expected_post_data["response"]   = "response"
     
     @expected_uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
   end
@@ -62,7 +62,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   def test_returns_true_on_success_with_optional_key
     @controller.session[:recaptcha_error] = "previous error that should be cleared"
     # reset private key
-    @expected_post_data[:privatekey] =  'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
+    @expected_post_data["privatekey"] =  'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
     expect_http_post(response_with_body("true\n"))
 
     assert @controller.verify_recaptcha(:private_key => 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX')
