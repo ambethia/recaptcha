@@ -23,7 +23,7 @@ module Ambethia
          xhtml.div(:id => 'dynamic_recaptcha') {}
          xhtml.script(:type => "text/javascript", :src => "#{uri}/js/recaptcha_ajax.js") {}
          xhtml.script(:type => "text/javascript") do |x|
-           x << "Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha') );"
+           x << "Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha')#{(options[:display].blank?)? '' : ',RecaptchaOptions'});"
          end
         else
           xhtml.script(:type => "text/javascript", :src => CGI::escapeHTML("#{uri}/challenge?k=#{key}&error=#{error}")) {}
