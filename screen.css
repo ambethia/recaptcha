@@ -1,4 +1,4 @@
-@import url('http://ambethia.com/stylesheets/droid.css');
+@import url('http://ambethia.com/stylesheets/droid/font-face.css');
 
 body {
   font-family: 'Droid Serif', Georgia, serif;
@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 code, pre, tt {
-  font-family: 'Droid Mono', monospace;
+  font-family: 'Droid Sans Mono', monospace;
 }
 
 body {
@@ -30,9 +30,17 @@ h1 .small {
   font-size: 0.4em;
 }
 
-h1 a {
-  text-decoration: none
+h1 a:link, h1 a:visited,
+.download a:link, .download a:visited {
+  background-color: transparent;
+  color: #600;
+  padding: 0;
 }
+
+h1 a:focus, h1 a:hover {
+  color: #800;
+}
+
 
 h2 {
   font-size: 1.5em;
@@ -42,8 +50,19 @@ h3 {
   text-align: center;
 }
 
-a {
-  color: #999999;
+a:link, a:visited  {
+  padding: 0 0.25em;
+  background-color: #600;
+  color: #fff;
+  text-decoration: none;
+}
+
+a:focus, a:hover{
+  background-color: #800;
+}
+
+a:active {
+  
 }
 
 .description {
@@ -58,7 +77,7 @@ a {
 }
 
 pre {
-  background: #000;
+  background: #212121;
   color: #fff;
   padding: 15px;
 }
