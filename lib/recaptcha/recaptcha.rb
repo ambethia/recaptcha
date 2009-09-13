@@ -15,34 +15,36 @@ module Ambethia
         key   = options[:public_key] ||= ENV['RECAPTCHA_PUBLIC_KEY']
         error = options[:error] ||= session[:recaptcha_error]
         uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
-        xhtml = Builder::XmlMarkup.new :target => out=(''), :indent => 2 # Because I can.
+        html  = ""
         if options[:display]
-          xhtml.script(:type => "text/javascript"){ |x| x << "var RecaptchaOptions = #{options[:display].to_json};\n"}
+          html << %{<script type="text/javascript">\n}
+          html << %{  var RecaptchaOptions = #{options[:display].to_json};\n}
+          html << %{</script>\n}
         end
         if options[:ajax]
-         xhtml.div(:id => 'dynamic_recaptcha') {}
-         xhtml.script(:type => "text/javascript", :src => "#{uri}/js/recaptcha_ajax.js") {}
-         xhtml.script(:type => "text/javascript") do |x|
-           x << "Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha')#{(options[:display].blank?)? '' : ',RecaptchaOptions'});"
-         end
+          html << %{<div id="dynamic_recaptcha"></div>}
+          html << %{<script type="text/javascript" src="#{uri}/js/recaptcha_ajax.js"></script>\n}
+          html << %{<script type="text/javascript">\n}
+          html << %{  Recaptcha.create('#{key}', document.getElementById('dynamic_recaptcha')#{options[:display] ? '' : ',RecaptchaOptions'});}
+          html << %{</script>\n}
         else
-          xhtml.script(:type => "text/javascript", :src => CGI::escapeHTML("#{uri}/challenge?k=#{key}&error=#{error}")) {}
+          html << %{<script type="text/javascript" src="#{uri}/challenge?k=#{key}}
+          html << %{#{error ? "&error=#{CGI::escape(error)}" : ""}"></script>\n}
           unless options[:noscript] == false
-            xhtml.noscript do
-              xhtml.iframe(:src    => "#{uri}/noscript?k=#{key}",
-                           :height => options[:iframe_height] ||= 300,
-                           :width  => options[:iframe_width]  ||= 500,
-                           :frameborder => 0) {}; xhtml.br
-              xhtml.textarea nil, :name => "recaptcha_challenge_field",
-                                  :rows => options[:textarea_rows] ||= 3,
-                                  :cols => options[:textarea_cols] ||= 40
-              xhtml.input :name => "recaptcha_response_field",
-                          :type => "hidden", :value => "manual_challenge"
-            end
+            html << %{<noscript>\n  }
+            html << %{<iframe src="#{uri}/noscript?k=#{key}" }
+            html << %{height="#{options[:iframe_height] ||= 300}" }
+            html << %{width="#{options[:iframe_width]   ||= 500}" }
+            html << %{frameborder="0"></iframe><br/>\n  }
+            html << %{<textarea name="recaptcha_challenge_field" }
+            html << %{rows="#{options[:textarea_rows] ||= 3}" }
+            html << %{cols="#{options[:textarea_cols] ||= 40}"></textarea>\n  }
+            html << %{<input type="hidden" name="recaptcha_response_field" value="manual_challenge">}
+            html << %{</noscript>\n}
           end
         end
         raise ReCaptchaError, "No public key specified." unless key
-        return out
+        return html
       end # recaptcha_tags
     end # Helpers
 
