@@ -1,3 +1,5 @@
+* Removed Ambethia namespace, and restructured classes a bit
+
 == 0.2.0 / 2009-09-12
 
 * RecaptchaOptions AJAX API Fix

@@ -1,12 +1,11 @@
 require 'test/unit'
-require 'rubygems'
-require 'rails/version'	# For getting the rails version constants
+require 'rails/version' # For getting the rails version constants
 require 'active_support/vendor' # For loading I18n
 require 'mocha'
 require 'net/http'
-require File.dirname(__FILE__) + '/../lib/recaptcha/recaptcha'
+require File.dirname(__FILE__) + '/../lib/recaptcha'
 
-class VerifyReCaptchaTest < Test::Unit::TestCase
+class RecaptchaVerifyTest < Test::Unit::TestCase
   def setup
 
     ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
@@ -20,11 +19,11 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
     @expected_post_data["challenge"]  = "challenge"
     @expected_post_data["response"]   = "response"
     
-    @expected_uri = URI.parse("http://#{Ambethia::ReCaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
+    @expected_uri = URI.parse("http://#{Recaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
   end
 
   def test_should_raise_exception_without_private_key
-    assert_raise Ambethia::ReCaptcha::ReCaptchaError do
+    assert_raise Recaptcha::RecaptchaError do
       ENV['RECAPTCHA_PRIVATE_KEY'] = nil
       @controller.verify_recaptcha
     end
@@ -72,7 +71,7 @@ class VerifyReCaptchaTest < Test::Unit::TestCase
   private
 
   class TestController
-    include Ambethia::ReCaptcha::Controller    
+    include Recaptcha::Verify
     attr_accessor :request, :params, :session
     
     def initialize

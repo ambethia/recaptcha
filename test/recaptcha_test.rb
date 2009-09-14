@@ -1,11 +1,11 @@
 require 'test/unit'
 require 'cgi'
-require File.dirname(__FILE__) + '/../lib/recaptcha/recaptcha'
+require File.dirname(__FILE__) + '/../lib/recaptcha'
 
-class ReCaptchaTest < Test::Unit::TestCase
-  include Ambethia::ReCaptcha
-  include Ambethia::ReCaptcha::Helper
-  include Ambethia::ReCaptcha::Controller
+class RecaptchaClientHelperTest < Test::Unit::TestCase
+  include Recaptcha
+  include Recaptcha::ClientHelper
+  include Recaptcha::Verify
 
   attr_accessor :session
 
@@ -29,7 +29,7 @@ class ReCaptchaTest < Test::Unit::TestCase
   end
   
   def test_should_raise_exception_without_public_key
-    assert_raise ReCaptchaError do
+    assert_raise RecaptchaError do
       ENV['RECAPTCHA_PUBLIC_KEY'] = nil
       recaptcha_tags
     end
