@@ -1,0 +1,9 @@
+== ReCaptcha for Rails
+
+Example implementation of the ReCaptcha plugin in a rails app. Can be installed with rubygems:
+
+  config.gem "ambethia-recaptcha", :lib => "recaptcha/rails", :source => "http://gems.github.com"
+
+Or, as a standard rails plugin:
+
+  script/plugin install git://github.com/ambethia/recaptcha.git

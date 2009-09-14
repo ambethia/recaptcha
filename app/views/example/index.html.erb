@@ -1,0 +1,8 @@
+<div id="flash">
+  <%= flash[:message] %>
+</div>
+
+<% form_tag('/example/verify') do %>
+  <%= recaptcha_tags %>
+  <%= submit_tag("Verify") %>
+<% end %>
