@@ -33,7 +33,7 @@ Some of the options available:
 <tt>:noscript</tt>::    Include <noscript> content (default +true+)
 <tt>:display</tt>::     Takes a hash containing the +theme+ and +tabindex+ options per the API. (default +nil+)
 <tt>:public_key</tt>::  Your public API key, takes precedence over the ENV variable (default +nil+).
-<tt>:error</tt>::       Override the error in +session[:recaptcha_error]+ (default +nil+).
+<tt>:error</tt>::       Override the error in +flash[:recaptcha_error]+ (default +nil+).
 
 == +verify_recaptcha+
 
