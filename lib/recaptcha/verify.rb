@@ -32,7 +32,7 @@ module Recaptcha
           return true
         end
       rescue Exception => e
-        raise RecaptchaError, e
+        raise RecaptchaError, e.message, e.backtrace
       end
     end # verify_recaptcha
   end # Verify
