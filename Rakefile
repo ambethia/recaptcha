@@ -5,6 +5,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name           = "recaptcha"
     gem.description    = "This plugin adds helpers for the ReCAPTCHA API "
+    gem.summary        = "Helpers for the ReCAPTCHA API"
     gem.homepage       = "http://github.com/ambethia/recaptcha"
     gem.authors        = ["Jason L. Perry"]
     gem.email          = "jasper@ambethia.com"

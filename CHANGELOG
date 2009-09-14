@@ -1,4 +1,5 @@
 * Removed Ambethia namespace, and restructured classes a bit
+* Added an example rails app in the example-rails branch
 
 == 0.2.0 / 2009-09-12
 

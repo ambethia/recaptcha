@@ -15,6 +15,16 @@ You'll want to add your public and private API keys in the environment variables
 and RECAPTCHA_PRIVATE_KEY, respectively. You could also specify them in config/environment.rb if you
 are so inclined. Exceptions will be raised if you call these methods and the keys can't be found.
 
+== Rails Installation
+
+ReCaptcha for rails can be installed as a gem:
+
+  config.gem "ambethia-recaptcha", :lib => "recaptcha/rails", :source => "http://gems.github.com"
+
+Or, as a standard rails plugin:
+
+  script/plugin install git://github.com/ambethia/recaptcha.git
+
 == +recaptcha_tags+
 
 Some of the options available:
