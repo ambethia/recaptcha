@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Sat Sep 12 19:29:19 -0400 2009</td>
+      <td>Mon Sep 14 22:42:57 -0400 2009</td>
     </tr>
     </table>
   </div>
@@ -69,7 +69,7 @@
   <div id="contextContent">
 
     <div id="description">
-      <h1>ReCAPTCHA</h1>
+      <h1>reCAPTCHA</h1>
 <table>
 <tr><td valign="top">Author:</td><td>Jason L Perry (<a href="http://ambethia.com">ambethia.com</a>)
 
@@ -77,10 +77,10 @@
 <tr><td valign="top">Copyright:</td><td>Copyright (c) 2007 Jason L Perry
 
 </td></tr>
-<tr><td valign="top">License:</td><td>MIT
+<tr><td valign="top">License:</td><td><a href="http://creativecommons.org/licenses/MIT/">MIT</a>
 
 </td></tr>
-<tr><td valign="top">Info:</td><td><a href="http://ambethia.com/recaptcha">ambethia.com/recaptcha</a>/
+<tr><td valign="top">Info:</td><td><a href="http://ambethia.com/recaptcha">ambethia.com/recaptcha</a>
 
 </td></tr>
 <tr><td valign="top">Git:</td><td><a
@@ -93,18 +93,64 @@ href="http://github.com/ambethia/recaptcha/issues">github.com/ambethia/recaptcha
 </td></tr>
 </table>
 <p>
-This plugin adds helpers for the ReCAPTCHA API (<a
-href="http://recaptcha.net">recaptcha.net</a>/). In your views you can use
-the <tt>recaptcha_tags</tt> method to embed the needed javascript, and you
-can validate in your controllers with <tt>verify_recaptcha</tt>.
+This plugin adds helpers for the <a href="http://recaptcha.net">reCAPTCHA
+API</a>. In your views you can use the <tt>recaptcha_tags</tt> method to
+embed the needed javascript, and you can validate in your controllers with
+<tt>verify_recaptcha</tt>.
 </p>
 <p>
 You&#8216;ll want to add your public and private API keys in the
-environment variables RECAPTCHA_PUBLIC_KEY and RECAPTCHA_PRIVATE_KEY,
-respectively. You could also specify them in config/environment.rb if you
-are so inclined. Exceptions will be raised if you call these methods and
-the keys can&#8216;t be found.
+environment variables <tt>RECAPTCHA_PUBLIC_KEY</tt> and
+<tt>RECAPTCHA_PRIVATE_KEY</tt>, respectively. You could also specify them
+in <tt>config/environment.rb</tt> if you are so inclined (see below).
+Exceptions will be raised if you call these methods and the keys
+can&#8216;t be found.
 </p>
+<h2>Rails Installation</h2>
+<p>
+reCAPTCHA for Rails can be installed as a gem:
+</p>
+<pre>
+  config.gem &quot;ambethia-recaptcha&quot;, :lib =&gt; &quot;recaptcha/rails&quot;, :source =&gt; &quot;http://gems.github.com&quot;
+</pre>
+<p>
+Or, as a standard rails plugin:
+</p>
+<pre>
+  script/plugin install git://github.com/ambethia/recaptcha.git
+</pre>
+<h2>Setting up your API Keys</h2>
+<p>
+There are two ways to setup your reCAPTCHA API keys once you <a
+href="http://recaptcha.net/whyrecaptcha.html">obtain</a> a pair. You can
+pass in your keys as options at runtime, for example:
+</p>
+<pre>
+  recaptcha_tags :public_key =&gt; '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+</pre>
+<p>
+and later,
+</p>
+<pre>
+  verify_recaptcha :private_key =&gt; '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+</pre>
+<p>
+Or, preferably, you can keep your keys out of your code base by exporting
+the environment variables mentioned earlier. You might do this in the
+.profile/rc, or equivalent for the user running your application:
+</p>
+<pre>
+  export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+</pre>
+<p>
+If that&#8216;s not your thing, and dropping things into
+<tt>config/environment.rb</tt> is, you can just do:
+</p>
+<pre>
+  ENV['RECAPTCHA_PUBLIC_KEY']  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  ENV['RECAPTCHA_PRIVATE_KEY'] = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+</pre>
 <h2><tt>recaptcha_tags</tt></h2>
 <p>
 Some of the options available:
@@ -120,18 +166,27 @@ Some of the options available:
 per the API. (default <tt>nil</tt>)
 
 </td></tr>
-<tr><td valign="top"><tt>:public_key</tt>:</td><td>Your public API key, takes precedence over the ENV variable (default
-<tt>nil</tt>).
+<tr><td valign="top"><tt>:ajax</tt>:</td><td>Render the dynamic AJAX captcha per the API. (default <tt>false</tt>)
 
 </td></tr>
-<tr><td valign="top"><tt>:error</tt>:</td><td>Override the error in +session[:recaptcha_error]+ (default <tt>nil</tt>).
+<tr><td valign="top"><tt>:public_key</tt>:</td><td>Your public API key, takes precedence over the ENV variable (default
+<tt>nil</tt>)
+
+</td></tr>
+<tr><td valign="top"><tt>:error</tt>:</td><td>Override the error code returned from the reCAPTCHA API (default
+<tt>nil</tt>)
 
 </td></tr>
 </table>
+<p>
+You can also override the html attributes for the sizes of the generated
+<tt>textarea</tt> and <tt>iframe</tt> elements, if CSS isn&#8216;t your
+thing. Inspect the source of <tt>recaptcha_tags</tt> to see these options.
+</p>
 <h2><tt>verify_recaptcha</tt></h2>
 <p>
 This method returns <tt>true</tt> or <tt>false</tt> after processing the
-parameters from the ReCAPTCHA widget. Why isn&#8216;t this a model
+parameters from the reCAPTCHA widget. Why isn&#8216;t this a model
 validation? Because that violates MVC. Use can use it like this, or how
 ever you like. Passing in the ActiveRecord object is optional, if you
 do&#8212;and the captcha fails to verify&#8212;an error will be added to
@@ -147,10 +202,18 @@ Some of the options available:
 <tr><td valign="top"><tt>:message</tt>:</td><td>Custom error message
 
 </td></tr>
+<tr><td valign="top"><tt>:private_key</tt>:</td><td>Your private API key, takes precedence over the ENV variable (default
+<tt>nil</tt>).
+
+</td></tr>
+<tr><td valign="top"><tt>:timeout</tt>:</td><td>The number of seconds to wait for reCAPTCHA servers before give up.
+(default +3+)
+
+</td></tr>
 </table>
 <pre>
   respond_to do |format|
-    if verify_recaptcha(:model =&gt; @post, :message =&gt; 'Oh! It's error with ReCaptcha!') &amp;&amp; @post.save
+    if verify_recaptcha(:model =&gt; @post, :message =&gt; 'Oh! It's error with reCAPTCHA!') &amp;&amp; @post.save
       # ...
     else
       # ...
