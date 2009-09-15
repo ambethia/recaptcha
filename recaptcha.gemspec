@@ -5,22 +5,20 @@
 
 Gem::Specification.new do |s|
   s.name = %q{recaptcha}
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason L. Perry"]
   s.date = %q{2009-09-14}
-  s.description = %q{This plugin adds helpers for the ReCAPTCHA API }
+  s.description = %q{This plugin adds helpers for the reCAPTCHA API }
   s.email = %q{jasper@ambethia.com}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
   ]
   s.files = [
-    ".gitignore",
-     "CHANGELOG",
+    "CHANGELOG",
      "LICENSE",
-     "Manifest",
      "README.rdoc",
      "Rakefile",
      "VERSION",
@@ -38,7 +36,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Helpers for the ReCAPTCHA API}
+  s.summary = %q{Helpers for the reCAPTCHA API}
   s.test_files = [
     "test/recaptcha_test.rb",
      "test/verify_recaptcha_test.rb"

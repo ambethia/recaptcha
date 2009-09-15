@@ -4,11 +4,12 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name           = "recaptcha"
-    gem.description    = "This plugin adds helpers for the ReCAPTCHA API "
-    gem.summary        = "Helpers for the ReCAPTCHA API"
+    gem.description    = "This plugin adds helpers for the reCAPTCHA API "
+    gem.summary        = "Helpers for the reCAPTCHA API"
     gem.homepage       = "http://github.com/ambethia/recaptcha"
     gem.authors        = ["Jason L. Perry"]
     gem.email          = "jasper@ambethia.com"
+    gem.files.reject! { |fn| fn.include? ".gitignore" }
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"

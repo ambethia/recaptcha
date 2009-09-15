@@ -1,4 +1,9 @@
-== 0.2.0 / 2009-09-14
+== 0.2.2 / 2009-09-14
+
+* Add a timeout to the validator
+* Give the documentation some love
+
+== 0.2.1 / 2009-09-14
 
 * Removed Ambethia namespace, and restructured classes a bit
 * Added an example rails app in the example-rails branch
