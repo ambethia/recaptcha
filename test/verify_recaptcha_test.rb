@@ -49,10 +49,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     
     errors = mock
     errors.expects(:add).with(:base, "Captcha response is incorrect, please try again.")
-    
-    model = mock(:class => mock(:name => mock(:underscore => 'foo')))
-    model.expects(:valid?)
-    model.expects(:errors).returns(errors)
+    model = mock(:valid? => false, :errors => errors)
 
     assert !@controller.verify_recaptcha(:model => model)
     assert_equal "bad-news", @controller.session[:recaptcha_error]
@@ -67,7 +64,13 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     assert @controller.verify_recaptcha(:private_key => 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX')
     assert_nil @controller.session[:recaptcha_error]
   end
-  
+
+  def test_timeout
+    expect_http_post(Timeout::Error, :exception => true)
+    assert !@controller.verify_recaptcha()
+    assert_equal "recaptcha-not-reachable", @controller.session[:recaptcha_error]
+  end
+
   private
 
   class TestController
@@ -79,8 +82,12 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     end
   end
   
-  def expect_http_post(response)
-    Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
+  def expect_http_post(response, options = {})
+    unless options[:exception]
+      Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
+    else
+      Net::HTTP.expects(:post_form).raises response
+    end
   end
   
   def response_with_body(body)
