@@ -20,18 +20,18 @@ module Recaptcha
         end
         answer, error = recaptcha.body.split.map { |s| s.chomp }
         unless answer == 'true'
-          session[:recaptcha_error] = error
+          flash[:recaptcha_error] = error
           if model
             model.valid?
-            model.errors.add :base, options[:message] || "Captcha response is incorrect, please try again."
+            model.errors.add :captcha, options[:message] || "Word verification response is incorrect, please try again."
           end
           return false
         else
-          session[:recaptcha_error] = nil
+          flash[:recaptcha_error] = nil
           return true
         end
       rescue Timeout::Error 
-        session[:recaptcha_error] = "recaptcha-not-reachable"
+        flash[:recaptcha_error] = "recaptcha-not-reachable"
         if model
           model.valid?
           model.errors.add :base, options[:message] || "Oops, we failed to validate your Captcha. Please try again."
