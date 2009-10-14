@@ -6,11 +6,12 @@ begin
     gem.name           = "recaptcha"
     gem.description    = "This plugin adds helpers for the reCAPTCHA API "
     gem.summary        = "Helpers for the reCAPTCHA API"
-    gem.homepage       = "http://github.com/ambethia/recaptcha"
+    gem.homepage       = "http://ambethia.com/recaptcha"
     gem.authors        = ["Jason L. Perry"]
     gem.email          = "jasper@ambethia.com"
     gem.files.reject! { |fn| fn.include? ".gitignore" }
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
