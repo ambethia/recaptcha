@@ -3,11 +3,16 @@ module Recaptcha
     # Your private API can be specified in the +options+ hash or preferably
     # the environment variable +RECAPTCHA_PUBLIC_KEY+.
     def verify_recaptcha(options = {})
-      return true if SKIP_VERIFY_ENV.include? ENV['RAILS_ENV']
-      model = options.is_a?(Hash)? options[:model] : options
-      private_key = options[:private_key] if options.is_a?(Hash)
-      private_key ||= ENV['RECAPTCHA_PRIVATE_KEY']
+      if !options.is_a? Hash
+        options = {:model => options}
+      end
+      
+      env = options[:env] || ENV['RAILS_ENV']
+      return true if SKIP_VERIFY_ENV.include? env
+      model = options[:model]
+      private_key = options[:private_key] || ENV['RECAPTCHA_PRIVATE_KEY']
       raise RecaptchaError, "No private key specified." unless private_key
+      
       begin
         recaptcha = nil
         Timeout::timeout(options[:timeout] || 3) do

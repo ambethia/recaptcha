@@ -25,6 +25,14 @@ Or, as a standard rails plugin:
 
   script/plugin install git://github.com/ambethia/recaptcha.git
 
+== Merb Installation
+
+reCAPTCHA can also be used in a Merb application when installed as a gem:
+
+  dependency "alm-recaptcha", ">=0.2.2.1", :require_as => "recaptcha/merb"
+
+Initial Merb compatability funded by ALM Labs.
+
 == Setting up your API Keys
 
 There are two ways to setup your reCAPTCHA API keys once you {obtain}[http://recaptcha.net/whyrecaptcha.html]

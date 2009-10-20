@@ -5,7 +5,8 @@ module Recaptcha
     def recaptcha_tags(options = {})
       # Default options
       key   = options[:public_key] ||= ENV['RECAPTCHA_PUBLIC_KEY']
-      error = options[:error] ||= flash[:recaptcha_error]
+      raise RecaptchaError, "No public key specified." unless key
+      error = options[:error] ||= (defined? flash ? flash[:recaptcha_error] : "")
       uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
       html  = ""
       if options[:display]
@@ -35,7 +36,6 @@ module Recaptcha
           html << %{</noscript>\n}
         end
       end
-      raise RecaptchaError, "No public key specified." unless key
       return html
     end # recaptcha_tags
   end # ClientHelper
