@@ -10,6 +10,7 @@ module Recaptcha
       env = options[:env] || ENV['RAILS_ENV']
       return true if SKIP_VERIFY_ENV.include? env
       model = options[:model]
+      attribute = options[:attribute] || :base
       private_key = options[:private_key] || ENV['RECAPTCHA_PRIVATE_KEY']
       raise RecaptchaError, "No private key specified." unless private_key
       
@@ -28,7 +29,7 @@ module Recaptcha
           flash[:recaptcha_error] = error
           if model
             model.valid?
-            model.errors.add :base, options[:message] || "Word verification response is incorrect, please try again."
+            model.errors.add attribute, options[:message] || "Word verification response is incorrect, please try again."
           end
           return false
         else
@@ -39,7 +40,7 @@ module Recaptcha
         flash[:recaptcha_error] = "recaptcha-not-reachable"
         if model
           model.valid?
-          model.errors.add :base, options[:message] || "Oops, we failed to validate your word verification response. Please try again."
+          model.errors.add attribute, options[:message] || "Oops, we failed to validate your word verification response. Please try again."
         end
         return false
       rescue Exception => e
