@@ -86,7 +86,7 @@ Some of the options available:
 <tt>:timeout</tt>::     The number of seconds to wait for reCAPTCHA servers before give up. (default +3+)
 
   respond_to do |format|
-    if verify_recaptcha(:model => @post, :message => 'Oh! It's error with reCAPTCHA!') && @post.save
+    if verify_recaptcha(:model => @post, :message => "Oh! It's error with reCAPTCHA!") && @post.save
       # ...
     else
       # ...
