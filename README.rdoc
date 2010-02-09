@@ -15,6 +15,12 @@ You'll want to add your public and private API keys in the environment variables
 and +RECAPTCHA_PRIVATE_KEY+, respectively. You could also specify them in <tt>config/environment.rb</tt> if you
 are so inclined (see below). Exceptions will be raised if you call these methods and the keys can't be found.
 
+== About this fork
+
+This fork tries to introduces a more convenient way to configure recaptcha's
+settings. The API will be inspired by {Thoughtbot's
+Hoptoad}[http://robots.thoughtbot.com/post/344833329/mygem-configure-block].
+
 == Rails Installation
 
 reCAPTCHA for Rails can be installed as a gem:
