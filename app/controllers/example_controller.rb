@@ -10,5 +10,4 @@ class ExampleController < ApplicationController
     end
     render :index
   end
-
 end

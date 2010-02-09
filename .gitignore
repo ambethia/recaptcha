@@ -1,2 +1,3 @@
 db/*.sqlite*
 tmp/**/*
+log/*.log
