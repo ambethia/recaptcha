@@ -47,7 +47,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     expect_http_post(response_with_body("false\nbad-news"))
     
     errors = mock
-    errors.expects(:add).with(:base, "Captcha response is incorrect, please try again.")
+    errors.expects(:add).with(:base, "Word verification response is incorrect, please try again.")
     model = mock(:valid? => false, :errors => errors)
 
     assert !@controller.verify_recaptcha(:model => model)
