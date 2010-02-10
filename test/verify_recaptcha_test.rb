@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'rails/version' # For getting the rails version constants
+require 'rubygems'
 require 'active_support/vendor' # For loading I18n
 require 'mocha'
 require 'net/http'
