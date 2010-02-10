@@ -1,13 +1,13 @@
 module Recaptcha
   module ClientHelper
     # Your public API can be specified in the +options+ hash or preferably
-    # the environment variable +RECAPTCHA_PUBLIC_KEY+.
+    # using the Configuration.
     def recaptcha_tags(options = {})
       # Default options
-      key   = options[:public_key] ||= ENV['RECAPTCHA_PUBLIC_KEY']
+      key   = options[:public_key] ||= Recaptcha.configuration.public_key
       raise RecaptchaError, "No public key specified." unless key
       error = options[:error] ||= (defined? flash ? flash[:recaptcha_error] : "")
-      uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
+      uri   = Recaptcha.configuration.api_server_url(options[:ssl])
       html  = ""
       if options[:display]
         html << %{<script type="text/javascript">\n}

@@ -7,24 +7,23 @@ require File.dirname(__FILE__) + '/../lib/recaptcha'
 
 class RecaptchaVerifyTest < Test::Unit::TestCase
   def setup
-
-    ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    Recaptcha.configuration.private_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     @controller = TestController.new
     @controller.request = stub(:remote_ip => "1.1.1.1")
     @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
 
     @expected_post_data = {}
-    @expected_post_data["privatekey"] = ENV['RECAPTCHA_PRIVATE_KEY']
+    @expected_post_data["privatekey"] = Recaptcha.configuration.private_key
     @expected_post_data["remoteip"]   = @controller.request.remote_ip
     @expected_post_data["challenge"]  = "challenge"
     @expected_post_data["response"]   = "response"
     
-    @expected_uri = URI.parse("http://#{Recaptcha::RECAPTCHA_VERIFY_SERVER}/verify")
+    @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
   end
 
   def test_should_raise_exception_without_private_key
     assert_raise Recaptcha::RecaptchaError do
-      ENV['RECAPTCHA_PRIVATE_KEY'] = nil
+      Recaptcha.configuration.private_key = nil
       @controller.verify_recaptcha
     end
   end
