@@ -32,15 +32,15 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     expect_http_post(response_with_body("false\ninvalid-site-private-key"))
 
     assert !@controller.verify_recaptcha    
-    assert_equal "invalid-site-private-key", @controller.session[:recaptcha_error]
+    assert_equal "invalid-site-private-key", @controller.flash[:recaptcha_error]
   end
   
   def test_returns_true_on_success
-    @controller.session[:recaptcha_error] = "previous error that should be cleared"    
+    @controller.flash[:recaptcha_error] = "previous error that should be cleared"    
     expect_http_post(response_with_body("true\n"))
 
     assert @controller.verify_recaptcha
-    assert_nil @controller.session[:recaptcha_error]
+    assert_nil @controller.flash[:recaptcha_error]
   end
   
   def test_errors_should_be_added_to_model
@@ -51,33 +51,33 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     model = mock(:valid? => false, :errors => errors)
 
     assert !@controller.verify_recaptcha(:model => model)
-    assert_equal "bad-news", @controller.session[:recaptcha_error]
+    assert_equal "bad-news", @controller.flash[:recaptcha_error]
   end
 
   def test_returns_true_on_success_with_optional_key
-    @controller.session[:recaptcha_error] = "previous error that should be cleared"
+    @controller.flash[:recaptcha_error] = "previous error that should be cleared"
     # reset private key
     @expected_post_data["privatekey"] =  'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
     expect_http_post(response_with_body("true\n"))
 
     assert @controller.verify_recaptcha(:private_key => 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX')
-    assert_nil @controller.session[:recaptcha_error]
+    assert_nil @controller.flash[:recaptcha_error]
   end
 
   def test_timeout
     expect_http_post(Timeout::Error, :exception => true)
     assert !@controller.verify_recaptcha()
-    assert_equal "recaptcha-not-reachable", @controller.session[:recaptcha_error]
+    assert_equal "recaptcha-not-reachable", @controller.flash[:recaptcha_error]
   end
 
   private
 
   class TestController
     include Recaptcha::Verify
-    attr_accessor :request, :params, :session
+    attr_accessor :request, :params, :flash
     
     def initialize
-      @session = {}
+      @flash = {}
     end
   end
   
