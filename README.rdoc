@@ -25,7 +25,7 @@ Hoptoad}[http://robots.thoughtbot.com/post/344833329/mygem-configure-block].
 
 reCAPTCHA for Rails can be installed as a gem:
 
-  config.gem "ambethia-recaptcha", :lib => "recaptcha/rails", :source => "http://gems.github.com"
+  config.gem "recaptcha", :lib => "recaptcha/rails"
 
 Or, as a standard rails plugin:
 
