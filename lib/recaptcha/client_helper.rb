@@ -36,7 +36,7 @@ module Recaptcha
           html << %{</noscript>\n}
         end
       end
-      return html
+      return raw html
     end # recaptcha_tags
   end # ClientHelper
 end # Recaptcha
