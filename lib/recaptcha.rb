@@ -1,5 +1,6 @@
 require 'recaptcha/client_helper'
 require 'recaptcha/verify'
+require 'recaptcha/activerecord'
 
 module Recaptcha
   module VERSION #:nodoc:

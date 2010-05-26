@@ -6,7 +6,7 @@ module Recaptcha
       # Default options
       key   = options[:public_key] ||= ENV['RECAPTCHA_PUBLIC_KEY']
       raise RecaptchaError, "No public key specified." unless key
-      error = options[:error] ||= (defined? flash ? flash[:recaptcha_error] : "")
+      error = current_object.errors.on(:recaptcha)
       uri   = options[:ssl] ? RECAPTCHA_API_SECURE_SERVER : RECAPTCHA_API_SERVER
       html  = ""
       if options[:display]
