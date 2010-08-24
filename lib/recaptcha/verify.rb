@@ -1,23 +1,23 @@
 module Recaptcha
   module Verify
     # Your private API can be specified in the +options+ hash or preferably
-    # the environment variable +RECAPTCHA_PUBLIC_KEY+.
+    # using the Configuration.
     def verify_recaptcha(options = {})
       if !options.is_a? Hash
         options = {:model => options}
       end
       
       env = options[:env] || ENV['RAILS_ENV']
-      return true if SKIP_VERIFY_ENV.include? env
+      return true if Recaptcha.configuration.skip_verify_env.include? env
       model = options[:model]
       attribute = options[:attribute] || :base
-      private_key = options[:private_key] || ENV['RECAPTCHA_PRIVATE_KEY']
+      private_key = options[:private_key] || Recaptcha.configuration.private_key
       raise RecaptchaError, "No private key specified." unless private_key
       
       begin
         recaptcha = nil
         Timeout::timeout(options[:timeout] || 3) do
-          recaptcha = Net::HTTP.post_form URI.parse("http://#{RECAPTCHA_VERIFY_SERVER}/verify"), {
+          recaptcha = Net::HTTP.post_form URI.parse(Recaptcha.configuration.verify_url), {
             "privatekey" => private_key,
             "remoteip"   => request.remote_ip,
             "challenge"  => params[:recaptcha_challenge_field],

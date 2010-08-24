@@ -11,8 +11,10 @@ class RecaptchaClientHelperTest < Test::Unit::TestCase
 
   def setup
     @session = {}
-    ENV['RECAPTCHA_PUBLIC_KEY']  = '0000000000000000000000000000000000000000'
-    ENV['RECAPTCHA_PRIVATE_KEY'] = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    Recaptcha.configure do |config|
+      config.public_key = '0000000000000000000000000000000000000000'
+      config.private_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    end
   end
     
   def test_recaptcha_tags
@@ -30,7 +32,7 @@ class RecaptchaClientHelperTest < Test::Unit::TestCase
   
   def test_should_raise_exception_without_public_key
     assert_raise RecaptchaError do
-      ENV['RECAPTCHA_PUBLIC_KEY'] = nil
+      Recaptcha.configuration.public_key = nil
       recaptcha_tags
     end
   end

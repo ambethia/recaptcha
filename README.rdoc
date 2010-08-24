@@ -7,19 +7,25 @@ Info::      http://ambethia.com/recaptcha
 Git::       http://github.com/ambethia/recaptcha/tree/master
 Bugs::      http://github.com/ambethia/recaptcha/issues
 
-This plugin adds helpers for the {reCAPTCHA API}[http://recaptcha.net]. In your views you can use
-the +recaptcha_tags+ method to embed the needed javascript, and you can validate in your controllers
-with +verify_recaptcha+.
+This plugin adds helpers for the {reCAPTCHA API}[http://recaptcha.net]. In your
+views you can use the +recaptcha_tags+ method to embed the needed javascript,
+and you can validate in your controllers with +verify_recaptcha+.
 
-You'll want to add your public and private API keys in the environment variables +RECAPTCHA_PUBLIC_KEY+
-and +RECAPTCHA_PRIVATE_KEY+, respectively. You could also specify them in <tt>config/environment.rb</tt> if you
-are so inclined (see below). Exceptions will be raised if you call these methods and the keys can't be found.
+Beforehand you need to configure Recaptcha with your custom private and public
+key. You may find detailed examples below. Exceptions will be raised if you
+call these methods and the keys can't be found.
+
+== About this fork
+
+This fork tries to introduces a more convenient way to configure recaptcha's
+settings. The API will be inspired by {Thoughtbot's
+Hoptoad}[http://robots.thoughtbot.com/post/344833329/mygem-configure-block].
 
 == Rails Installation
 
 reCAPTCHA for Rails can be installed as a gem:
 
-  config.gem "ambethia-recaptcha", :lib => "recaptcha/rails", :source => "http://gems.github.com"
+  config.gem "recaptcha", :lib => "recaptcha/rails"
 
 Or, as a standard rails plugin:
 
@@ -35,8 +41,34 @@ Initial Merb compatability funded by ALM Labs.
 
 == Setting up your API Keys
 
-There are two ways to setup your reCAPTCHA API keys once you {obtain}[http://recaptcha.net/whyrecaptcha.html]
-a pair. You can pass in your keys as options at runtime, for example:
+There are multiple ways to setup your reCAPTCHA API key once you
+{obtain}[http://recaptcha.net/whyrecaptcha.html] a pair.
+
+=== Recaptcha.configure
+
+You may use the block style configuration. The following code could be placed
+into a +config/initializers/recaptcha.rb+ when used in a Rails project.
+
+  Recaptcha.configure do |config|
+    config.public_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+    config.private_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+  end
+
+This way, you may also set additional options to fit recaptcha into your
+deployment environment.
+
+=== Shell environment
+
+Or, you can keep your keys out of your code base by exporting the following
+environment variables. You might do this in the .profile/rc, or equivalent for
+the user running your application:
+
+  export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+
+=== Per call
+
+You can also pass in your keys as options at runtime, for example:
 
   recaptcha_tags :public_key => '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 
@@ -44,18 +76,8 @@ and later,
 
   verify_recaptcha :private_key => '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 
-
-Or, preferably, you can keep your keys out of your code base by exporting the environment variables
-mentioned earlier. You might do this in the .profile/rc, or equivalent for the user running your
-application:
-
-  export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-  export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
-
-If that's not your thing, and dropping things into <tt>config/environment.rb</tt> is, you can just do:
-
-  ENV['RECAPTCHA_PUBLIC_KEY']  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-  ENV['RECAPTCHA_PRIVATE_KEY'] = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+This option might be useful, if the same code base is used for multiple
+reCAPTCHA setups.
 
 == +recaptcha_tags+
 
