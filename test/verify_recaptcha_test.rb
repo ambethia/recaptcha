@@ -1,9 +1,9 @@
 require 'test/unit'
 require 'rails/version' # For getting the rails version constants
-require 'active_support/vendor' # For loading I18n
+#require 'active_support/vendor' # For loading I18n
 require 'mocha'
 require 'net/http'
-require File.dirname(__FILE__) + '/../lib/recaptcha'
+require File.dirname(File.expand_path(__FILE__)) + '/../lib/recaptcha'
 
 class RecaptchaVerifyTest < Test::Unit::TestCase
   def setup
