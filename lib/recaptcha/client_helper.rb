@@ -28,7 +28,7 @@ module Recaptcha
           html << %{<iframe src="#{uri}/noscript?k=#{key}" }
           html << %{height="#{options[:iframe_height] ||= 300}" }
           html << %{width="#{options[:iframe_width]   ||= 500}" }
-          html << %{frameborder="0"></iframe><br/>\n  }
+          html << %{style="border:none;"></iframe><br/>\n  }
           html << %{<textarea name="recaptcha_challenge_field" }
           html << %{rows="#{options[:textarea_rows] ||= 3}" }
           html << %{cols="#{options[:textarea_cols] ||= 40}"></textarea>\n  }
@@ -36,7 +36,7 @@ module Recaptcha
           html << %{</noscript>\n}
         end
       end
-      return html
+      return html.html_safe
     end # recaptcha_tags
   end # ClientHelper
 end # Recaptcha
