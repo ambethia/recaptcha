@@ -19,27 +19,22 @@ module Recaptcha
         Timeout::timeout(options[:timeout] || 3) do
           recaptcha = Net::HTTP.post_form URI.parse(Recaptcha.configuration.verify_url), {
             "privatekey" => private_key,
-            "remoteip"   => request.remote_ip,
-            "challenge"  => params[:recaptcha_challenge_field],
-            "response"   => params[:recaptcha_response_field]
+            "remoteip"   => remote_ip,
+            "challenge"  => recaptcha_challenge_field,
+            "response"   => recaptcha_response_field
           }
         end
         answer, error = recaptcha.body.split.map { |s| s.chomp }
         unless answer == 'true'
-          flash[:recaptcha_error] = error
           if model
-            model.valid?
             model.errors.add attribute, options[:message] || "Word verification response is incorrect, please try again."
           end
           return false
         else
-          flash[:recaptcha_error] = nil
           return true
         end
       rescue Timeout::Error 
-        flash[:recaptcha_error] = "recaptcha-not-reachable"
         if model
-          model.valid?
           model.errors.add attribute, options[:message] || "Oops, we failed to validate your word verification response. Please try again."
         end
         return false
