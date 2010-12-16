@@ -10,6 +10,8 @@ begin
     gem.authors        = ["Jason L. Perry"]
     gem.email          = "jasper@ambethia.com"
     gem.files.reject! { |fn| fn.include? ".gitignore" }
+    gem.add_development_dependency "mocha"
+    gem.add_development_dependency "activesupport"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

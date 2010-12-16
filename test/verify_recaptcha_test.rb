@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'rails/version' # For getting the rails version constants
+require 'active_support/core_ext/string'
 require 'rubygems'
 require 'mocha'
 require 'net/http'
@@ -36,7 +36,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
   end
   
   def test_returns_true_on_success
-    @controller.flash[:recaptcha_error] = "previous error that should be cleared"    
+    @controller.flash[:recaptcha_error] = "previous error that should be cleared" 
     expect_http_post(response_with_body("true\n"))
 
     assert @controller.verify_recaptcha
