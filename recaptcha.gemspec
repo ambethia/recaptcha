@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{recaptcha}
-  s.version = "0.3.0"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason L. Perry"]
-  s.date = %q{2010-12-16}
+  s.date = %q{2010-12-20}
   s.description = %q{This plugin adds helpers for the reCAPTCHA API }
   s.email = %q{jasper@ambethia.com}
   s.extra_rdoc_files = [
