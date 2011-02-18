@@ -38,3 +38,7 @@ module Recaptcha
   class RecaptchaError < StandardError
   end
 end
+
+if defined?(Rails)
+  require 'recaptcha/railtie'
+end
