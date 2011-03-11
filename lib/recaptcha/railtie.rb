@@ -1,3 +1,4 @@
+require 'net/http'
 require 'recaptcha'
 module Rails
   module Recaptcha
