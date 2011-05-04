@@ -1,6 +1,6 @@
 require 'test/unit'
-require 'active_support/core_ext/string'
 require 'rubygems'
+require 'active_support/core_ext/string'
 require 'mocha'
 require 'net/http'
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/recaptcha'
