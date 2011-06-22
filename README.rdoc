@@ -96,7 +96,7 @@ elements, if CSS isn't your thing. Inspect the source of +recaptcha_tags+ to see
 == +verify_recaptcha+
 
 This method returns +true+ or +false+ after processing the parameters from the reCAPTCHA widget. Why
-isn't this a model validation? Because that violates MVC. Use can use it like this, or how ever you
+isn't this a model validation? Because that violates MVC. You can use it like this, or how ever you
 like. Passing in the ActiveRecord object is optional, if you do--and the captcha fails to verify--an
 error will be added to the object for you to use.
 
