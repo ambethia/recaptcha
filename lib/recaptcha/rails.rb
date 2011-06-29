@@ -1,3 +1,4 @@
+require 'net/http'
 require 'recaptcha'
 
 ActionView::Base.send(:include, Recaptcha::ClientHelper)
