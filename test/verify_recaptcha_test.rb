@@ -1,7 +1,8 @@
 require 'test/unit'
-require 'active_support/core_ext/string'
 require 'rubygems'
+require 'active_support/core_ext/string'
 require 'mocha'
+require 'i18n'
 require 'net/http'
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/recaptcha'
 
@@ -69,6 +70,28 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     assert !@controller.verify_recaptcha()
     assert_equal "recaptcha-not-reachable", @controller.flash[:recaptcha_error]
   end
+
+	def test_message_should_use_i18n
+		I18n.locale = :de
+		verification_failed_translated   = "Sicherheitscode konnte nicht verifiziert werden."
+		verification_failed_default      = "Word verification response is incorrect, please try again."
+		recaptcha_unreachable_translated = "Netzwerkfehler, bitte versuchen Sie es später erneut."
+		recaptcha_unreachable_default    = "Oops, we failed to validate your word verification response. Please try again."
+		I18n.expects(:translate).with(:'recaptcha.errors.verification_failed', :default => verification_failed_default).returns(verification_failed_translated)
+		I18n.expects(:translate).with(:'recaptcha.errors.recaptcha_unreachable', :default => recaptcha_unreachable_default).returns(recaptcha_unreachable_translated)
+
+		errors = mock
+		errors.expects(:add).with(:base, verification_failed_translated)
+		errors.expects(:add).with(:base, recaptcha_unreachable_translated)
+		model  = mock; model.stubs(:valid? => false, :errors => errors)
+
+		expect_http_post(response_with_body("false\nbad-news"))
+		@controller.verify_recaptcha(:model => model)
+
+    expect_http_post(Timeout::Error, :exception => true)
+		@controller.verify_recaptcha(:model => model)
+
+	end
 
   private
 
