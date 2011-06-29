@@ -116,6 +116,17 @@ Some of the options available:
     end
   end
 
+  # or in your controller
+
+  def create
+    @post = Post.new params[:post]
+    if @post.save_with_captcha(self)
+      # ...
+    else
+      # ...
+    end
+  end
+
 == TODO
 * Remove Rails/ActionController dependencies
 * Framework agnostic
