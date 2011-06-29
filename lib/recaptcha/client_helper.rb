@@ -36,7 +36,7 @@ module Recaptcha
           html << %{</noscript>\n}
         end
       end
-      return html.html_safe
+      return (html.respond_to?(:html_safe) && html.html_safe) || html
     end # recaptcha_tags
   end # ClientHelper
 end # Recaptcha
