@@ -70,6 +70,22 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     assert_equal "recaptcha-not-reachable", @controller.flash[:recaptcha_error]
   end
 
+  def test_verify_gets_skipped_if_env_is_set_to_a_true_value
+    ENV["SKIP_RECAPTCHA_VERIFY"] = "1"
+
+    assert @controller.verify_recaptcha()
+
+    ENV.delete("SKIP_RECAPTCHA_VERIFY")
+  end
+
+  def test_verify_does_not_get_skipped_if_env_is_set_to_0
+    ENV["SKIP_RECAPTCHA_VERIFY"] = "0"
+
+    assert !@controller.verify_recaptcha()
+
+    ENV.delete("SKIP_RECAPTCHA_VERIFY")
+  end
+
   private
 
   class TestController
