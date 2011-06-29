@@ -23,7 +23,11 @@ Hoptoad}[http://robots.thoughtbot.com/post/344833329/mygem-configure-block].
 
 == Rails Installation
 
-reCAPTCHA for Rails can be installed as a gem:
+reCAPTCHA for Rails, add this to your Gemfile:
+
+  gem "recaptcha", :require => "recaptcha/rails"
+
+Or, it can be installed as a gem:
 
   config.gem "recaptcha", :lib => "recaptcha/rails"
 
@@ -87,7 +91,13 @@ and later,
 This option might be useful, if the same code base is used for multiple
 reCAPTCHA setups.
 
-== +recaptcha_tags+
+== To use 'recaptcha'
+
+Add +recaptcha_tags+ to each form you want to protect.
+
+And, add +verify_recaptcha+ logic to each form action that you've protected.
+
+=== +recaptcha_tags+
 
 Some of the options available:
 
@@ -101,7 +111,7 @@ Some of the options available:
 You can also override the html attributes for the sizes of the generated +textarea+ and +iframe+
 elements, if CSS isn't your thing. Inspect the source of +recaptcha_tags+ to see these options.
 
-== +verify_recaptcha+
+=== +verify_recaptcha+
 
 This method returns +true+ or +false+ after processing the parameters from the reCAPTCHA widget. Why
 isn't this a model validation? Because that violates MVC. You can use it like this, or how ever you
