@@ -28,7 +28,6 @@ module Recaptcha
         unless answer == 'true'
           flash[:recaptcha_error] = error
           if model
-            model.valid?
             message = "Word verification response is incorrect, please try again."
             message = I18n.translate(:'recaptcha.errors.verification_failed', {:default => message}) if defined?(I18n)
             model.errors.add attribute, options[:message] || message
@@ -41,7 +40,6 @@ module Recaptcha
       rescue Timeout::Error
         flash[:recaptcha_error] = "recaptcha-not-reachable"
         if model
-          model.valid?
           message = "Oops, we failed to validate your word verification response. Please try again."
           message = I18n.translate(:'recaptcha.errors.recaptcha_unreachable', :default => message) if defined?(I18n)
           model.errors.add attribute, options[:message] || message

@@ -51,7 +51,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
 
     errors = mock
     errors.expects(:add).with(:base, "Word verification response is incorrect, please try again.")
-    model = mock(:valid? => false, :errors => errors)
+    model = mock(:errors => errors)
 
     assert !@controller.verify_recaptcha(:model => model)
     assert_equal "bad-news", @controller.flash[:recaptcha_error]
@@ -85,7 +85,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     errors = mock
     errors.expects(:add).with(:base, verification_failed_translated)
     errors.expects(:add).with(:base, recaptcha_unreachable_translated)
-    model  = mock; model.stubs(:valid? => false, :errors => errors)
+    model  = mock; model.stubs(:errors => errors)
 
     expect_http_post(response_with_body("false\nbad-news"))
     @controller.verify_recaptcha(:model => model)
