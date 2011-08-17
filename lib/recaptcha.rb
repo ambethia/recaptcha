@@ -54,5 +54,5 @@ module Recaptcha
 end
 
 if defined?(Rails)
-  require 'recaptcha/railtie'
+  require 'recaptcha/rails'
 end
