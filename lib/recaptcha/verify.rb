@@ -6,14 +6,14 @@ module Recaptcha
       if !options.is_a? Hash
         options = {:model => options}
       end
-      
+
       env = options[:env] || ENV['RAILS_ENV']
       return true if Recaptcha.configuration.skip_verify_env.include? env
       model = options[:model]
       attribute = options[:attribute] || :base
       private_key = options[:private_key] || Recaptcha.configuration.private_key
       raise RecaptchaError, "No private key specified." unless private_key
-      
+
       begin
         recaptcha = nil
         Timeout::timeout(options[:timeout] || 3) do
@@ -28,9 +28,8 @@ module Recaptcha
         unless answer == 'true'
           flash[:recaptcha_error] = error
           if model
-            model.valid?
-						message = "Word verification response is incorrect, please try again."
-						message = I18n.translate(:'recaptcha.errors.verification_failed', {:default => message}) if defined?(I18n)
+            message = "Word verification response is incorrect, please try again."
+            message = I18n.translate(:'recaptcha.errors.verification_failed', {:default => message}) if defined?(I18n)
             model.errors.add attribute, options[:message] || message
           end
           return false
@@ -38,14 +37,13 @@ module Recaptcha
           flash[:recaptcha_error] = nil
           return true
         end
-      rescue Timeout::Error 
+      rescue Timeout::Error
         flash[:recaptcha_error] = "recaptcha-not-reachable"
         if model
-          model.valid?
-					message = "Oops, we failed to validate your word verification response. Please try again."
-					message = I18n.translate(:'recaptcha.errors.recaptcha_unreachable', :default => message) if defined?(I18n)
+          message = "Oops, we failed to validate your word verification response. Please try again."
+          message = I18n.translate(:'recaptcha.errors.recaptcha_unreachable', :default => message) if defined?(I18n)
           model.errors.add attribute, options[:message] || message
-				end
+        end
         return false
       rescue Exception => e
         raise RecaptchaError, e.message, e.backtrace
