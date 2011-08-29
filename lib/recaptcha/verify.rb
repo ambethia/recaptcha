@@ -1,3 +1,4 @@
+require "uri"
 module Recaptcha
   module Verify
     # Your private API can be specified in the +options+ hash or preferably
@@ -16,13 +17,20 @@ module Recaptcha
 
       begin
         recaptcha = nil
+        if(Recaptcha.configuration.proxy)
+          proxy_server = URI.parse(Recaptcha.configuration.proxy)
+          http = Net::HTTP::Proxy(proxy_server.host, proxy_server.port)
+        else
+          http = Net::HTTP
+        end
+
         Timeout::timeout(options[:timeout] || 3) do
-          recaptcha = Net::HTTP.post_form URI.parse(Recaptcha.configuration.verify_url), {
+          recaptcha = http.post_form(URI.parse(Recaptcha.configuration.verify_url), {
             "privatekey" => private_key,
             "remoteip"   => request.remote_ip,
             "challenge"  => params[:recaptcha_challenge_field],
             "response"   => params[:recaptcha_response_field]
-          }
+          })
         end
         answer, error = recaptcha.body.split.map { |s| s.chomp }
         unless answer == 'true'

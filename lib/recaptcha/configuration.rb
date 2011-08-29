@@ -33,7 +33,8 @@ module Recaptcha
                   :verify_url,
                   :skip_verify_env,
                   :private_key,
-                  :public_key
+                  :public_key,
+                  :proxy
 
     def initialize #:nodoc:
       @nonssl_api_server_url = RECAPTCHA_API_SERVER_URL
