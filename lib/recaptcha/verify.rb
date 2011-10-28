@@ -19,7 +19,7 @@ module Recaptcha
         recaptcha = nil
         if(Recaptcha.configuration.proxy)
           proxy_server = URI.parse(Recaptcha.configuration.proxy)
-          http = Net::HTTP::Proxy(proxy_server.host, proxy_server.port)
+          http = Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
         else
           http = Net::HTTP
         end
