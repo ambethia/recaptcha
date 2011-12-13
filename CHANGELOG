@@ -1,3 +1,8 @@
+== 0.3.3 / 2011-12-13
+
+* Rails 3
+* Remove jeweler
+
 == 0.2.2 / 2009-09-14
 
 * Add a timeout to the validator
