@@ -136,12 +136,19 @@ Some of the options available:
   end
 
 == I18n support
-reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem 
-to translate the default error message if I18n is available. To customize the messages to your locale, 
+reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem
+to translate the default error message if I18n is available. To customize the messages to your locale,
 add these keys to your I18n backend:
 
 <tt>recaptcha.errors.verification_failed</tt>:: error message displayed if the captcha words didn't match
 <tt>recaptcha.errors.recaptcha_unavailable</tt>:: displayed if a timout error occured while attempting to verify the captcha
+
+Also you can translate API response errors to human friendly by adding translations to the locale (+config/locales/en.yml+):
+
+  en:
+    recaptcha:
+      errors:
+        incorrect-captcha-sol: 'Fail'
 
 == TODO
 * Remove Rails/ActionController dependencies
