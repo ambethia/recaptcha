@@ -42,7 +42,7 @@ module Recaptcha
           end
           return false
         else
-          flash[:recaptcha_error] = nil
+          flash.delete(:recaptcha_error)
           return true
         end
       rescue Timeout::Error
