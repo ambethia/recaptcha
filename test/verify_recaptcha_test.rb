@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'rubygems'
+require 'active_support'
 require 'active_support/core_ext/string'
 require 'mocha'
 require 'i18n'
@@ -70,7 +71,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
   def test_timeout
     expect_http_post(Timeout::Error, :exception => true)
     assert !@controller.verify_recaptcha()
-    assert_equal "recaptcha-not-reachable", @controller.flash[:recaptcha_error]
+    assert_equal "Recaptcha unreachable.", @controller.flash[:recaptcha_error]
   end
 
   def test_message_should_use_i18n
@@ -79,8 +80,12 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     verification_failed_default      = "Word verification response is incorrect, please try again."
     recaptcha_unreachable_translated = "Netzwerkfehler, bitte versuchen Sie es später erneut."
     recaptcha_unreachable_default    = "Oops, we failed to validate your word verification response. Please try again."
-    I18n.expects(:translate).with(:'recaptcha.errors.verification_failed', :default => verification_failed_default).returns(verification_failed_translated)
-    I18n.expects(:translate).with(:'recaptcha.errors.recaptcha_unreachable', :default => recaptcha_unreachable_default).returns(recaptcha_unreachable_translated)
+
+    I18n.expects(:translate).with('recaptcha.errors.bad-news', {:default => 'bad-news'})
+    I18n.expects(:translate).with('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
+
+    I18n.expects(:translate).with('recaptcha.errors.verification_failed', :default => verification_failed_default).returns(verification_failed_translated)
+    I18n.expects(:translate).with('recaptcha.errors.recaptcha_unreachable', :default => recaptcha_unreachable_default).returns(recaptcha_unreachable_translated)
 
     errors = mock
     errors.expects(:add).with(:base, verification_failed_translated)
@@ -93,6 +98,22 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     expect_http_post(Timeout::Error, :exception => true)
     @controller.verify_recaptcha(:model => model)
 
+  end
+
+  def test_it_translates_api_response_with_i18n
+    api_error_translated = "Bad news, body :("
+    expect_http_post(response_with_body("false\nbad-news"))
+    I18n.expects(:translate).with('recaptcha.errors.bad-news', :default => 'bad-news').returns(api_error_translated)
+
+    assert !@controller.verify_recaptcha
+    assert_equal api_error_translated, @controller.flash[:recaptcha_error]
+  end
+
+  def test_it_fallback_to_api_response_if_i18n_translation_is_missing
+    expect_http_post(response_with_body("false\nbad-news"))
+
+    assert !@controller.verify_recaptcha
+    assert_equal 'bad-news', @controller.flash[:recaptcha_error]
   end
 
   private
