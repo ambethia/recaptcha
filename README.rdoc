@@ -23,25 +23,12 @@ Hoptoad}[http://robots.thoughtbot.com/post/344833329/mygem-configure-block].
 
 == Rails Installation
 
-reCAPTCHA for Rails, add this to your Gemfile:
+reCAPTCHA for Rails > 3.0, add this to your Gemfile:
 
   gem "recaptcha", :require => "recaptcha/rails"
 
-Or, it can be installed as a gem:
-
-  config.gem "recaptcha", :lib => "recaptcha/rails"
-
-Or, as a standard rails plugin:
-
-  script/plugin install git://github.com/ambethia/recaptcha.git
-
-== Merb Installation
-
-reCAPTCHA can also be used in a Merb application when installed as a gem:
-
-  dependency "alm-recaptcha", ">=0.2.2.1", :require_as => "recaptcha/merb"
-
-Initial Merb compatability funded by ALM Labs.
+Rails apps below 3.0 are no longer supported, but you can install an older
+release and view it's README.
 
 == Setting up your API Keys
 
@@ -70,11 +57,12 @@ If you want to temporarily overwrite the configuration you set with `Recaptcha.c
     # Do stuff with the overwritten public_key.
   end
 
-=== Shell environment
+=== Heroku & Shell environment
 
 Or, you can keep your keys out of your code base by exporting the following
 environment variables. You might do this in the .profile/rc, or equivalent for
-the user running your application:
+the user running your application. This would also be the preffered method
+in an Heroku deployment.
 
   export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
   export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
