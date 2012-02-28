@@ -1,6 +1,6 @@
 module Recaptcha
   # This class enables detailed configuration of the recaptcha services.
-  # 
+  #
   # By calling
   #
   #   Recaptcha.configuration # => instance of Recaptcha::Configuration
@@ -13,7 +13,7 @@ module Recaptcha
   # you are able to perform configuration updates.
   #
   # Your are able to customize all attributes listed below. All values have
-  # sensitive default and will very likely not need to be changed. 
+  # sensitive default and will very likely not need to be changed.
   #
   # Please note that the public and private key for the reCAPTCHA API Access
   # have no useful default value. The keys may be set via the Shell enviroment
