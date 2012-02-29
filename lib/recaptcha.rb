@@ -7,6 +7,7 @@ module Recaptcha
   RECAPTCHA_API_SECURE_SERVER_URL = 'https://www.google.com/recaptcha/api'
   RECAPTCHA_VERIFY_URL            = 'http://www.google.com/recaptcha/api/verify'
 
+  HANDLE_TIMEOUTS_GRACEFULLY      = true
   SKIP_VERIFY_ENV = ['test', 'cucumber']
 
   # Gives access to the current Configuration.

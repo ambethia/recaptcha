@@ -51,18 +51,22 @@ module Recaptcha
           return true
         end
       rescue Timeout::Error
-        flash[:recaptcha_error] = if defined?(I18n)
-          I18n.translate('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
-        else
-          'Recaptcha unreachable.'
-        end
+        if Recaptcha.configuration.handle_timeouts_gracefully
+          flash[:recaptcha_error] = if defined?(I18n)
+            I18n.translate('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
+          else
+            'Recaptcha unreachable.'
+          end
 
-        if model
-          message = "Oops, we failed to validate your word verification response. Please try again."
-          message = I18n.translate('recaptcha.errors.recaptcha_unreachable', :default => message) if defined?(I18n)
-          model.errors.add attribute, options[:message] || message
+          if model
+            message = "Oops, we failed to validate your word verification response. Please try again."
+            message = I18n.translate('recaptcha.errors.recaptcha_unreachable', :default => message) if defined?(I18n)
+            model.errors.add attribute, options[:message] || message
+          end
+          return false
+        else
+          raise RecaptchaError, "Recaptcha unreachable."
         end
-        return false
       rescue Exception => e
         raise RecaptchaError, e.message, e.backtrace
       end

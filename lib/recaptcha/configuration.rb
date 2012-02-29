@@ -34,13 +34,15 @@ module Recaptcha
                   :skip_verify_env,
                   :private_key,
                   :public_key,
-                  :proxy
+                  :proxy,
+                  :handle_timeouts_gracefully
 
     def initialize #:nodoc:
-      @nonssl_api_server_url = RECAPTCHA_API_SERVER_URL
-      @ssl_api_server_url    = RECAPTCHA_API_SECURE_SERVER_URL
-      @verify_url            = RECAPTCHA_VERIFY_URL
-      @skip_verify_env       = SKIP_VERIFY_ENV
+      @nonssl_api_server_url      = RECAPTCHA_API_SERVER_URL
+      @ssl_api_server_url         = RECAPTCHA_API_SECURE_SERVER_URL
+      @verify_url                 = RECAPTCHA_VERIFY_URL
+      @skip_verify_env            = SKIP_VERIFY_ENV
+      @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
 
       @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
       @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
