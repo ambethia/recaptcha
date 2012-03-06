@@ -74,6 +74,16 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     assert_equal "Recaptcha unreachable.", @controller.flash[:recaptcha_error]
   end
 
+  def test_timeout_when_handle_timeouts_gracefully_disabled
+    Recaptcha.with_configuration(:handle_timeouts_gracefully => false) do
+      expect_http_post(Timeout::Error, :exception => true)
+      assert_raise Recaptcha::RecaptchaError, "Recaptcha unreachable." do
+        assert @controller.verify_recaptcha()
+      end
+      assert_nil @controller.flash[:recaptcha_error]
+    end
+  end
+
   def test_message_should_use_i18n
     I18n.locale = :de
     verification_failed_translated   = "Sicherheitscode konnte nicht verifiziert werden."
