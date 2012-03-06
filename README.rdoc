@@ -53,7 +53,7 @@ deployment environment.
 
 If you want to temporarily overwrite the configuration you set with `Recaptcha.configure` (when testing, for example), you can use a `Recaptcha#with_configuration` block:
 
-  Recaptcha.configure(:public_key => '12345') do
+  Recaptcha.with_configuration(:public_key => '12345') do
     # Do stuff with the overwritten public_key.
   end
 
