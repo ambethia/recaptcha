@@ -1,5 +1,5 @@
 # coding: utf-8
-
+#=begin
 require 'test/unit'
 require 'rubygems'
 require 'active_support'
@@ -7,6 +7,8 @@ require 'active_support/core_ext/string'
 require 'mocha'
 require 'i18n'
 require 'net/http'
+require 'webmock/test_unit'
+
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/recaptcha'
 
 class RecaptchaVerifyTest < Test::Unit::TestCase
@@ -24,7 +26,8 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
 
     @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
   end
-
+  
+  
   def test_should_raise_exception_without_private_key
     assert_raise Recaptcha::RecaptchaError do
       Recaptcha.configuration.private_key = nil
@@ -49,7 +52,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
 
   def test_errors_should_be_added_to_model
     expect_http_post(response_with_body("false\nbad-news"))
-
+    
     errors = mock
     errors.expects(:add).with(:base, "Word verification response is incorrect, please try again.")
     model = mock(:errors => errors)
@@ -138,14 +141,14 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
   end
 
   def expect_http_post(response, options = {})
-    unless options[:exception]
-      Net::HTTP.expects(:post_form).with(@expected_uri, @expected_post_data).returns(response)
+    unless options[:exception] 
+      stub_request(:post, @expected_uri).with(@expected_post_data).to_return(:body => response)
     else
-      Net::HTTP.expects(:post_form).raises response
-    end
+      stub_request(:post, @expected_uri).to_raise(response) 
+    end 
   end
 
   def response_with_body(body)
-    stub(:body => body)
+    body
   end
 end

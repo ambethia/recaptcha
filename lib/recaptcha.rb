@@ -1,6 +1,7 @@
 require 'recaptcha/configuration'
 require 'recaptcha/client_helper'
 require 'recaptcha/verify'
+require 'recaptcha/captcha_verify'
 
 module Recaptcha
   RECAPTCHA_API_SERVER_URL        = 'http://www.google.com/recaptcha/api'
@@ -41,6 +42,8 @@ module Recaptcha
   end
 
   class RecaptchaError < StandardError
+  end
+  class RecaptchaVerifyError < StandardError 
   end
 end
 
