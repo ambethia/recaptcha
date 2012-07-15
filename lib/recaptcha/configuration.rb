@@ -35,7 +35,8 @@ module Recaptcha
                   :private_key,
                   :public_key,
                   :proxy,
-                  :handle_timeouts_gracefully
+                  :handle_timeouts_gracefully,
+                  :use_ssl_by_default
 
     def initialize #:nodoc:
       @nonssl_api_server_url      = RECAPTCHA_API_SERVER_URL
@@ -43,12 +44,14 @@ module Recaptcha
       @verify_url                 = RECAPTCHA_VERIFY_URL
       @skip_verify_env            = SKIP_VERIFY_ENV
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
+      @use_ssl_by_default         = USE_SSL_BY_DEFAULT
 
       @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
       @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
     end
 
-    def api_server_url(ssl = false) #:nodoc:
+    def api_server_url(ssl = nil) #:nodoc:
+      ssl = use_ssl_by_default if ssl.nil?
       ssl ? ssl_api_server_url : nonssl_api_server_url
     end
   end
