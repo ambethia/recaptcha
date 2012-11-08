@@ -9,7 +9,7 @@ module Recaptcha
       end
 
       env = options[:env] || ENV['RAILS_ENV']
-      return true if Recaptcha.configuration.skip_verify_env.include? env
+      return params[:recaptcha_response_field] != "fail" if Recaptcha.configuration.skip_verify_env.include? env
       model = options[:model]
       attribute = options[:attribute] || :base
       private_key = options[:private_key] || Recaptcha.configuration.private_key
