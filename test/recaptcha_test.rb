@@ -19,7 +19,7 @@ class RecaptchaClientHelperTest < Test::Unit::TestCase
 
   def test_recaptcha_tags
     # Might as well match something...
-    assert_match /http:\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags
+    assert_match /"\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags
   end
 
   def test_recaptcha_tags_with_ssl

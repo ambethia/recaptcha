@@ -90,7 +90,7 @@ And, add +verify_recaptcha+ logic to each form action that you've protected.
 
 Some of the options available:
 
-<tt>:ssl</tt>::         Uses secure http for captcha widget (default +false+)
+<tt>:ssl</tt>::         Uses https for captcha widget, even if hosted on http (default +false+)
 <tt>:noscript</tt>::    Include <noscript> content (default +true+)
 <tt>:display</tt>::     Takes a hash containing the +theme+ and +tabindex+ options per the API. (default +nil+), options: 'red', 'white', 'blackglass', 'clean', 'custom'
 <tt>:ajax</tt>::        Render the dynamic AJAX captcha per the API. (default +false+)
