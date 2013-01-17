@@ -12,7 +12,7 @@ module Recaptcha
       html  = ""
       if options[:display]
         html << %{<script type="text/javascript">\n}
-        html << %{  var RecaptchaOptions = #{options[:display].to_json};\n}
+        html << %{  var RecaptchaOptions = #{hash_to_json(options[:display])};\n}
         html << %{</script>\n}
       end
       if options[:ajax]
@@ -49,5 +49,19 @@ module Recaptcha
       end
       return (html.respond_to?(:html_safe) && html.html_safe) || html
     end # recaptcha_tags
+
+    private
+
+    def hash_to_json(hash)
+      result = "{"
+      result << hash.map do |k, v|
+        if ! v.is_a?(String) || k.to_s == "callback"
+          "\"#{k}\": #{v}"
+        else
+          "\"#{k}\": \"#{v}\""
+        end
+      end.join(", ")
+      result << "}"
+    end
   end # ClientHelper
 end # Recaptcha
