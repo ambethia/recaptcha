@@ -3,7 +3,7 @@ require 'recaptcha/client_helper'
 require 'recaptcha/verify'
 
 module Recaptcha
-  RECAPTCHA_API_SERVER_URL        = 'http://www.google.com/recaptcha/api'
+  RECAPTCHA_API_SERVER_URL        = '//www.google.com/recaptcha/api'
   RECAPTCHA_API_SECURE_SERVER_URL = 'https://www.google.com/recaptcha/api'
   RECAPTCHA_VERIFY_URL            = 'http://www.google.com/recaptcha/api/verify'
 
