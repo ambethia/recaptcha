@@ -1,0 +1,37 @@
+Example
+---------------
+
+For example create Post scaffold
+
+`
+rails g scaffold title body:text
+`
+
+Then add `before_filter` to the PostsControllers:
+
+
+    class PostsController < ApplicationController
+      before_filter :captcha_verify, :only => [:create]
+    end
+
+This filter only for `create action`.
+
+In the `PostsController` need make `@post` in the filter
+
+    before_filter do 
+      @post = unless params[:id].nil?
+              Post.find(params[:id])
+            else 
+              Post.new
+            end
+    end
+
+Remove `@post` from `edit`, `new`, `update` actions.
+
+Then add the exception handling when the data is incorrect.
+
+    rescue_from Recaptcha::RecaptchaVerifyError do |exception|
+      render :action => :new 
+    end
+
+Now when you enter incorrect recaptcha will again be shown the form for create `Post`.
