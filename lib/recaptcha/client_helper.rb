@@ -3,13 +3,28 @@ module Recaptcha
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
+      html  = ""
+      env = options[:env] || ENV['RAILS_ENV']
+      if Recaptcha.configuration.skip_verify_env.include? env
+        html = <<-EOS
+          <div id="recaptcha_widget_div">
+            <div id="recaptcha_area" class="recaptcha_test">
+              <p>Recaptcha running on test mode.</p>
+              <p>Type "fail" on the field below to fail.</p>
+              <p>Type any other value to pass.</p>
+              <input name="recaptcha_response_field" id="recaptcha_response_field" type="text" autocorrect="off" autocapitalize="off" autocomplete="off">
+            </div>
+          </div>
+        EOS
+        return (html.respond_to?(:html_safe) && html.html_safe) || html
+      end
+
       # Default options
       key   = options[:public_key] ||= Recaptcha.configuration.public_key
       raise RecaptchaError, "No public key specified." unless key
       error = options[:error] ||= ((defined? flash) ? flash[:recaptcha_error] : "")
       uri   = Recaptcha.configuration.api_server_url(options[:ssl])
       lang  = options[:display] && options[:display][:lang] ? options[:display][:lang].to_sym : ""
-      html  = ""
       if options[:display]
         html << %{<script type="text/javascript">\n}
         html << %{  var RecaptchaOptions = #{hash_to_json(options[:display])};\n}
