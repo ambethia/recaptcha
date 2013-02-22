@@ -1,10 +1,9 @@
 = reCAPTCHA
 
 Author::    Jason L Perry (http://ambethia.com)
-Copyright:: Copyright (c) 2007 Jason L Perry
+Copyright:: Copyright (c) 2007-2013 Jason L Perry
 License::   {MIT}[http://creativecommons.org/licenses/MIT/]
-Info::      http://ambethia.com/recaptcha
-Git::       http://github.com/ambethia/recaptcha/tree/master
+Info::      http://github.com/ambethia/recaptcha
 Bugs::      http://github.com/ambethia/recaptcha/issues
 
 This plugin adds helpers for the {reCAPTCHA API}[http://recaptcha.net]. In your
@@ -14,12 +13,6 @@ and you can validate in your controllers with +verify_recaptcha+.
 Beforehand you need to configure Recaptcha with your custom private and public
 key. You may find detailed examples below. Exceptions will be raised if you
 call these methods and the keys can't be found.
-
-== About this fork
-
-This fork tries to introduce a more convenient way to configure recaptcha's
-settings. The API will be inspired by {Thoughtbot's
-Hoptoad}[http://robots.thoughtbot.com/post/344833329/mygem-configure-block].
 
 == Rails Installation
 
