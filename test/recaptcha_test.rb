@@ -27,9 +27,9 @@ class RecaptchaClientHelperTest < Test::Unit::TestCase
     assert_match /https:\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags
   end
 
-  def test_ssl_by_default_without_ssl
-    Recaptcha.configuration.use_ssl_by_default = true
-    assert_match /http:\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags(:ssl => false)
+  def test_relative_protocol_by_default_without_ssl
+    Recaptcha.configuration.use_ssl_by_default = false
+    assert_match /\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags(:ssl => false)
   end
 
   def test_recaptcha_tags_with_ssl
