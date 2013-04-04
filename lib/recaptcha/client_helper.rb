@@ -55,7 +55,9 @@ module Recaptcha
     def hash_to_json(hash)
       result = "{"
       result << hash.map do |k, v|
-        if ! v.is_a?(String) || k.to_s == "callback"
+        if v.is_a?(Hash)
+          "\"#{k}\": #{hash_to_json(v)}"
+        elsif ! v.is_a?(String) || k.to_s == "callback"
           "\"#{k}\": #{v}"
         else
           "\"#{k}\": \"#{v}\""
