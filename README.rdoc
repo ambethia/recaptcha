@@ -75,7 +75,15 @@ reCAPTCHA setups.
 
 == To use 'recaptcha'
 
-Add +recaptcha_tags+ to each form you want to protect.
+Add +recaptcha_tags+ to each form you want to protect. Place it where you want the recaptcha widget to appear.
+
+Example:
+
+  <%= form_for @foo do |f| %>
+    # ... additional lines truncated for brevity ...
+    <%= recaptcha_tags %>
+    # ... additional lines truncated for brevity ...
+  <% end %>
 
 And, add +verify_recaptcha+ logic to each form action that you've protected.
 
