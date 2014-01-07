@@ -122,7 +122,7 @@ to translate the default error message if I18n is available. To customize the me
 add these keys to your I18n backend:
 
 <tt>recaptcha.errors.verification_failed</tt>:: error message displayed if the captcha words didn't match
-<tt>recaptcha.errors.recaptcha_unavailable</tt>:: displayed if a timout error occured while attempting to verify the captcha
+<tt>recaptcha.errors.recaptcha_unreachable</tt>:: displayed if a timeout error occured while attempting to verify the captcha
 
 Also you can translate API response errors to human friendly by adding translations to the locale (+config/locales/en.yml+):
 
