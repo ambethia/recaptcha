@@ -25,6 +25,20 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
     @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
   end
 
+  def test_should_raise_exception_when_calling_bang_method
+    @controller.expects(:verify_recaptcha).returns(false)
+
+    assert_raise Recaptcha::VerifyError do
+      @controller.verify_recaptcha!
+    end
+  end
+
+  def test_should_return_whatever_verify_method_returns_when_using_bang_method
+    @controller.expects(:verify_recaptcha).returns(:foo)
+
+    assert_equal :foo, @controller.verify_recaptcha!
+  end
+
   def test_should_raise_exception_without_private_key
     assert_raise Recaptcha::RecaptchaError do
       Recaptcha.configuration.private_key = nil

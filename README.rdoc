@@ -8,7 +8,8 @@ Bugs::      http://github.com/ambethia/recaptcha/issues
 
 This plugin adds helpers for the {reCAPTCHA API}[http://recaptcha.net]. In your
 views you can use the +recaptcha_tags+ method to embed the needed javascript,
-and you can validate in your controllers with +verify_recaptcha+.
+and you can validate in your controllers with +verify_recaptcha+ or +verify_recaptcha!+,
+which throws an error on failiure.
 
 Beforehand you need to configure Recaptcha with your custom private and public
 key. You may find detailed examples below. Exceptions will be raised if you

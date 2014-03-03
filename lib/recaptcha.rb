@@ -43,6 +43,10 @@ module Recaptcha
 
   class RecaptchaError < StandardError
   end
+
+  class VerifyError < RecaptchaError
+  end
+
 end
 
 if defined?(Rails)
