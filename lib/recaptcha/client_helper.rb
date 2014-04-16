@@ -16,11 +16,18 @@ module Recaptcha
         html << %{</script>\n}
       end
       if options[:ajax]
+        if options[:display] && options[:display][:custom_theme_widget]
+          widget = options[:display][:custom_theme_widget]
+        else
+          widget = "dynamic_recaptcha"
+          html << <<-EOS
+           <div id="#{widget}"></div>
+          EOS
+        end
         html << <<-EOS
-          <div id="dynamic_recaptcha"></div>
           <script type="text/javascript">
             var rc_script_tag = document.createElement('script'),
-                rc_init_func = function(){Recaptcha.create("#{key}", document.getElementById("dynamic_recaptcha")#{',RecaptchaOptions' if options[:display]});}
+                rc_init_func = function(){Recaptcha.create("#{key}", document.getElementById("#{widget}")#{',RecaptchaOptions' if options[:display]});}
             rc_script_tag.src = "#{uri}/js/recaptcha_ajax.js";
             rc_script_tag.type = 'text/javascript';
             rc_script_tag.onload = function(){rc_init_func.call();};
