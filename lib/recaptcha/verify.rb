@@ -71,5 +71,9 @@ module Recaptcha
         raise RecaptchaError, e.message, e.backtrace
       end
     end # verify_recaptcha
+
+    def verify_recaptcha!(options = {})
+      verify_recaptcha(options) or raise VerifyError
+    end #verify_recaptcha!
   end # Verify
 end # Recaptcha
