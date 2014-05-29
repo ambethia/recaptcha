@@ -6,7 +6,7 @@ License::   {MIT}[http://creativecommons.org/licenses/MIT/]
 Info::      http://github.com/ambethia/recaptcha
 Bugs::      http://github.com/ambethia/recaptcha/issues
 
-This plugin adds helpers for the {reCAPTCHA API}[http://recaptcha.net]. In your
+This plugin adds helpers for the {reCAPTCHA API}[https://www.google.com/recaptcha]. In your
 views you can use the +recaptcha_tags+ method to embed the needed javascript,
 and you can validate in your controllers with +verify_recaptcha+ or +verify_recaptcha!+,
 which throws an error on failiure.
@@ -27,7 +27,7 @@ release and view it's README.
 == Setting up your API Keys
 
 There are multiple ways to setup your reCAPTCHA API key once you
-{obtain}[http://recaptcha.net/whyrecaptcha.html] a pair.
+{obtain}[https://www.google.com/recaptcha/admin] a pair.
 
 === Recaptcha.configure
 
