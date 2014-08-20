@@ -13,7 +13,7 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
   def setup
     Recaptcha.configuration.private_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     @controller = TestController.new
-    @controller.request = stub(:remote_ip => "1.1.1.1")
+    @controller.request = stub(:remote_ip => "1.1.1.1", format: :html)
     @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
 
     @expected_post_data = {}
@@ -138,6 +138,13 @@ class RecaptchaVerifyTest < Test::Unit::TestCase
 
     assert !@controller.verify_recaptcha
     assert_equal 'bad-news', @controller.flash[:recaptcha_error]
+  end
+
+  def test_not_flashing_error_if_request_format_not_in_html
+    @controller.request = stub(:remote_ip => "1.1.1.1", format: :json)
+    expect_http_post(response_with_body("false\nbad-news"))
+    assert !@controller.verify_recaptcha
+    assert_nil @controller.flash[:recaptcha_error]
   end
 
   private
