@@ -38,7 +38,7 @@ module Recaptcha
             I18n.translate("recaptcha.errors.#{error}", {:default => error})
           else
             error
-          end
+          end if request_in_html_format?
 
           if model
             message = "Word verification response is incorrect, please try again."
@@ -72,6 +72,9 @@ module Recaptcha
       end
     end # verify_recaptcha
 
+    def request_in_html_format?
+      request.format == :html
+    end
     def verify_recaptcha!(options = {})
       verify_recaptcha(options) or raise VerifyError
     end #verify_recaptcha!
