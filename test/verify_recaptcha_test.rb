@@ -14,13 +14,21 @@ class RecaptchaVerifyTest < Minitest::Test
     Recaptcha.configuration.private_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     @controller = TestController.new
     @controller.request = stub(:remote_ip => "1.1.1.1", format: :html)
-    @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
 
     @expected_post_data = {}
-    @expected_post_data["privatekey"] = Recaptcha.configuration.private_key
     @expected_post_data["remoteip"]   = @controller.request.remote_ip
-    @expected_post_data["challenge"]  = "challenge"
     @expected_post_data["response"]   = "response"
+
+    if Recaptcha.configuration.v1?
+      @controller.params = {:recaptcha_challenge_field => "challenge", :recaptcha_response_field => "response"}
+      @expected_post_data["privatekey"] = Recaptcha.configuration.private_key
+      @expected_post_data["challenge"]  = "challenge"
+    end
+
+    if Recaptcha.configuration.v2?
+      @controller.params = {:recaptcha_response_field => "response"}
+      @expected_post_data["secret"] = Recaptcha.configuration.private_key
+    end
 
     @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
   end
