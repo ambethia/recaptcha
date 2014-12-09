@@ -11,30 +11,36 @@ class RecaptchaClientHelperTest < Minitest::Test
 
   def setup
     @session = {}
+    @nonssl_api_server_url = Regexp.new(Regexp.quote(Recaptcha.configuration.nonssl_api_server_url) + '(.*)')
+    @ssl_api_server_url = Regexp.new(Regexp.quote(Recaptcha.configuration.ssl_api_server_url) + '(.*)')
     Recaptcha.configure do |config|
       config.public_key = '0000000000000000000000000000000000000000'
       config.private_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     end
   end
 
+  def test_recaptcha_api_version_default
+    assert_equal(Recaptcha.configuration.api_version, Recaptcha::RECAPTCHA_API_VERSION)
+  end
+
   def test_recaptcha_tags
     # Might as well match something...
     skip
-    assert_match /"\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags
+    assert_match @nonssl_api_server_url, recaptcha_tags
   end
 
   def test_ssl_by_default
     Recaptcha.configuration.use_ssl_by_default = true
-    assert_match /https:\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags
+    assert_match @ssl_api_server_url, recaptcha_tags
   end
 
   def test_relative_protocol_by_default_without_ssl
     Recaptcha.configuration.use_ssl_by_default = false
-    assert_match /\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags(:ssl => false)
+    assert_match @nonssl_api_server_url, recaptcha_tags(:ssl => false)
   end
 
   def test_recaptcha_tags_with_ssl
-    assert_match /https:\/\/www.google.com\/recaptcha\/api\/challenge/, recaptcha_tags(:ssl => true)
+    assert_match @ssl_api_server_url, recaptcha_tags(:ssl => true)
   end
 
   def test_recaptcha_tags_without_noscript
