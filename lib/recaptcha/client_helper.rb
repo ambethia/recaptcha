@@ -3,6 +3,11 @@ module Recaptcha
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
+      return v1_tags(options) if Recaptcha.configuration.v1?
+      return v2_tags(options) if Recaptcha.configuration.v2?
+    end # recaptcha_tags
+
+    def v1_tags(options)
       # Default options
       key   = options[:public_key] ||= Recaptcha.configuration.public_key
       raise RecaptchaError, "No public key specified." unless key
@@ -55,7 +60,45 @@ module Recaptcha
         end
       end
       return (html.respond_to?(:html_safe) && html.html_safe) || html
-    end # recaptcha_tags
+    end
+
+    def v2_tags(options)
+      key   = options[:public_key] ||= Recaptcha.configuration.public_key
+      raise RecaptchaError, "No public key specified." unless key
+      error = options[:error] ||= ((defined? flash) ? flash[:recaptcha_error] : "")
+      uri   = Recaptcha.configuration.api_server_url(options[:ssl])
+      
+      v2_options = options.slice(:theme, :type, :callback).map {|k,v| %{data-#{k}="#{v}"} }.join(" ")
+
+      html = ""
+      html << %{<script src="#{uri}" async defer></script>\n}
+      html << %{<div class="g-recaptcha" data-sitekey="#{key}" #{v2_options}></div>\n}
+    
+      unless options[:noscript] == false
+        html << %{<noscript>}
+        html << %{<div style="width: 302px; height: 352px;">}
+        html << %{  <div style="width: 302px; height: 352px; position: relative;">}
+        html << %{    <div style="width: 302px; height: 352px; position: absolute;">}
+        html << %{      <iframe src="https://www.google.com/recaptcha/api/fallback?k=your_site_key"}
+        html << %{                frameborder="0" scrolling="no"}
+        html << %{                style="width: 302px; height:352px; border-style: none;">}
+        html << %{        </iframe>}
+        html << %{      </div>}
+        html << %{      <div style="width: 250px; height: 80px; position: absolute; border-style: none; }
+        html << %{             bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">}
+        html << %{        <textarea id="g-recaptcha-response" name="g-recaptcha-response" }
+        html << %{                  class="g-recaptcha-response" }
+        html << %{                  style="width: 250px; height: 80px; border: 1px solid #c1c1c1; }
+        html << %{                  margin: 0px; padding: 0px; resize: none;" value=""> }
+        html << %{        </textarea>}
+        html << %{      </div>}
+        html << %{    </div>}
+        html << %{  </div>}
+        html << %{</noscript>}
+      end
+
+      return (html.respond_to?(:html_safe) && html.html_safe) || html
+    end
 
     private
 

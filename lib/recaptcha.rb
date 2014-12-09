@@ -3,11 +3,23 @@ require 'recaptcha/client_helper'
 require 'recaptcha/verify'
 
 module Recaptcha
-  RECAPTCHA_API_SERVER_URL        = '//www.google.com/recaptcha/api'
-  RECAPTCHA_API_SECURE_SERVER_URL = 'https://www.google.com/recaptcha/api'
-  RECAPTCHA_VERIFY_URL            = 'http://www.google.com/recaptcha/api/verify'
-  USE_SSL_BY_DEFAULT              = false
+  CONFIG =
+    {
+      'v1' => {
+        'server_url' => '//www.google.com/recaptcha/api',
+        'secure_server_url' => 'https://www.google.com/recaptcha/api',
+        'verify_url' => 'http://www.google.com/recaptcha/api/verify'
+      },
 
+      'v2' => {
+        'server_url' => '//www.google.com/recaptcha/api.js',
+        'secure_server_url' => 'https://www.google.com/recaptcha/api.js',
+        'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
+      }
+    }
+
+  RECAPTCHA_API_VERSION           = 'v2' 
+  USE_SSL_BY_DEFAULT              = false
   HANDLE_TIMEOUTS_GRACEFULLY      = true
   SKIP_VERIFY_ENV = ['test', 'cucumber']
 

@@ -22,16 +22,41 @@ module Recaptcha
           http = Net::HTTP
         end
 
-        Timeout::timeout(options[:timeout] || 3) do
-          recaptcha = http.post_form(URI.parse(Recaptcha.configuration.verify_url), {
+        if Recaptcha.configuration.v1?
+          verify_hash = {
             "privatekey" => private_key,
             "remoteip"   => request.remote_ip,
             "challenge"  => params[:recaptcha_challenge_field],
             "response"   => params[:recaptcha_response_field]
-          })
+          }
+          Timeout::timeout(options[:timeout] || 3) do
+            recaptcha = http.post_form(URI.parse(Recaptcha.configuration.verify_url), verify_hash)
+          end
+          answer, error = recaptcha.body.split.map { |s| s.chomp }
         end
-        answer, error = recaptcha.body.split.map { |s| s.chomp }
-        unless answer == 'true'
+
+        if Recaptcha.configuration.v2?
+          verify_hash = {
+            "secret"    => private_key,
+            "remoteip"  => request.remote_ip,
+            "response"  => params['g-recaptcha-response']
+          }
+
+          Timeout::timeout(options[:timeout] || 3) do
+            uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
+            http_instance = http.new(uri.host, uri.port)
+            if uri.port==443
+              http_instance.use_ssl = 
+              http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
+            end
+            request = Net::HTTP::Get.new(uri.request_uri)
+            recaptcha = http_instance.request(request)
+          end
+          answer, error = JSON.parse(recaptcha.body).values
+        end
+
+        unless answer.to_s == 'true'
+          error = 'verification_failed' if error && Recaptcha.configuration.v2?
           flash[:recaptcha_error] = if defined?(I18n)
             I18n.translate("recaptcha.errors.#{error}", {:default => error})
           else
