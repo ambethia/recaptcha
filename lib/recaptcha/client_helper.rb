@@ -75,11 +75,12 @@ module Recaptcha
       html << %{<div class="g-recaptcha" data-sitekey="#{key}" #{v2_options}></div>\n}
     
       unless options[:noscript] == false
+        fallback_uri = "#{uri.chomp('.js')}/fallback?k=#{key}"
         html << %{<noscript>}
         html << %{<div style="width: 302px; height: 352px;">}
         html << %{  <div style="width: 302px; height: 352px; position: relative;">}
         html << %{    <div style="width: 302px; height: 352px; position: absolute;">}
-        html << %{      <iframe src="https://www.google.com/recaptcha/api/fallback?k=your_site_key"}
+        html << %{      <iframe src="#{fallback_uri}"}
         html << %{                frameborder="0" scrolling="no"}
         html << %{                style="width: 302px; height:352px; border-style: none;">}
         html << %{        </iframe>}
