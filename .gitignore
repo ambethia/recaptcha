@@ -1,6 +1,8 @@
 rdoc
 pkg
-Gemfile.lock
 .ruby-gemset
 .ruby-version
 .bundle
+
+.gems
+.rbenv-gemsets
