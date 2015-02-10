@@ -67,6 +67,7 @@ module Recaptcha
       raise RecaptchaError, "No public key specified." unless key
       error = options[:error] ||= ((defined? flash) ? flash[:recaptcha_error] : "")
       uri   = Recaptcha.configuration.api_server_url(options[:ssl])
+      uri += "?hl=#{options[:hl]}" unless options[:hl].blank?
       
       v2_options = options.slice(:theme, :type, :callback).map {|k,v| %{data-#{k}="#{v}"} }.join(" ")
 
