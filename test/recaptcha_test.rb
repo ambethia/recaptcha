@@ -23,10 +23,19 @@ class RecaptchaClientHelperTest < Minitest::Test
     assert_equal(Recaptcha.configuration.api_version, Recaptcha::RECAPTCHA_API_VERSION)
   end
 
-  def test_recaptcha_tags
-    # Might as well match something...
-    skip
-    assert_match @nonssl_api_server_url, recaptcha_tags
+  def test_recaptcha_tags_v2
+    # match a v2 only tag
+    assert_match /data-sitekey/, recaptcha_tags
+    # refute a v1 only tag
+    refute_match /\/challenge\?/, recaptcha_tags
+  end
+
+  def test_recaptcah_tags_v1
+    Recaptcha.configuration.api_version = 'v1'
+    # match a v1 only tag
+    assert_match /\/challenge\?/, recaptcha_tags
+    # refute a v2 only tag
+    refute_match /data-sitekey/, recaptcha_tags
   end
 
   def test_ssl_by_default
@@ -60,6 +69,18 @@ class RecaptchaClientHelperTest < Minitest::Test
     end
 
     assert_equal('12345', key)
+  end
+
+  def test_v1_with_api_v1?
+    Recaptcha.configuration.api_version = 'v1'
+    assert Recaptcha.configuration.v1?
+    refute Recaptcha.configuration.v2?
+  end
+
+  def test_v2_with_api_v2?
+    Recaptcha.configuration.api_version = 'v2'
+    assert Recaptcha.configuration.v2?
+    refute Recaptcha.configuration.v1?
   end
 
   def test_reset_configuration_after_with_configuration_block
