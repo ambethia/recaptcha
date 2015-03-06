@@ -28,22 +28,33 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :api_version, 
+    attr_accessor :api_version,
                   :skip_verify_env,
                   :private_key,
                   :public_key,
                   :proxy,
                   :handle_timeouts_gracefully,
-                  :use_ssl_by_default
+                  :use_ssl_by_default,
+                  :v1_server_url,
+                  :v1_secure_server_url,
+                  :v1_verify_url,
+                  :v2_server_url,
+                  :v2_secure_server_url,
+                  :v2_verify_url
 
     def initialize #:nodoc:
       @api_version                = RECAPTCHA_API_VERSION
       @skip_verify_env            = SKIP_VERIFY_ENV
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
       @use_ssl_by_default         = USE_SSL_BY_DEFAULT
+      %w(v1 v2).each do |api_version|
+        %w(server secure_server verify).each do |url|
+          instance_variable_set "@#{api_version}_#{url}_url", CONFIG[api_version][url]
+        end
+      end
 
       @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
-      @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']      
+      @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
     end
 
     def api_server_url(ssl = nil) #:nodoc:
@@ -52,15 +63,15 @@ module Recaptcha
     end
 
     def nonssl_api_server_url
-      CONFIG[@api_version]['server_url']
+      instance_variable_get "@#{@api_version}_server_url"
     end
 
     def ssl_api_server_url
-      CONFIG[@api_version]['secure_server_url']
+      instance_variable_get "@#{@api_version}_secure_server_url"
     end
 
     def verify_url
-      CONFIG[@api_version]['verify_url']
+      instance_variable_get "@#{@api_version}_verify_url"
     end
 
     def v1?

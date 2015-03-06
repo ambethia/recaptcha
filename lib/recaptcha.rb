@@ -18,7 +18,7 @@ module Recaptcha
       }
     }
 
-  RECAPTCHA_API_VERSION           = 'v2' 
+  RECAPTCHA_API_VERSION           = 'v2'
   USE_SSL_BY_DEFAULT              = false
   HANDLE_TIMEOUTS_GRACEFULLY      = true
   SKIP_VERIFY_ENV = ['test', 'cucumber']
