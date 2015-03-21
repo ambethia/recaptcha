@@ -6,8 +6,8 @@ module Recaptcha
     def verify_recaptcha(options = {})
       options = {:model => options} unless options.is_a? Hash
 
-      env = options[:env] || ENV['RAILS_ENV']
-      return true if Recaptcha.configuration.skip_verify_env.include? env
+      env_options = options[:env] || ENV['RAILS_ENV']
+      return true if Recaptcha.configuration.skip_verify_env.include? env_options
       model = options[:model]
       attribute = options[:attribute] || :base
       private_key = options[:private_key] || Recaptcha.configuration.private_key
@@ -22,10 +22,11 @@ module Recaptcha
           http = Net::HTTP
         end
 
+        remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
         if Recaptcha.configuration.v1?
           verify_hash = {
             "privatekey" => private_key,
-            "remoteip"   => request.remote_ip,
+            "remoteip"   => remote_ip,
             "challenge"  => params[:recaptcha_challenge_field],
             "response"   => params[:recaptcha_response_field]
           }
@@ -38,7 +39,7 @@ module Recaptcha
         if Recaptcha.configuration.v2?
           verify_hash = {
             "secret"    => private_key,
-            "remoteip"  => request.remote_ip,
+            "remoteip"  => remote_ip,
             "response"  => params['g-recaptcha-response']
           }
 
@@ -46,7 +47,7 @@ module Recaptcha
             uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
             http_instance = http.new(uri.host, uri.port)
             if uri.port==443
-              http_instance.use_ssl = 
+              http_instance.use_ssl =
               http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
             end
             request = Net::HTTP::Get.new(uri.request_uri)
