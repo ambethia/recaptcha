@@ -22,6 +22,7 @@ module Recaptcha
           http = Net::HTTP
         end
 
+        # env['REMOTE_ADDR'] to retrieve IP for Grape API
         remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
         if Recaptcha.configuration.v1?
           verify_hash = {
