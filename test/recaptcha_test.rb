@@ -19,14 +19,12 @@ class RecaptchaClientHelperTest < Minitest::Test
     end
   end
 
-  def test_recaptcha_api_version_default
-    assert_equal(Recaptcha.configuration.api_version, Recaptcha::RECAPTCHA_API_VERSION)
-  end
-
-  def test_recaptcha_tags
-    # Might as well match something...
-    skip
-    assert_match @nonssl_api_server_url, recaptcha_tags
+  def test_recaptcha_tags_v2
+    Recaptcha.configuration.api_version = 'v2'
+    # match a v2 only tag
+    assert_match /data-sitekey/, recaptcha_tags
+    # refute a v1 only tag
+    refute_match /\/challenge\?/, recaptcha_tags
   end
 
   def test_ssl_by_default
@@ -52,18 +50,5 @@ class RecaptchaClientHelperTest < Minitest::Test
       Recaptcha.configuration.public_key = nil
       recaptcha_tags
     end
-  end
-
-  def test_different_configuration_within_with_configuration_block
-    key = Recaptcha.with_configuration(:public_key => '12345') do
-      Recaptcha.configuration.public_key
-    end
-
-    assert_equal('12345', key)
-  end
-
-  def test_reset_configuration_after_with_configuration_block
-    Recaptcha.with_configuration(:public_key => '12345')
-    assert_equal('0000000000000000000000000000000000000000', Recaptcha.configuration.public_key)
   end
 end
