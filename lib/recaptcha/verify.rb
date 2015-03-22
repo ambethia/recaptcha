@@ -59,11 +59,13 @@ module Recaptcha
 
         unless answer.to_s == 'true'
           error = 'verification_failed' if error && Recaptcha.configuration.v2?
-          flash[:recaptcha_error] = if defined?(I18n)
-            I18n.translate("recaptcha.errors.#{error}", {:default => error})
-          else
-            error
-          end if request_in_html_format?
+          if request_in_html_format?
+            flash[:recaptcha_error] = if defined?(I18n)
+                                        I18n.translate("recaptcha.errors.#{error}", {:default => error})
+                                      else
+                                        error
+                                      end
+          end
 
           if model
             message = "Word verification response is incorrect, please try again."
@@ -72,15 +74,17 @@ module Recaptcha
           end
           return false
         else
-          flash.delete(:recaptcha_error)
+          flash.delete(:recaptcha_error) if request_in_html_format?
           return true
         end
       rescue Timeout::Error
         if Recaptcha.configuration.handle_timeouts_gracefully
-          flash[:recaptcha_error] = if defined?(I18n)
-            I18n.translate('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
-          else
-            'Recaptcha unreachable.'
+          if request_in_html_format?
+            flash[:recaptcha_error] = if defined?(I18n)
+                                        I18n.translate('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
+                                      else
+                                        'Recaptcha unreachable.'
+                                      end
           end
 
           if model
@@ -98,7 +102,7 @@ module Recaptcha
     end # verify_recaptcha
 
     def request_in_html_format?
-      request.format == :html
+      request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
     end
     def verify_recaptcha!(options = {})
       verify_recaptcha(options) or raise VerifyError
