@@ -144,6 +144,13 @@ Also you can translate API response errors to human friendly by adding translati
       errors:
         incorrect-captcha-sol: 'Fail'
 
+== Testing
+By default, reCAPTCHA is skipped on "test" env, so if you need to make sure it's working properly, just remove the "test" entry of the skip_environment inside Recapcha class, look:
+
+  
+  Recaptcha.configuration.skip_verify_env.delete("test")
+
+
 == TODO
 * Remove Rails/ActionController dependencies
 * Framework agnostic
