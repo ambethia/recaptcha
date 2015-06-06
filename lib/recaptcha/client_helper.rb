@@ -69,7 +69,7 @@ module Recaptcha
       uri   = Recaptcha.configuration.api_server_url(options[:ssl])
       uri += "?hl=#{options[:hl]}" unless options[:hl].blank?
       
-      v2_options = options.slice(:theme, :type, :callback).map {|k,v| %{data-#{k}="#{v}"} }.join(" ")
+      v2_options = options.slice(:theme, :type, :callback, :expired_callback).map {|k,v| %{data-#{k.to_s.gsub(/_/,'-')}="#{v}"} }.join(" ")
 
       html = ""
       html << %{<script src="#{uri}" async defer></script>\n}
@@ -109,7 +109,7 @@ module Recaptcha
       result << hash.map do |k, v|
         if v.is_a?(Hash)
           "\"#{k}\": #{hash_to_json(v)}"
-        elsif ! v.is_a?(String) || k.to_s == "callback"
+        elsif ! v.is_a?(String) || k.to_s =~ %r{(callback|expired-callback)}
           "\"#{k}\": #{v}"
         else
           "\"#{k}\": \"#{v}\""
