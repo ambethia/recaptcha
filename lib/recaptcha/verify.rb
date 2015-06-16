@@ -6,7 +6,7 @@ module Recaptcha
     def verify_recaptcha(options = {})
       options = {:model => options} unless options.is_a? Hash
 
-      env_options = options[:env] || ENV['RAILS_ENV']
+      env_options = options[:env] || ENV['RAILS_ENV'] || Rails.env if defined? Rails.env
       return true if Recaptcha.configuration.skip_verify_env.include? env_options
       model = options[:model]
       attribute = options[:attribute] || :base
