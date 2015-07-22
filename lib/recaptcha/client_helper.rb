@@ -71,7 +71,7 @@ module Recaptcha
       uri   = Recaptcha.configuration.api_server_url(options[:ssl])
       uri += "?hl=#{options[:hl]}" unless options[:hl].blank?
       
-      v2_options = options.slice(:theme, :type, :callback, :expired_callback).map {|k,v| %{data-#{k.to_s.gsub(/_/,'-')}="#{v}"} }.join(" ")
+      v2_options = options.slice(:theme, :type, :callback, :size, :expired_callback).map {|k,v| %{data-#{k.to_s.gsub(/_/,'-')}="#{v}"} }.join(" ")
 
       stoken_json = hash_to_json({'session_id' => SecureRandom.uuid, 'ts_ms' => (Time.now.to_f * 1000).to_i})
       cipher = OpenSSL::Cipher::AES128.new(:ECB)
