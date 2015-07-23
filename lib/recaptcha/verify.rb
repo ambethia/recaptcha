@@ -31,9 +31,11 @@ module Recaptcha
             "challenge"  => params[:recaptcha_challenge_field],
             "response"   => params[:recaptcha_response_field]
           }
+
           Timeout::timeout(options[:timeout] || 3) do
             recaptcha = http.post_form(URI.parse(Recaptcha.configuration.verify_url), verify_hash)
           end
+
           answer, error = recaptcha.body.split.map { |s| s.chomp }
         end
 
@@ -44,16 +46,18 @@ module Recaptcha
             "response"  => params['g-recaptcha-response']
           }
 
-          Timeout::timeout(options[:timeout] || 3) do
-            uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
-            http_instance = http.new(uri.host, uri.port)
-            if uri.port==443
-              http_instance.use_ssl =
-              http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
-            end
-            request = Net::HTTP::Get.new(uri.request_uri)
-            recaptcha = http_instance.request(request)
+          uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
+          http_instance = http.new(uri.host, uri.port)
+          http_instance.read_timeout = http_instance.open_timeout = options[:timeout] || 5
+
+          if uri.port == 443
+            http_instance.use_ssl =
+            http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
+
+          request = Net::HTTP::Get.new(uri.request_uri)
+          recaptcha = http_instance.request(request)
+
           answer, error = JSON.parse(recaptcha.body).values
         end
 
