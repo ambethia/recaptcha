@@ -70,7 +70,7 @@ module Recaptcha
       error = options[:error] ||= ((defined? flash) ? flash[:recaptcha_error] : "")
       uri   = Recaptcha.configuration.api_server_url(options[:ssl])
       uri += "?hl=#{options[:hl]}" unless options[:hl].blank?
-      
+
       v2_options = options.slice(:theme, :type, :callback, :expired_callback).map {|k,v| %{data-#{k.to_s.gsub(/_/,'-')}="#{v}"} }.join(" ")
 
       stoken_json = hash_to_json({'session_id' => SecureRandom.uuid, 'ts_ms' => (Time.now.to_f * 1000).to_i})
@@ -84,8 +84,12 @@ module Recaptcha
 
       html = ""
       html << %{<script src="#{uri}" async defer></script>\n}
-      html << %{<div class="g-recaptcha" data-sitekey="#{public_key}" data-stoken="#{encoded_stoken}" #{v2_options}></div>\n}
-    
+      if options[:stoken] == false
+        html << %{<div class="g-recaptcha" data-sitekey="#{public_key}" #{v2_options}></div>\n}
+      else
+        html << %{<div class="g-recaptcha" data-sitekey="#{public_key}" data-stoken="#{encoded_stoken}" #{v2_options}></div>\n}
+      end
+
       unless options[:noscript] == false
         fallback_uri = "#{uri.chomp('.js')}/fallback?k=#{public_key}"
         html << %{<noscript>}
