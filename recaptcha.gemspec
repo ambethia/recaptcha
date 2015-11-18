@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "recaptcha/version"
+require "./lib/recaptcha/version"
 
 Gem::Specification.new do |s|
   s.name        = "recaptcha"
@@ -8,14 +6,10 @@ Gem::Specification.new do |s|
   s.authors     = ["Jason L Perry"]
   s.email       = ["jasper@ambethia.com"]
   s.homepage    = "http://github.com/ambethia/recaptcha"
-  s.summary     = %q{Helpers for the reCAPTCHA API}
-  s.description = %q{This plugin adds helpers for the reCAPTCHA API}
+  s.summary     = s.description = "Helpers for the reCAPTCHA API"
+  s.license     = "MIT"
 
-  s.rubyforge_project = "recaptcha"
-
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.require_paths = ["lib"]
+  s.files         = `git ls-files lib README.rdoc CHANGELOG LICENSE`.split("\n")
 
   s.add_development_dependency "mocha"
   s.add_development_dependency "rake"
