@@ -17,7 +17,7 @@ module Recaptcha
       html  = ""
       if options[:display]
         html << %{<script type="text/javascript">\n}
-        html << %{  var RecaptchaOptions = #{hash_to_json(options[:display])};\n}
+        html << %{  var RecaptchaOptions = #{hash_to_json(options[:display].except(:lang))};\n}
         html << %{</script>\n}
       end
       if options[:ajax]
