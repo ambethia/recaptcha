@@ -16,6 +16,8 @@ GEM
     coderay (1.1.0)
     i18n (0.7.0)
     json (1.8.3)
+    maxitest (1.5.4)
+      minitest (>= 5.0.0, < 5.9.0)
     metaclass (0.0.4)
     method_source (0.8.2)
     minitest (5.8.3)
@@ -40,7 +42,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   i18n
-  minitest (~> 5.0)
+  maxitest
   mocha
   pry-byebug
   rake

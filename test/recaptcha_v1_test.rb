@@ -1,6 +1,4 @@
-require 'minitest/autorun'
-require 'cgi'
-require File.dirname(File.expand_path(__FILE__)) + '/../lib/recaptcha'
+require_relative 'helper'
 
 class RecaptchaV1Test < Minitest::Test
   include Recaptcha

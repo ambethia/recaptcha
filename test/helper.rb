@@ -1,0 +1,5 @@
+require 'bundler/setup'
+require 'maxitest/autorun'
+require 'mocha/setup'
+require 'cgi'
+require 'recaptcha'

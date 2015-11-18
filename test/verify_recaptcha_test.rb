@@ -1,13 +1,8 @@
-# coding: utf-8
-
-require 'minitest/autorun'
-require 'rubygems'
+require_relative 'helper'
 require 'active_support'
 require 'active_support/core_ext/string'
-require 'mocha/setup'
 require 'i18n'
 require 'net/http'
-require File.dirname(File.expand_path(__FILE__)) + '/../lib/recaptcha'
 
 class RecaptchaVerifyTest < Minitest::Test
   def setup
