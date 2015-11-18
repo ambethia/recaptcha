@@ -67,24 +67,32 @@ module Recaptcha
       raise RecaptchaError, "No public key specified." unless public_key
       private_key  = options[:private_key] ||= Recaptcha.configuration.private_key
       raise RecaptchaError, "No private key specified." unless private_key
-      error = options[:error] ||= ((defined? flash) ? flash[:recaptcha_error] : "")
+      error = options[:error] ||= ((defined? flash) ? flash[:recaptcha_error] : "") # TODO not being used !?
       uri   = Recaptcha.configuration.api_server_url(options[:ssl])
       uri += "?hl=#{options[:hl]}" unless options[:hl].blank?
 
-      v2_options = options.slice(:theme, :type, :callback, :expired_callback).map {|k,v| %{data-#{k.to_s.gsub(/_/,'-')}="#{v}"} }.join(" ")
-
-      stoken_json = hash_to_json({'session_id' => SecureRandom.uuid, 'ts_ms' => (Time.now.to_f * 1000).to_i})
-      cipher = OpenSSL::Cipher::AES128.new(:ECB)
-      private_key_digest = Digest::SHA1.digest(private_key)[0...16]
-
-      cipher.encrypt
-      cipher.key = private_key_digest
-      encrypted_stoken = cipher.update(stoken_json) << cipher.final
-      encoded_stoken = Base64.urlsafe_encode64(encrypted_stoken).gsub(/\=+\Z/, '')
-
       html = ""
       html << %{<script src="#{uri}" async defer></script>\n}
-      html << %{<div class="g-recaptcha" data-sitekey="#{public_key}" data-stoken="#{encoded_stoken}" #{v2_options}></div>\n}
+
+      data_attributes = options.slice(:theme, :type, :callback, :expired_callback)
+      data_attributes[:sitekey] = public_key
+
+      if options[:stoken] != false
+        stoken_json = hash_to_json({'session_id' => SecureRandom.uuid, 'ts_ms' => (Time.now.to_f * 1000).to_i})
+        cipher = OpenSSL::Cipher::AES128.new(:ECB)
+        private_key_digest = Digest::SHA1.digest(private_key)[0...16]
+
+        cipher.encrypt
+        cipher.key = private_key_digest
+        encrypted_stoken = cipher.update(stoken_json) << cipher.final
+        encoded_stoken = Base64.urlsafe_encode64(encrypted_stoken).gsub(/\=+\Z/, '')
+
+        data_attributes[:stoken] = encoded_stoken
+      end
+
+      data_attributes = data_attributes.map {|k,v| %{data-#{k.to_s.gsub(/_/,'-')}="#{v}"} }.join(" ")
+
+      html << %{<div class="g-recaptcha" #{data_attributes}></div>\n}
 
       unless options[:noscript] == false
         fallback_uri = "#{uri.chomp('.js')}/fallback?k=#{public_key}"

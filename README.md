@@ -118,6 +118,8 @@ Some of the options available:
 | :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
 | :public_key | Your public API key, takes precedence over the ENV variable (default `nil`)|
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
+| :stoken     | Include in reCAPTCHA API v2 the security token (default `true`)|
+
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
 elements, if CSS isn't your thing. Inspect the source of `recaptcha_tags` to see these options.

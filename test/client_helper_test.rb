@@ -64,6 +64,21 @@ describe Recaptcha::ClientHelper do
     end
   end
 
+  describe "stoken" do
+    let(:regex) { /" data-stoken="[1]" / }
+
+    it "adds a security token by default" do
+      html = recaptcha_tags
+      html.sub!(/data-stoken="[^"]+"/, 'data-stoken="TOKEN"')
+      html.must_include "<div class=\"g-recaptcha\" data-sitekey=\"0000000000000000000000000000000000000000\" data-stoken=\"TOKEN\"></div>"
+    end
+
+    it "does not add a security token when specified" do
+      html = recaptcha_tags(stoken: false)
+      html.must_include "<div class=\"g-recaptcha\" data-sitekey=\"0000000000000000000000000000000000000000\"></div>"
+    end
+  end
+
   it "raises withut public key" do
     Recaptcha.configuration.public_key = nil
     assert_raises Recaptcha::RecaptchaError do
