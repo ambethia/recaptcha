@@ -79,6 +79,11 @@ describe Recaptcha::ClientHelper do
     end
   end
 
+  it "can include size" do
+    html = recaptcha_tags(size: 10)
+    html.must_include "<div class=\"g-recaptcha\" data-size=\"10\" data-sitekey=\"0000000000000000000000000000000000000000\""
+  end
+
   it "raises withut public key" do
     Recaptcha.configuration.public_key = nil
     assert_raises Recaptcha::RecaptchaError do

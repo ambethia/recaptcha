@@ -74,7 +74,7 @@ module Recaptcha
       html = ""
       html << %{<script src="#{uri}" async defer></script>\n}
 
-      data_attributes = options.slice(:theme, :type, :callback, :expired_callback)
+      data_attributes = options.slice(:theme, :type, :callback, :expired_callback, :size)
       data_attributes[:sitekey] = public_key
 
       if options[:stoken] != false

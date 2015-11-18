@@ -119,6 +119,7 @@ Some of the options available:
 | :public_key | Your public API key, takes precedence over the ENV variable (default `nil`)|
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
 | :stoken     | Include in reCAPTCHA API v2 the security token (default `true`)|
+| :size       | Specify a size (default `nil`)|
 
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
