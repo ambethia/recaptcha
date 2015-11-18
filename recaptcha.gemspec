@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.summary     = s.description = "Helpers for the reCAPTCHA API"
   s.license     = "MIT"
 
-  s.files         = `git ls-files lib README.rdoc CHANGELOG LICENSE`.split("\n")
+  s.files         = `git ls-files lib README.md CHANGELOG LICENSE`.split("\n")
 
   s.add_development_dependency "mocha"
   s.add_development_dependency "rake"
