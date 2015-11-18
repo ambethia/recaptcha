@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     recaptcha (0.4.0)
+      json
 
 GEM
   remote: https://rubygems.org/
