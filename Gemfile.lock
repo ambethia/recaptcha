@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    recaptcha (0.5.0)
+    recaptcha (0.6.0)
       json
 
 GEM
@@ -50,3 +50,6 @@ DEPENDENCIES
   pry-byebug
   rake
   recaptcha!
+
+BUNDLED WITH
+   1.10.6
