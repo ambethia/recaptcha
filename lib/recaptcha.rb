@@ -1,6 +1,7 @@
 require 'recaptcha/configuration'
 require 'recaptcha/client_helper'
 require 'recaptcha/verify'
+require 'recaptcha/token'
 
 module Recaptcha
   CONFIG =
