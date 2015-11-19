@@ -1,3 +1,14 @@
+== NEXT
+ - remove ssl_api_server_url, nonssl_api_server_url, change api_server_url to always need ssl option
+
+== 0.6.0
+ - extract token module
+
+== 0.5.0
+ - size option
+ - support disabling stoken
+ - support Rails.env
+
 == 0.3.6 / 2012-01-07
 
 * Many documentation changes

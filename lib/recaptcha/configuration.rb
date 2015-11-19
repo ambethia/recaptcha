@@ -28,7 +28,7 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :api_version, 
+    attr_accessor :api_version,
                   :skip_verify_env,
                   :private_key,
                   :public_key,
@@ -43,24 +43,17 @@ module Recaptcha
       @use_ssl_by_default         = USE_SSL_BY_DEFAULT
 
       @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
-      @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']      
+      @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
     end
 
-    def api_server_url(ssl = nil) #:nodoc:
+    def api_server_url(ssl: nil)
       ssl = use_ssl_by_default if ssl.nil?
-      ssl ? ssl_api_server_url : nonssl_api_server_url
-    end
-
-    def nonssl_api_server_url
-      CONFIG[@api_version]['server_url']
-    end
-
-    def ssl_api_server_url
-      CONFIG[@api_version]['secure_server_url']
+      key = (ssl ? 'secure_server_url' : 'server_url')
+      CONFIG.fetch(@api_version).fetch(key)
     end
 
     def verify_url
-      CONFIG[@api_version]['verify_url']
+      CONFIG.fetch(@api_version).fetch('verify_url')
     end
 
     def v1?

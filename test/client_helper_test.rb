@@ -30,27 +30,26 @@ describe Recaptcha::ClientHelper do
   end
 
   describe "ssl" do
-    before do
-      @nonssl_api_server_url = Regexp.new(Regexp.quote(Recaptcha.configuration.nonssl_api_server_url) + '(.*)')
-      @ssl_api_server_url = Regexp.new(Regexp.quote(Recaptcha.configuration.ssl_api_server_url) + '(.*)')
+    def url(options={})
+      "\"#{Recaptcha.configuration.api_server_url(options)}\""
     end
 
     it "uses ssl when ssl by default is on" do
       Recaptcha.configuration.use_ssl_by_default = true
-      assert_match @ssl_api_server_url, recaptcha_tags
+      recaptcha_tags.must_include url(ssl: true)
     end
 
     it "does not use ssl when ssl by default is off" do
-      assert_match @nonssl_api_server_url, recaptcha_tags
+      recaptcha_tags.must_include url(ssl: false)
     end
 
     it "does not use ssl when ssl by default is overwritten" do
       Recaptcha.configuration.use_ssl_by_default = true
-      assert_match @nonssl_api_server_url, recaptcha_tags(ssl: false)
+      recaptcha_tags(ssl: false).must_include url(ssl: false)
     end
 
     it "uses ssl when ssl by default is overwritten to true" do
-      assert_match @nonssl_api_server_url, recaptcha_tags(ssl: true)
+      recaptcha_tags(ssl: true).must_include url(ssl: true)
     end
   end
 
