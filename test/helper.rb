@@ -4,7 +4,7 @@ require 'mocha/setup'
 require 'cgi'
 require 'recaptcha'
 
-Minitest::Test.prepend(Module.new do
+Minitest::Test.send(:prepend, Module.new do
   def setup
     super
     Recaptcha.configure do |config|
