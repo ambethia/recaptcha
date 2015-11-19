@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.required_ruby_version = '>= 2.0.0'
 
-  s.files       = `git ls-files lib README.md CHANGELOG LICENSE`.split("\n")
+  s.files       = `git ls-files lib README.md CHANGELOG.md LICENSE`.split("\n")
 
   s.add_runtime_dependency "json"
   s.add_development_dependency "mocha"
