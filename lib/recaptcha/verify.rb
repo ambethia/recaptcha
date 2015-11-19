@@ -1,12 +1,16 @@
 require "uri"
+require "json"
+
 module Recaptcha
   module Verify
+    DEFAULT_TIMEOUT = 3
+
     # Your private API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def verify_recaptcha(options = {})
       options = {:model => options} unless options.is_a? Hash
 
-      env_options = options[:env] || ENV['RAILS_ENV']
+      env_options = options[:env] || ENV['RAILS_ENV'] || (Rails.env if defined? Rails.env)
       return true if Recaptcha.configuration.skip_verify_env.include? env_options
       model = options[:model]
       attribute = options[:attribute] || :base
@@ -15,7 +19,7 @@ module Recaptcha
 
       begin
         recaptcha = nil
-        if(Recaptcha.configuration.proxy)
+        if Recaptcha.configuration.proxy
           proxy_server = URI.parse(Recaptcha.configuration.proxy)
           http = Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
         else
@@ -31,7 +35,7 @@ module Recaptcha
             "challenge"  => params[:recaptcha_challenge_field],
             "response"   => params[:recaptcha_response_field]
           }
-          Timeout::timeout(options[:timeout] || 3) do
+          Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
             recaptcha = http.post_form(URI.parse(Recaptcha.configuration.verify_url), verify_hash)
           end
           answer, error = recaptcha.body.split.map { |s| s.chomp }
@@ -44,10 +48,10 @@ module Recaptcha
             "response"  => params['g-recaptcha-response']
           }
 
-          Timeout::timeout(options[:timeout] || 3) do
+          Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
             uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
             http_instance = http.new(uri.host, uri.port)
-            if uri.port==443
+            if uri.port == 443
               http_instance.use_ssl =
               http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
             end
@@ -57,55 +61,56 @@ module Recaptcha
           answer, error = JSON.parse(recaptcha.body).values
         end
 
-        unless answer.to_s == 'true'
+        if answer.to_s == 'true'
+          flash.delete(:recaptcha_error) if request_in_html_format?
+          true
+        else
           error = 'verification_failed' if error && Recaptcha.configuration.v2?
           if request_in_html_format?
             flash[:recaptcha_error] = if defined?(I18n)
-                                        I18n.translate("recaptcha.errors.#{error}", {:default => error})
-                                      else
-                                        error
-                                      end
+              I18n.translate("recaptcha.errors.#{error}", default: error)
+            else
+              error
+            end
           end
 
           if model
             message = "Word verification response is incorrect, please try again."
-            message = I18n.translate('recaptcha.errors.verification_failed', {:default => message}) if defined?(I18n)
+            message = I18n.translate('recaptcha.errors.verification_failed', default: message) if defined?(I18n)
             model.errors.add attribute, options[:message] || message
           end
-          return false
-        else
-          flash.delete(:recaptcha_error) if request_in_html_format?
-          return true
+          false
         end
       rescue Timeout::Error
         if Recaptcha.configuration.handle_timeouts_gracefully
           if request_in_html_format?
             flash[:recaptcha_error] = if defined?(I18n)
-                                        I18n.translate('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
-                                      else
-                                        'Recaptcha unreachable.'
-                                      end
+              I18n.translate('recaptcha.errors.recaptcha_unreachable', default: 'Recaptcha unreachable.')
+            else
+              'Recaptcha unreachable.'
+            end
           end
 
           if model
             message = "Oops, we failed to validate your word verification response. Please try again."
-            message = I18n.translate('recaptcha.errors.recaptcha_unreachable', :default => message) if defined?(I18n)
+            message = I18n.translate('recaptcha.errors.recaptcha_unreachable', default: message) if defined?(I18n)
             model.errors.add attribute, options[:message] || message
           end
-          return false
+          false
         else
           raise RecaptchaError, "Recaptcha unreachable."
         end
-      rescue Exception => e
+      rescue StandardError => e
         raise RecaptchaError, e.message, e.backtrace
       end
-    end # verify_recaptcha
+    end
 
     def request_in_html_format?
       request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
     end
+
     def verify_recaptcha!(options = {})
       verify_recaptcha(options) or raise VerifyError
-    end #verify_recaptcha!
-  end # Verify
-end # Recaptcha
+    end
+  end
+end

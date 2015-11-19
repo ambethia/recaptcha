@@ -1,41 +1,40 @@
 PATH
   remote: .
   specs:
-    recaptcha (0.4.0)
+    recaptcha (0.5.0)
+      json
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.1.8)
-      i18n (~> 0.6, >= 0.6.9)
+    activesupport (4.2.5)
+      i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.1)
+      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    byebug (3.5.1)
-      columnize (~> 0.8)
-      debugger-linecache (~> 1.2)
-      slop (~> 3.6)
+    bump (0.5.3)
+    byebug (8.2.0)
     coderay (1.1.0)
-    columnize (0.8.9)
-    debugger-linecache (1.2.0)
-    i18n (0.6.11)
-    json (1.8.1)
+    i18n (0.7.0)
+    json (1.8.3)
+    maxitest (1.5.4)
+      minitest (>= 5.0.0, < 5.9.0)
     metaclass (0.0.4)
     method_source (0.8.2)
-    minitest (5.4.3)
+    minitest (5.8.3)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    pry (0.10.1)
+    pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    pry-byebug (2.0.0)
-      byebug (~> 3.4)
+    pry-byebug (3.3.0)
+      byebug (~> 8.0)
       pry (~> 0.10)
-    rake (10.3.2)
+    rake (10.4.2)
     slop (3.6.0)
-    thread_safe (0.3.4)
+    thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
 
@@ -44,9 +43,13 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  bump
   i18n
-  minitest (~> 5.0)
+  maxitest
   mocha
   pry-byebug
   rake
   recaptcha!
+
+BUNDLED WITH
+   1.10.6

@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "recaptcha/version"
+require "./lib/recaptcha/version"
 
 Gem::Specification.new do |s|
   s.name        = "recaptcha"
@@ -8,19 +6,18 @@ Gem::Specification.new do |s|
   s.authors     = ["Jason L Perry"]
   s.email       = ["jasper@ambethia.com"]
   s.homepage    = "http://github.com/ambethia/recaptcha"
-  s.summary     = %q{Helpers for the reCAPTCHA API}
-  s.description = %q{This plugin adds helpers for the reCAPTCHA API}
+  s.summary     = s.description = "Helpers for the reCAPTCHA API"
+  s.license     = "MIT"
+  s.required_ruby_version = '>= 2.0.0'
 
-  s.rubyforge_project = "recaptcha"
+  s.files       = `git ls-files lib README.md CHANGELOG LICENSE`.split("\n")
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.require_paths = ["lib"]
-
+  s.add_runtime_dependency "json"
   s.add_development_dependency "mocha"
   s.add_development_dependency "rake"
   s.add_development_dependency "activesupport"
   s.add_development_dependency "i18n"
-  s.add_development_dependency "minitest", "~> 5.0"
+  s.add_development_dependency "maxitest"
   s.add_development_dependency "pry-byebug"
+  s.add_development_dependency "bump"
 end
