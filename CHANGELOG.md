@@ -3,6 +3,7 @@
 
 ## 0.6.0
 * extract token module
+* need to use `gem "recaptcha", require: "recaptcha/rails"` to get rails helpers installed
 
 ## 0.5.0
 * size option
