@@ -1,6 +1,8 @@
 ## NEXT
 * remove api v1 support
 * remove ssl_api_server_url, nonssl_api_server_url, change api_server_url to always need ssl option
+* removed activesupport dependency for .to_query
+* made flash and models both have descriptive errors
 
 ## 0.6.0
 * extract token module
