@@ -13,9 +13,13 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.3.8)
     bump (0.5.3)
     byebug (8.2.0)
     coderay (1.1.0)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
+    hashdiff (0.2.3)
     i18n (0.7.0)
     json (1.8.3)
     maxitest (1.5.4)
@@ -33,10 +37,15 @@ GEM
       byebug (~> 8.0)
       pry (~> 0.10)
     rake (10.4.2)
+    safe_yaml (1.0.4)
     slop (3.6.0)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    webmock (1.22.3)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
 
 PLATFORMS
   ruby
@@ -50,6 +59,7 @@ DEPENDENCIES
   pry-byebug
   rake
   recaptcha!
+  webmock
 
 BUNDLED WITH
    1.10.6

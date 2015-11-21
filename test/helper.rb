@@ -1,8 +1,12 @@
 require 'bundler/setup'
 require 'maxitest/autorun'
 require 'mocha/setup'
+require 'webmock/minitest'
 require 'cgi'
 require 'recaptcha'
+require 'i18n'
+
+I18n.enforce_available_locales = false
 
 Minitest::Test.send(:prepend, Module.new do
   def setup

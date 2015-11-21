@@ -1,5 +1,6 @@
 require "uri"
 require "json"
+require "active_support/core_ext/object/to_query"
 
 module Recaptcha
   module Verify
@@ -52,7 +53,7 @@ module Recaptcha
             uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
             http_instance = http.new(uri.host, uri.port)
             if uri.port == 443
-              http_instance.use_ssl =
+              http_instance.use_ssl = true
               http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
             end
             request = Net::HTTP::Get.new(uri.request_uri)
