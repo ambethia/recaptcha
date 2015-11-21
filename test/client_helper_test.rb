@@ -5,30 +5,6 @@ require 'active_support/core_ext/hash'
 describe Recaptcha::ClientHelper do
   include Recaptcha::ClientHelper
 
-  describe "v1" do
-    before do
-      Recaptcha.configuration.api_version = 'v1'
-    end
-
-    it "uses v1 tags" do
-      assert_match /\/challenge\?/, recaptcha_tags
-    end
-
-    it "does not use v2 tags" do
-      refute_match /data-sitekey/, recaptcha_tags
-    end
-  end
-
-  describe "v2" do
-    it "uses v2 tags" do
-      assert_match /data-sitekey/, recaptcha_tags
-    end
-
-    it "does not use v1 tags" do
-      refute_match /\/challenge\?/, recaptcha_tags
-    end
-  end
-
   describe "ssl" do
     def url(options={})
       "\"#{Recaptcha.configuration.api_server_url(options)}\""

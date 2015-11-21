@@ -29,49 +29,33 @@ module Recaptcha
 
         # env['REMOTE_ADDR'] to retrieve IP for Grape API
         remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
-        if Recaptcha.configuration.v1?
-          verify_hash = {
-            "privatekey" => private_key,
-            "remoteip"   => remote_ip,
-            "challenge"  => params[:recaptcha_challenge_field],
-            "response"   => params[:recaptcha_response_field]
-          }
-          Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
-            recaptcha = http.post_form(URI.parse(Recaptcha.configuration.verify_url), verify_hash)
-          end
-          answer, error = recaptcha.body.split.map { |s| s.chomp }
-        end
+        verify_hash = {
+          "secret"    => private_key,
+          "remoteip"  => remote_ip,
+          "response"  => params['g-recaptcha-response']
+        }
 
-        if Recaptcha.configuration.v2?
-          verify_hash = {
-            "secret"    => private_key,
-            "remoteip"  => remote_ip,
-            "response"  => params['g-recaptcha-response']
-          }
-
-          Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
-            uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
-            http_instance = http.new(uri.host, uri.port)
-            if uri.port == 443
-              http_instance.use_ssl = true
-              http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
-            end
-            request = Net::HTTP::Get.new(uri.request_uri)
-            recaptcha = http_instance.request(request)
+        Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
+          uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
+          http_instance = http.new(uri.host, uri.port)
+          if uri.port == 443
+            http_instance.use_ssl = true
+            http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
-          answer, error = JSON.parse(recaptcha.body).values
+          request = Net::HTTP::Get.new(uri.request_uri)
+          recaptcha = http_instance.request(request)
         end
+        answer = JSON.parse(recaptcha.body).values.first
 
         if answer.to_s == 'true'
           flash.delete(:recaptcha_error) if request_in_html_format?
           true
         else
-          error = 'verification_failed' if error && Recaptcha.configuration.v2?
           if request_in_html_format?
             flash[:recaptcha_error] = if defined?(I18n)
-              I18n.translate("recaptcha.errors.#{error}", default: error)
+              I18n.translate("recaptcha.errors.verification_failed", default: 'verification_failed')
             else
-              error
+              'verification_failed'
             end
           end
 

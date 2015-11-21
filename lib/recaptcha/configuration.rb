@@ -28,16 +28,9 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :api_version,
-                  :skip_verify_env,
-                  :private_key,
-                  :public_key,
-                  :proxy,
-                  :handle_timeouts_gracefully,
-                  :use_ssl_by_default
+    attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :use_ssl_by_default
 
     def initialize #:nodoc:
-      @api_version                = RECAPTCHA_API_VERSION
       @skip_verify_env            = SKIP_VERIFY_ENV
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
       @use_ssl_by_default         = USE_SSL_BY_DEFAULT
@@ -49,19 +42,11 @@ module Recaptcha
     def api_server_url(ssl: nil)
       ssl = use_ssl_by_default if ssl.nil?
       key = (ssl ? 'secure_server_url' : 'server_url')
-      CONFIG.fetch(@api_version).fetch(key)
+      CONFIG.fetch(key)
     end
 
     def verify_url
-      CONFIG.fetch(@api_version).fetch('verify_url')
-    end
-
-    def v1?
-      @api_version == 'v1'
-    end
-
-    def v2?
-      @api_version == 'v2'
+      CONFIG.fetch('verify_url')
     end
   end
 end
