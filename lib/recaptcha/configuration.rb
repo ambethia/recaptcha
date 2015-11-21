@@ -39,6 +39,14 @@ module Recaptcha
       @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
     end
 
+    def private_key!
+      private_key || raise(RecaptchaError, "No private key specified.")
+    end
+
+    def public_key!
+      public_key || raise(RecaptchaError, "No public key specified.")
+    end
+
     def api_server_url(ssl: nil)
       ssl = use_ssl_by_default if ssl.nil?
       key = (ssl ? 'secure_server_url' : 'server_url')

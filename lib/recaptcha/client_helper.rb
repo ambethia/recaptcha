@@ -3,8 +3,7 @@ module Recaptcha
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
-      public_key = options[:public_key] || Recaptcha.configuration.public_key
-      raise RecaptchaError, "No public key specified." unless public_key
+      public_key = options[:public_key] || Recaptcha.configuration.public_key!
 
       script_url = Recaptcha.configuration.api_server_url(ssl: options[:ssl])
       script_url += "?hl=#{options[:hl]}" unless options[:hl].blank?
