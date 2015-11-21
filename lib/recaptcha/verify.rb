@@ -52,41 +52,51 @@ module Recaptcha
           true
         else
           if recaptcha_flash_supported?
-            flash[:recaptcha_error] = if defined?(I18n)
-              I18n.translate("recaptcha.errors.verification_failed", default: 'verification_failed')
-            else
+            flash[:recaptcha_error] = recaptcha_i18n(
+              "recaptcha.errors.verification_failed",
               'verification_failed'
-            end
+            )
           end
 
           if model
-            message = "Word verification response is incorrect, please try again."
-            message = I18n.translate('recaptcha.errors.verification_failed', default: message) if defined?(I18n)
-            model.errors.add attribute, options[:message] || message
+            model.errors.add attribute, options[:message] || recaptcha_i18n(
+              'recaptcha.errors.verification_failed',
+              "Word verification response is incorrect, please try again."
+            )
           end
+
           false
         end
       rescue Timeout::Error
         if Recaptcha.configuration.handle_timeouts_gracefully
           if recaptcha_flash_supported?
-            flash[:recaptcha_error] = if defined?(I18n)
-              I18n.translate('recaptcha.errors.recaptcha_unreachable', default: 'Recaptcha unreachable.')
-            else
+            flash[:recaptcha_error] = recaptcha_i18n(
+              'recaptcha.errors.recaptcha_unreachable',
               'Recaptcha unreachable.'
-            end
+            )
           end
 
           if model
-            message = "Oops, we failed to validate your word verification response. Please try again."
-            message = I18n.translate('recaptcha.errors.recaptcha_unreachable', default: message) if defined?(I18n)
-            model.errors.add attribute, options[:message] || message
+            model.errors.add attribute, options[:message] || recaptcha_i18n(
+              'recaptcha.errors.recaptcha_unreachable',
+              "Oops, we failed to validate your word verification response. Please try again."
+            )
           end
+
           false
         else
           raise RecaptchaError, "Recaptcha unreachable."
         end
       rescue StandardError => e
         raise RecaptchaError, e.message, e.backtrace
+      end
+    end
+
+    def recaptcha_i18n(key, default)
+      if defined?(I18n)
+        I18n.translate(key, default: default)
+      else
+        default
       end
     end
 
