@@ -51,7 +51,7 @@ describe Recaptcha::Verify do
       expect_http_post.to_return(body: %{{"foo":"false", "bar":"invalid-site-private-key"}})
 
       refute @controller.verify_recaptcha
-      assert_equal "verification_failed", @controller.flash[:recaptcha_error]
+      assert_equal "Word verification response is incorrect, please try again.", @controller.flash[:recaptcha_error]
     end
 
     it "adds an error to the model" do
@@ -62,7 +62,7 @@ describe Recaptcha::Verify do
       model = mock(:errors => errors)
 
       refute @controller.verify_recaptcha(:model => model)
-      assert_equal "verification_failed", @controller.flash[:recaptcha_error]
+      assert_equal "Word verification response is incorrect, please try again.", @controller.flash[:recaptcha_error]
     end
 
     it "returns true on success with optional key" do
@@ -77,7 +77,7 @@ describe Recaptcha::Verify do
     it "fails silently when timing out" do
       expect_http_post.to_timeout
       refute @controller.verify_recaptcha
-      assert_equal "Recaptcha unreachable.", @controller.flash[:recaptcha_error]
+      assert_equal "Oops, we failed to validate your word verification response. Please try again.", @controller.flash[:recaptcha_error]
     end
 
     it "blows up on timeout when graceful is disabled" do
@@ -90,26 +90,33 @@ describe Recaptcha::Verify do
       end
     end
 
-    it "uses I18n for the message" do
+    it "uses I18n for the failed message" do
       I18n.locale = :de
       verification_failed_translated   = "Sicherheitscode konnte nicht verifiziert werden."
       verification_failed_default      = "Word verification response is incorrect, please try again."
-      recaptcha_unreachable_translated = "Netzwerkfehler, bitte versuchen Sie es später erneut."
-      recaptcha_unreachable_default    = "Oops, we failed to validate your word verification response. Please try again."
-
-      I18n.expects(:translate).with('recaptcha.errors.verification_failed', {:default => 'verification_failed'})
-      I18n.expects(:translate).with('recaptcha.errors.recaptcha_unreachable', {:default => 'Recaptcha unreachable.'})
 
       I18n.expects(:translate).with('recaptcha.errors.verification_failed', :default => verification_failed_default).returns(verification_failed_translated)
-      I18n.expects(:translate).with('recaptcha.errors.recaptcha_unreachable', :default => recaptcha_unreachable_default).returns(recaptcha_unreachable_translated)
 
       errors = mock
       errors.expects(:add).with(:base, verification_failed_translated)
-      errors.expects(:add).with(:base, recaptcha_unreachable_translated)
-      model  = mock; model.stubs(:errors => errors)
+      model  = mock
+      model.stubs(:errors => errors)
 
       expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
       @controller.verify_recaptcha(:model => model)
+    end
+
+    it "uses I18n for the timeout message" do
+      I18n.locale = :de
+      recaptcha_unreachable_translated = "Netzwerkfehler, bitte versuchen Sie es später erneut."
+      recaptcha_unreachable_default    = "Oops, we failed to validate your word verification response. Please try again."
+
+      I18n.expects(:translate).with('recaptcha.errors.recaptcha_unreachable', :default => recaptcha_unreachable_default).returns(recaptcha_unreachable_translated)
+
+      errors = mock
+      errors.expects(:add).with(:base, recaptcha_unreachable_translated)
+      model  = mock
+      model.stubs(:errors => errors)
 
       expect_http_post.to_timeout
       @controller.verify_recaptcha(:model => model)
@@ -118,7 +125,7 @@ describe Recaptcha::Verify do
     it "translates api response with I18n" do
       api_error_translated = "Bad news, body :("
       expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
-      I18n.expects(:translate).with('recaptcha.errors.verification_failed', :default => 'verification_failed').returns(api_error_translated)
+      I18n.expects(:translate).with('recaptcha.errors.verification_failed', :default => 'Word verification response is incorrect, please try again.').returns(api_error_translated)
 
       refute @controller.verify_recaptcha
       assert_equal api_error_translated, @controller.flash[:recaptcha_error]
@@ -128,7 +135,7 @@ describe Recaptcha::Verify do
       expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
 
       refute @controller.verify_recaptcha
-      assert_equal 'verification_failed', @controller.flash[:recaptcha_error]
+      assert_equal "Word verification response is incorrect, please try again.", @controller.flash[:recaptcha_error]
     end
 
     it "does not flash error when request was not html" do

@@ -51,37 +51,25 @@ module Recaptcha
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
           true
         else
-          if recaptcha_flash_supported?
-            flash[:recaptcha_error] = recaptcha_i18n(
-              "recaptcha.errors.verification_failed",
-              'verification_failed'
-            )
-          end
+          message = options[:message] || recaptcha_i18n(
+            "recaptcha.errors.verification_failed",
+            "Word verification response is incorrect, please try again."
+          )
 
-          if model
-            model.errors.add attribute, options[:message] || recaptcha_i18n(
-              'recaptcha.errors.verification_failed',
-              "Word verification response is incorrect, please try again."
-            )
-          end
+          flash[:recaptcha_error] = message if recaptcha_flash_supported?
+          model.errors.add attribute, message if model
 
           false
         end
       rescue Timeout::Error
         if Recaptcha.configuration.handle_timeouts_gracefully
-          if recaptcha_flash_supported?
-            flash[:recaptcha_error] = recaptcha_i18n(
-              'recaptcha.errors.recaptcha_unreachable',
-              'Recaptcha unreachable.'
-            )
-          end
+          message = options[:message] || recaptcha_i18n(
+            "recaptcha.errors.recaptcha_unreachable",
+            "Oops, we failed to validate your word verification response. Please try again."
+          )
 
-          if model
-            model.errors.add attribute, options[:message] || recaptcha_i18n(
-              'recaptcha.errors.recaptcha_unreachable',
-              "Oops, we failed to validate your word verification response. Please try again."
-            )
-          end
+          flash[:recaptcha_error] = message if recaptcha_flash_supported?
+          model.errors.add attribute, message if model
 
           false
         else
