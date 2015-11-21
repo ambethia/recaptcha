@@ -1,8 +1,8 @@
-require 'uri'
 require 'recaptcha/configuration'
 require 'recaptcha/client_helper'
 require 'recaptcha/verify'
 require 'recaptcha/token'
+require 'uri'
 
 module Recaptcha
   CONFIG = {
@@ -54,7 +54,8 @@ module Recaptcha
       else
         Net::HTTP
       end
-      uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
+      query = URI.encode_www_form(verify_hash)
+      uri = URI.parse(Recaptcha.configuration.verify_url + '?' + query)
       http_instance = http.new(uri.host, uri.port)
       if uri.port == 443
         http_instance.use_ssl = true

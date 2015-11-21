@@ -1,5 +1,4 @@
-require "json"
-require "active_support/core_ext/object/to_query"
+require 'json'
 
 module Recaptcha
   module Verify
@@ -19,8 +18,8 @@ module Recaptcha
         remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
         verify_hash = {
           "secret"    => private_key,
-          "remoteip"  => remote_ip,
-          "response"  => params['g-recaptcha-response']
+          "remoteip"  => remote_ip.to_s,
+          "response"  => params['g-recaptcha-response'].to_s
         }
 
         reply = Recaptcha.get(verify_hash, options)
