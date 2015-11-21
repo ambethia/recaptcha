@@ -10,23 +10,16 @@ module Recaptcha
     # using the Configuration.
     def verify_recaptcha(options = {})
       options = {:model => options} unless options.is_a? Hash
+      model = options[:model]
+      attribute = options[:attribute] || :base
 
       env_options = options[:env] || ENV['RAILS_ENV'] || (Rails.env if defined? Rails.env)
       return true if Recaptcha.configuration.skip_verify_env.include? env_options
-      model = options[:model]
-      attribute = options[:attribute] || :base
+
       private_key = options[:private_key] || Recaptcha.configuration.private_key
       raise RecaptchaError, "No private key specified." unless private_key
 
       begin
-        recaptcha = nil
-        if Recaptcha.configuration.proxy
-          proxy_server = URI.parse(Recaptcha.configuration.proxy)
-          http = Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
-        else
-          http = Net::HTTP
-        end
-
         # env['REMOTE_ADDR'] to retrieve IP for Grape API
         remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
         verify_hash = {
@@ -35,7 +28,13 @@ module Recaptcha
           "response"  => params['g-recaptcha-response']
         }
 
-        Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
+        reply = Timeout::timeout(options[:timeout] || DEFAULT_TIMEOUT) do
+          http = if Recaptcha.configuration.proxy
+            proxy_server = URI.parse(Recaptcha.configuration.proxy)
+            Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
+          else
+            Net::HTTP
+          end
           uri = URI.parse(Recaptcha.configuration.verify_url + '?' + verify_hash.to_query)
           http_instance = http.new(uri.host, uri.port)
           if uri.port == 443
@@ -43,9 +42,10 @@ module Recaptcha
             http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
           end
           request = Net::HTTP::Get.new(uri.request_uri)
-          recaptcha = http_instance.request(request)
+          http_instance.request(request).body
         end
-        answer = JSON.parse(recaptcha.body).values.first
+
+        answer = JSON.parse(reply).values.first
 
         if answer.to_s == 'true'
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
