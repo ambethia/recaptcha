@@ -6,6 +6,8 @@ require 'cgi'
 require 'recaptcha'
 require 'i18n'
 
+ENV.delete('RAILS_ENV')
+
 I18n.enforce_available_locales = false
 
 Minitest::Test.send(:prepend, Module.new do
