@@ -48,10 +48,10 @@ module Recaptcha
         answer = JSON.parse(recaptcha.body).values.first
 
         if answer.to_s == 'true'
-          flash.delete(:recaptcha_error) if request_in_html_format?
+          flash.delete(:recaptcha_error) if recaptcha_flash_supported?
           true
         else
-          if request_in_html_format?
+          if recaptcha_flash_supported?
             flash[:recaptcha_error] = if defined?(I18n)
               I18n.translate("recaptcha.errors.verification_failed", default: 'verification_failed')
             else
@@ -68,7 +68,7 @@ module Recaptcha
         end
       rescue Timeout::Error
         if Recaptcha.configuration.handle_timeouts_gracefully
-          if request_in_html_format?
+          if recaptcha_flash_supported?
             flash[:recaptcha_error] = if defined?(I18n)
               I18n.translate('recaptcha.errors.recaptcha_unreachable', default: 'Recaptcha unreachable.')
             else
@@ -90,7 +90,7 @@ module Recaptcha
       end
     end
 
-    def request_in_html_format?
+    def recaptcha_flash_supported?
       request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
     end
 
