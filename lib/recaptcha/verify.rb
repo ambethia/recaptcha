@@ -1,4 +1,3 @@
-require "uri"
 require "json"
 require "active_support/core_ext/object/to_query"
 
@@ -31,26 +30,24 @@ module Recaptcha
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
           true
         else
-          message = options[:message] || Recaptcha.i18n(
+          recaptcha_error(
+            model,
+            attribute,
+            options[:message],
             "recaptcha.errors.verification_failed",
             "Word verification response is incorrect, please try again."
           )
-
-          flash[:recaptcha_error] = message if recaptcha_flash_supported?
-          model.errors.add attribute, message if model
-
           false
         end
       rescue Timeout::Error
         if Recaptcha.configuration.handle_timeouts_gracefully
-          message = options[:message] || Recaptcha.i18n(
+          recaptcha_error(
+            model,
+            attribute,
+            options[:message],
             "recaptcha.errors.recaptcha_unreachable",
             "Oops, we failed to validate your word verification response. Please try again."
           )
-
-          flash[:recaptcha_error] = message if recaptcha_flash_supported?
-          model.errors.add attribute, message if model
-
           false
         else
           raise RecaptchaError, "Recaptcha unreachable."
@@ -60,12 +57,20 @@ module Recaptcha
       end
     end
 
-    def recaptcha_flash_supported?
-      request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
-    end
-
     def verify_recaptcha!(options = {})
       verify_recaptcha(options) or raise VerifyError
+    end
+
+    private
+
+    def recaptcha_error(model, attribute, message, key, default)
+      message = message || Recaptcha.i18n(key, default)
+      flash[:recaptcha_error] = message if recaptcha_flash_supported?
+      model.errors.add attribute, message if model
+    end
+
+    def recaptcha_flash_supported?
+      request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
     end
 
     def self.skip?(env)

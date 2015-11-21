@@ -1,3 +1,4 @@
+require 'uri'
 require 'recaptcha/configuration'
 require 'recaptcha/client_helper'
 require 'recaptcha/verify'
