@@ -34,7 +34,7 @@ describe Recaptcha::Verify do
   describe "#verify_recaptcha" do
     it "returns true on success" do
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post.to_return(body: '{"foo":true}')
+      expect_http_post.to_return(body: '{"success":true}')
 
       assert @controller.verify_recaptcha
       assert_nil @controller.flash[:recaptcha_error]
@@ -68,7 +68,7 @@ describe Recaptcha::Verify do
     it "returns true on success with optional key" do
       key = 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post(private_key: key).to_return(body: '{"foo":true}')
+      expect_http_post(private_key: key).to_return(body: '{"success":true}')
 
       assert @controller.verify_recaptcha(private_key: key)
       assert_nil @controller.flash[:recaptcha_error]

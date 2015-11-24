@@ -23,7 +23,7 @@ module Recaptcha
         }
 
         reply = Recaptcha.get(verify_hash, options)
-        answer = JSON.parse(reply).values.first
+        answer = JSON.parse(reply)['success']
 
         if answer.to_s == 'true'
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
