@@ -30,10 +30,8 @@ There are multiple ways to setup your reCAPTCHA API key once you
 
 ### Recaptcha.configure
 
-You may use the block style configuration. The following code could be placed
-into a `config/initializers/recaptcha.rb` when used in a Rails project.
-
 ```Ruby
+# config/initializers/recaptcha.rb
 Recaptcha.configure do |config|
   config.public_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
   config.private_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
@@ -42,14 +40,9 @@ Recaptcha.configure do |config|
 end
 ```
 
-This way, you may also set additional options to fit recaptcha into your
-deployment environment.
-
 ### Recaptcha.with_configuration
 
-If you want to temporarily overwrite the configuration you set with 
-`Recaptcha.configure` (when testing, for example), you can use a 
-`Recaptcha#with_configuration` block:
+For temporary overwrites.
 
 ```Ruby
 Recaptcha.with_configuration(public_key: '12345') do
@@ -59,10 +52,8 @@ end
 
 ### Heroku & Shell environment
 
-Or, you can keep your keys out of your code base by exporting the following
-environment variables. You might do this in the .profile/rc, or equivalent for
-the user running your application. This would also be the preffered method
-in an Heroku deployment.
+Keep keys out of the code base with environment variables. 
+Great for heroku development or locally with [dotenv](https://github.com/bkeepers/dotenv).
 
 ```
 export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
@@ -71,20 +62,15 @@ export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 
 ### Per call
 
-You can also pass in your keys as options at runtime, for example:
+Pass in keys as options at runtime, for code base with multiple reCAPTCHA setups:
 
 ```Ruby
 recaptcha_tags public_key: '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-```
 
-and later,
+and
 
-```Ruby
 verify_recaptcha private_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
-
-This option might be useful, if the same code base is used for multiple
-reCAPTCHA setups.
 
 ## To use 'recaptcha'
 
