@@ -124,6 +124,7 @@ Some of the options available:
 | :message     | Custom error message
 | :private_key | Your private API key, takes precedence over the ENV variable (default `nil`).
 | :timeout     | The number of seconds to wait for reCAPTCHA servers before give up. (default `3`)
+| :response    | Custom response parameter (default: params['g-recaptcha-response'])
 
 ```Ruby
 respond_to do |format|

@@ -12,6 +12,7 @@ module Recaptcha
       return true if Recaptcha::Verify.skip?(options[:env])
 
       private_key = options[:private_key] || Recaptcha.configuration.private_key!
+      recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
 
       begin
         # env['REMOTE_ADDR'] to retrieve IP for Grape API
@@ -19,7 +20,7 @@ module Recaptcha
         verify_hash = {
           "secret"    => private_key,
           "remoteip"  => remote_ip.to_s,
-          "response"  => params['g-recaptcha-response'].to_s
+          "response"  => recaptcha_response
         }
 
         reply = Recaptcha.get(verify_hash, options)
