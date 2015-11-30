@@ -1,4 +1,7 @@
-## 1.0.0 - 2015-11-30 
+## 1.0.1 - 2015-11-30
+* no longer defines `Rails` when `recaptcha/rails` is required
+
+## 1.0.0 - 2015-11-30
 * remove api v1 support
 * remove ssl_api_server_url, nonssl_api_server_url, change api_server_url to always need ssl option
 * removed activesupport dependency for .to_query
