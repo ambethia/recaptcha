@@ -1,14 +1,14 @@
-## NEXT
+## 1.0.0 - 2015-11-30 
 * remove api v1 support
 * remove ssl_api_server_url, nonssl_api_server_url, change api_server_url to always need ssl option
 * removed activesupport dependency for .to_query
 * made flash and models both have descriptive errors
 
-## 0.6.0
+## 0.6.0 - 2015-11-19
 * extract token module
 * need to use `gem "recaptcha", require: "recaptcha/rails"` to get rails helpers installed
 
-## 0.5.0
+## 0.5.0 - 2015-11-18
 * size option
 * support disabling stoken
 * support Rails.env
