@@ -56,5 +56,18 @@ module Recaptcha
     def verify_url
       CONFIG.fetch('verify_url')
     end
+
+    def api_version=(v)
+      if v == 'v2'
+        warn 'setting api_version is deprecated and will be removed shortly, only v2 is supported'
+      else
+        raise ArgumentError, "only v2 is supported, not #{v.inspect}"
+      end
+    end
+
+    def api_version
+      warn 'getting api_version is deprecated and will be removed shortly, only v2 is supported'
+      'v2'
+    end
   end
 end

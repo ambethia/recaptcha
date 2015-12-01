@@ -29,4 +29,24 @@ describe Recaptcha::Configuration do
 
     Recaptcha.configuration.public_key.must_equal outside
   end
+
+  describe "#api_version=" do
+    it "warns when assigning v2" do
+      Recaptcha.configuration.expects(:warn)
+      Recaptcha.configuration.api_version = "v2"
+    end
+
+    it "raises when assigning v1" do
+      assert_raises ArgumentError do
+        Recaptcha.configuration.api_version = "v1"
+      end
+    end
+  end
+
+  describe "#api_version" do
+    it "warns" do
+      Recaptcha.configuration.expects(:warn)
+      Recaptcha.configuration.api_version.must_equal "v2"
+    end
+  end
 end

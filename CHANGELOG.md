@@ -1,3 +1,6 @@
+## 1.0.2 - 2015-11-30
+* nice deprecations for api_version
+
 ## 1.0.1 - 2015-11-30
 * no longer defines `Rails` when `recaptcha/rails` is required
 
