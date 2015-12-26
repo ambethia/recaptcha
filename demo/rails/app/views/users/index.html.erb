@@ -1,0 +1,5 @@
+<table>
+  <% @users.each do |user| %>
+    <tr><td><%= link_to user.name, edit_user_path(user) %></td></tr>
+  <% end %>
+</table>

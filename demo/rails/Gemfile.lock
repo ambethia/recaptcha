@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    recaptcha (0.6.0)
+    recaptcha (1.0.2)
       json
 
 GEM
@@ -112,4 +112,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
