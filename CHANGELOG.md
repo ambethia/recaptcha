@@ -1,3 +1,6 @@
+## 1.1.0 - 2016-01-27
+* support RACK_ENV
+
 ## 1.0.2 - 2015-11-30
 * nice deprecations for api_version
 
