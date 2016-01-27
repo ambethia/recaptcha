@@ -7,6 +7,7 @@ require 'recaptcha'
 require 'i18n'
 
 ENV.delete('RAILS_ENV')
+ENV.delete('RACK_ENV')
 
 I18n.enforce_available_locales = false
 
