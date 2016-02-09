@@ -19,7 +19,7 @@ which throws an error on failiure.
 gem "recaptcha", require: "recaptcha/rails"
 ```
 
-Keep keys out of the code base with environment variables.<br/> 
+Keep keys out of the code base with environment variables.<br/>
 Set in production and locally use [dotenv](https://github.com/bkeepers/dotenv), make sure to add it above recaptcha.
 
 Otherwise see [Alternative API key setup](#alternative-api-key-setup).
@@ -29,7 +29,7 @@ export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
-Add `recaptcha_tags` to the forms you want to protect. 
+Add `recaptcha_tags` to the forms you want to protect.
 
 ```Erb
 <%= form_for @foo do |f| %>
@@ -72,20 +72,11 @@ Some of the options available:
 | :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
 | :public_key | Override public API key |
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
-| :stoken     | Include in reCAPTCHA API v2 the security token (default `true`)|
+| :stoken     | Include security token to enable the use of any domain without registration with reCAPTCHA, `stoken expired` will be raised when the system clock is out of sync (default `true`)|
 | :size       | Specify a size (default `nil`)|
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
 elements, if CSS isn't your thing. Inspect the source of `recaptcha_tags` to see these options.
-
-## v2 API stoken and the System Clock
-
-When this gem interacts with the the reCAPTCHA server using the Version 2 API, we encrypt and provide
-an extra 'secure token'. This enables you to use the Version 2 API on any domain that you like without
-having to register it first with reCAPTCHA. See: https://github.com/ambethia/recaptcha/issues/130
-
-It's **important to note** that a timestamp is encrypted and sent along with a random session_id so your
-system time **must be accurate** or you'll get 'stoken expired' messages.
 
 ## verify_recaptcha
 
