@@ -78,6 +78,15 @@ Some of the options available:
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
 elements, if CSS isn't your thing. Inspect the source of `recaptcha_tags` to see these options.
 
+## v2 API stoken and the System Clock
+
+When this gem interacts with the the reCAPTCHA server using the Version 2 API, we encrypt and provide
+an extra 'secure token'. This enables you to use the Version 2 API on any domain that you like without
+having to register it first with reCAPTCHA. See: https://github.com/ambethia/recaptcha/issues/130
+
+It's **important to note** that a timestamp is encrypted and sent along with a random session_id so your
+system time **must be accurate** or you'll get 'stoken expired' messages.
+
 ## verify_recaptcha
 
 This method returns `true` or `false` after processing the parameters from the reCAPTCHA widget. Why
