@@ -35,7 +35,7 @@ module Recaptcha
             attribute,
             options[:message],
             "recaptcha.errors.verification_failed",
-            "Word verification response is incorrect, please try again."
+            "reCAPTCHA verification failed, please try again."
           )
           false
         end
@@ -46,7 +46,7 @@ module Recaptcha
             attribute,
             options[:message],
             "recaptcha.errors.recaptcha_unreachable",
-            "Oops, we failed to validate your word verification response. Please try again."
+            "Oops, we failed to validate your reCAPTCHA response. Please try again."
           )
           false
         else
