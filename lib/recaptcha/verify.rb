@@ -13,7 +13,7 @@ module Recaptcha
 
       private_key = options[:private_key] || Recaptcha.configuration.private_key!
       recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
-      custom_domain_validation = options[:domain] || nil
+      custom_domain_validation = options[:domain]
 
       begin
         # env['REMOTE_ADDR'] to retrieve IP for Grape API
