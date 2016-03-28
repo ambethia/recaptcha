@@ -172,7 +172,7 @@ describe Recaptcha::Verify do
       assert_nil @controller.flash[:recaptcha_error]
     end
 
-    it "railses when invalid custom domain validation is passed" do
+    it "raises when invalid custom domain validation is passed" do
       domain = 0
 
       expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.domain.com"}})
