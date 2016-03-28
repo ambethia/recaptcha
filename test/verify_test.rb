@@ -144,6 +144,43 @@ describe Recaptcha::Verify do
       refute @controller.verify_recaptcha
       assert_nil @controller.flash[:recaptcha_error]
     end
+
+    it "check for equality when string custom domain validation is passed" do
+      domain = 'fake.domain.com'
+
+      expect_http_post.to_return(body: %{{"success":true, "hostname": "#{domain}"}})
+
+      assert @controller.verify_recaptcha(domain: domain)
+      assert_nil @controller.flash[:recaptcha_error]
+    end
+
+    it "fails when custom domain validation does not match" do
+      expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.domain.com"}})
+
+      refute @controller.verify_recaptcha(domain: 'fake.hostname.com')
+      assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+    end
+
+    it "check with call when callable custom domain validation is passed" do
+      fake_domain = 'fake.domain.com'
+
+      domain = -> (d) { d == fake_domain }
+
+      expect_http_post.to_return(body: %{{"success":true, "hostname": "#{fake_domain}"}})
+
+      assert @controller.verify_recaptcha(domain: domain)
+      assert_nil @controller.flash[:recaptcha_error]
+    end
+
+    it "railses when invalid custom domain validation is passed" do
+      domain = 0
+
+      expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.domain.com"}})
+
+      assert_raises Recaptcha::RecaptchaError do
+        @controller.verify_recaptcha(domain: domain)
+      end
+    end
   end
 
   private

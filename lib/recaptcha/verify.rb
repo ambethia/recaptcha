@@ -13,6 +13,7 @@ module Recaptcha
 
       private_key = options[:private_key] || Recaptcha.configuration.private_key!
       recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
+      custom_domain_validation = options[:domain] || nil
 
       begin
         # env['REMOTE_ADDR'] to retrieve IP for Grape API
@@ -23,10 +24,16 @@ module Recaptcha
           "response"  => recaptcha_response
         }
 
-        reply = Recaptcha.get(verify_hash, options)
-        answer = JSON.parse(reply)['success']
+        raw_reply = Recaptcha.get(verify_hash, options)
+        reply = JSON.parse(raw_reply)
+        answer = reply['success']
+        domain_validated = true
 
-        if answer.to_s == 'true'
+        if custom_domain_validation
+          domain_validated = domain_validated?(reply['hostname'], custom_domain_validation)
+        end
+
+        if domain_validated && answer.to_s == 'true'
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
           true
         else
@@ -62,6 +69,16 @@ module Recaptcha
     end
 
     private
+
+    def domain_validated?(hostname, custom_domain_validation)
+      if custom_domain_validation.respond_to?(:call)
+        custom_domain_validation.call(hostname)
+      elsif custom_domain_validation.respond_to?(:to_str)
+        hostname == custom_domain_validation.to_str
+      else
+        raise ArgumentError, "Custom domain validation needs to be a string or a callable."
+      end
+    end
 
     def recaptcha_error(model, attribute, message, key, default)
       message = message || Recaptcha.i18n(key, default)
