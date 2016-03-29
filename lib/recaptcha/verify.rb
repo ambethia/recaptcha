@@ -26,13 +26,8 @@ module Recaptcha
         raw_reply = Recaptcha.get(verify_hash, options)
         reply = JSON.parse(raw_reply)
         answer = reply['success']
-        hostname_validated = true
 
-        if hostname_validation = options[:hostname]
-          hostname_validated = hostname_validated?(reply['hostname'], hostname_validation)
-        end
-
-        if hostname_validated && answer.to_s == 'true'
+        if hostname_valid?(reply['hostname'], options[:hostname]) && answer.to_s == 'true'
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
           true
         else
@@ -69,11 +64,11 @@ module Recaptcha
 
     private
 
-    def hostname_validated?(hostname, hostname_validation)
-      if hostname_validation.is_a?(String)
-        hostname_validation == hostname
-      else
-        hostname_validation.call(hostname)
+    def hostname_valid?(hostname, validation)
+      case validation
+      when nil, FalseClass then true
+      when String then validation == hostname
+      else validation.call(hostname)
       end
     end
 

@@ -146,36 +146,42 @@ describe Recaptcha::Verify do
     end
 
     describe ':hostname' do
+      let(:hostname) { 'fake.hostname.com' }
+
       before do
-        expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.hostname.com"}})
+        expect_http_post.to_return(body: %{{"success":true, "hostname": "#{hostname}"}})
       end
 
-      it "check for equality when string custom hostname validation is passed" do
-        assert @controller.verify_recaptcha(hostname: 'fake.hostname.com')
+      it "passes with nil" do
+        assert @controller.verify_recaptcha(hostname: nil)
         assert_nil @controller.flash[:recaptcha_error]
       end
 
-      it "fails when custom hostname validation does not match" do
-        expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.domain.com"}})
-
-        refute @controller.verify_recaptcha(hostname: 'fake.hostname.com')
-        assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+      it "passes with false" do
+        assert @controller.verify_recaptcha(hostname: false)
+        assert_nil @controller.flash[:recaptcha_error]
       end
 
-      it "check with call when callable custom hostname validation is passed" do
-        fake_hostname = 'fake.hostname.com'
-
-        hostname = -> (d) { d == fake_hostname }
-
+      it "check for equality when string custom hostname validation is passed" do
         assert @controller.verify_recaptcha(hostname: hostname)
         assert_nil @controller.flash[:recaptcha_error]
       end
 
-      it "raises when invalid custom hostname validation is passed" do
-        hostname = 0
+      it "fails when custom hostname validation does not match" do
+        expect_http_post.to_return(body: %{{"success":true, "hostname": "not_#{hostname}"}})
 
+        refute @controller.verify_recaptcha(hostname: hostname)
+        assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+      end
+
+      it "check with call when callable custom hostname validation is passed" do
+        assert @controller.verify_recaptcha(hostname: -> (d) { d == hostname })
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "raises when invalid custom hostname validation is passed" do
         assert_raises Recaptcha::RecaptchaError do
-          @controller.verify_recaptcha(hostname: hostname)
+          @controller.verify_recaptcha(hostname: 0)
         end
       end
     end
