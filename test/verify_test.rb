@@ -131,7 +131,7 @@ describe Recaptcha::Verify do
       assert_equal api_error_translated, @controller.flash[:recaptcha_error]
     end
 
-    it "falls back to api respnse if i18n translation is missing" do
+    it "falls back to api response if i18n translation is missing" do
       expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
 
       refute @controller.verify_recaptcha
@@ -143,6 +143,41 @@ describe Recaptcha::Verify do
       expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
       refute @controller.verify_recaptcha
       assert_nil @controller.flash[:recaptcha_error]
+    end
+
+    describe ':hostname' do
+      before do
+        expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.hostname.com"}})
+      end
+
+      it "check for equality when string custom hostname validation is passed" do
+        assert @controller.verify_recaptcha(hostname: 'fake.hostname.com')
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "fails when custom hostname validation does not match" do
+        expect_http_post.to_return(body: %{{"success":true, "hostname": "fake.domain.com"}})
+
+        refute @controller.verify_recaptcha(hostname: 'fake.hostname.com')
+        assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+      end
+
+      it "check with call when callable custom hostname validation is passed" do
+        fake_hostname = 'fake.hostname.com'
+
+        hostname = -> (d) { d == fake_hostname }
+
+        assert @controller.verify_recaptcha(hostname: hostname)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "raises when invalid custom hostname validation is passed" do
+        hostname = 0
+
+        assert_raises Recaptcha::RecaptchaError do
+          @controller.verify_recaptcha(hostname: hostname)
+        end
+      end
     end
   end
 

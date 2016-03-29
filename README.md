@@ -89,13 +89,13 @@ Some of the options available:
 
 | Option       | Description |
 |--------------|-------------|
-| :model       | Model to set errors
-| :attribute   | Model attribute to receive errors (default :base)
-| :message     | Custom error message
+| :model       | Model to set errors.
+| :attribute   | Model attribute to receive errors. (default :base)
+| :message     | Custom error message.
 | :private_key | Override private API key.
 | :timeout     | The number of seconds to wait for reCAPTCHA servers before give up. (default `3`)
-| :response    | Custom response parameter (default: params['g-recaptcha-response'])
-
+| :response    | Custom response parameter. (default: params['g-recaptcha-response'])
+| :hostname      | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`)
 
 ## I18n support
 reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem
