@@ -13,7 +13,6 @@ module Recaptcha
 
       private_key = options[:private_key] || Recaptcha.configuration.private_key!
       recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
-      custom_domain_validation = options[:domain]
 
       begin
         # env['REMOTE_ADDR'] to retrieve IP for Grape API
@@ -27,13 +26,13 @@ module Recaptcha
         raw_reply = Recaptcha.get(verify_hash, options)
         reply = JSON.parse(raw_reply)
         answer = reply['success']
-        domain_validated = true
+        hostname_validated = true
 
-        if custom_domain_validation
-          domain_validated = domain_validated?(reply['hostname'], custom_domain_validation)
+        if hostname_validation = options[:hostname]
+          hostname_validated = hostname_validated?(reply['hostname'], hostname_validation)
         end
 
-        if domain_validated && answer.to_s == 'true'
+        if hostname_validated && answer.to_s == 'true'
           flash.delete(:recaptcha_error) if recaptcha_flash_supported?
           true
         else
@@ -70,13 +69,11 @@ module Recaptcha
 
     private
 
-    def domain_validated?(hostname, custom_domain_validation)
-      if custom_domain_validation.respond_to?(:call)
-        custom_domain_validation.call(hostname)
-      elsif custom_domain_validation.respond_to?(:to_str)
-        hostname == custom_domain_validation.to_str
+    def hostname_validated?(hostname, hostname_validation)
+      if hostname_validation.is_a?(String)
+        hostname_validation == hostname
       else
-        raise ArgumentError, "Custom domain validation needs to be a string or a callable."
+        hostname_validation.call(hostname)
       end
     end
 

@@ -95,7 +95,7 @@ Some of the options available:
 | :private_key | Override private API key.
 | :timeout     | The number of seconds to wait for reCAPTCHA servers before give up. (default `3`)
 | :response    | Custom response parameter. (default: params['g-recaptcha-response'])
-| :domain      | Domain name to check equality when you need custom [domain name validation](https://developers.google.com/recaptcha/docs/domain_validation). You can also pass a callable that receives the [hostname field](https://developers.google.com/recaptcha/docs/verify#api-response) and returns if domain name is valid or not. (default: `nil`)
+| :hostname      | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`)
 
 ## I18n support
 reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem
