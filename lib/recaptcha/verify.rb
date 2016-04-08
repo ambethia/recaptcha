@@ -28,7 +28,7 @@ module Recaptcha
         answer = reply['success']
 
         if hostname_valid?(reply['hostname'], options[:hostname]) && answer.to_s == 'true'
-          flash.delete(:recaptcha_error) if recaptcha_flash_supported? && model.nil?
+          flash.delete(:recaptcha_error) if recaptcha_flash_supported? && !model
           true
         else
           recaptcha_error(
@@ -74,8 +74,11 @@ module Recaptcha
 
     def recaptcha_error(model, attribute, message, key, default)
       message = message || Recaptcha.i18n(key, default)
-      flash[:recaptcha_error] = message if recaptcha_flash_supported? && model.nil?
-      model.errors.add attribute, message if model
+      if model
+        model.errors.add attribute, message
+      else
+        flash[:recaptcha_error] = message if recaptcha_flash_supported?
+      end
     end
 
     def recaptcha_flash_supported?
