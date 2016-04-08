@@ -1,3 +1,9 @@
+## 1.3.0 - 2016-04-07
+* do not set model error and flash
+
+## 1.2.0 - 2016-04-01
+* custom domain validation
+
 ## 1.1.0 - 2016-01-27
 * support RACK_ENV
 
