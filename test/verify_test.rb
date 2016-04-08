@@ -62,7 +62,7 @@ describe Recaptcha::Verify do
       model = mock(:errors => errors)
 
       refute @controller.verify_recaptcha(:model => model)
-      assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+      assert_nil @controller.flash[:recaptcha_error]
     end
 
     it "returns true on success with optional key" do
