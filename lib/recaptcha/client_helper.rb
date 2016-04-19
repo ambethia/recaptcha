@@ -13,7 +13,7 @@ module Recaptcha
       data_attributes = options.each_with_object({}) do |(k, v), a|
         a[k] = v if data_attributes.include?(k)
       end
-      data_attributes[:callback] = options['data-callback'] unless options['data-callback'].blank? 
+      data_attributes[:callback] = options['callback'] unless options['callback'].blank? 
       data_attributes[:sitekey] = public_key
       data_attributes[:stoken] = Recaptcha::Token.secure_token if options[:stoken] != false
       data_attributes = data_attributes.map { |k,v| %{data-#{k.to_s.tr('_','-')}="#{v}"} }.join(" ")

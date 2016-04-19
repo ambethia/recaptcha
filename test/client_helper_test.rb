@@ -29,6 +29,17 @@ describe Recaptcha::ClientHelper do
     end
   end
 
+
+  describe "callback" do
+    it "does not add callback data-attr when callback is not given" do
+      recaptcha_tags.wont_include "data-callback"
+    end
+
+    it "does  add callback data-attr when it is given" do
+      recaptcha_tags(callback: "captchaCallback").must_include "data-callback='captchaCallback'"
+    end
+  end
+
   describe "noscript" do
     it "does not adds noscript tags when noscript is given" do
       recaptcha_tags(noscript: false).wont_include "noscript"
