@@ -74,6 +74,7 @@ Some of the options available:
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
 | :stoken     | ([Deprecated](https://developers.google.com/recaptcha/docs/secure_token#config)) Include security token to enable the use of any domain without registration with reCAPTCHA, `stoken expired` will be raised when the system clock is out of sync (default `true`)|
 | :size       | Specify a size (default `nil`)|
+| :hl         | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
 elements, if CSS isn't your thing. Inspect the source of `recaptcha_tags` to see these options.
