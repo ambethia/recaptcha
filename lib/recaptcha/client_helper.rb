@@ -3,6 +3,7 @@ module Recaptcha
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
+      raise(RecaptchaError, "Secure Token is deprecated.") if options[:stoken]
       public_key = options[:public_key] || Recaptcha.configuration.public_key!
 
       script_url = Recaptcha.configuration.api_server_url(ssl: options[:ssl])
