@@ -1,7 +1,6 @@
 require 'recaptcha/configuration'
 require 'recaptcha/client_helper'
 require 'recaptcha/verify'
-require 'recaptcha/token'
 require 'uri'
 require 'net/http'
 
