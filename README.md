@@ -72,7 +72,6 @@ Some of the options available:
 | :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
 | :public_key | Override public API key |
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
-| :stoken     | ([Deprecated](https://developers.google.com/recaptcha/docs/secure_token#config)) Include security token to enable the use of any domain without registration with reCAPTCHA, `stoken expired` will be raised when the system clock is out of sync (default `true`)|
 | :size       | Specify a size (default `nil`)|
 | :hl         | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
 
