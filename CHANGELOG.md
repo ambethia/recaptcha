@@ -1,3 +1,6 @@
+## 2.0.0 - 2016-05-17
+* remove stoken support, must use custom domain verification or domain whitelist
+
 ## 1.3.0 - 2016-04-07
 * do not set model error and flash
 
