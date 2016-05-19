@@ -6,19 +6,20 @@ module Recaptcha
     # using the Configuration.
     def verify_recaptcha(options = {})
       options = {:model => options} unless options.is_a? Hash
-      model = options[:model]
-      attribute = options[:attribute] || :base
-
       return true if Recaptcha::Verify.skip?(options[:env])
 
-      private_key = options[:private_key] || Recaptcha.configuration.private_key!
+      model = options[:model]
+      attribute = options[:attribute] || :base
       recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
 
       begin
-        reply = get_parsed_response(request, private_key, recaptcha_response, options)
-        answer = reply['success']
+        verified = if recaptcha_response.empty?
+          false
+        else
+          recaptcha_verify_via_api_call(request, recaptcha_response, options)
+        end
 
-        if hostname_valid?(reply['hostname'], options[:hostname]) && answer.to_s == 'true'
+        if verified
           flash.delete(:recaptcha_error) if recaptcha_flash_supported? && !model
           true
         else
@@ -55,22 +56,22 @@ module Recaptcha
 
     private
 
-    def get_parsed_response(request, private_key, recaptcha_response, options)
-      return {} if recaptcha_response.empty?
-
-      # env['REMOTE_ADDR'] to retrieve IP for Grape API
+    def recaptcha_verify_via_api_call(request, recaptcha_response, options)
+      private_key = options[:private_key] || Recaptcha.configuration.private_key!
       remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
+
       verify_hash = {
         "secret"    => private_key,
         "remoteip"  => remote_ip.to_s,
         "response"  => recaptcha_response
       }
 
-      raw_reply = Recaptcha.get(verify_hash, options)
-      JSON.parse(raw_reply)
+      reply = JSON.parse(Recaptcha.get(verify_hash, options))
+      reply['success'].to_s == "true" &&
+        recaptcha_hostname_valid?(reply['hostname'], options[:hostname])
     end
 
-    def hostname_valid?(hostname, validation)
+    def recaptcha_hostname_valid?(hostname, validation)
       case validation
       when nil, FalseClass then true
       when String then validation == hostname

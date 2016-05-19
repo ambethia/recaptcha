@@ -145,23 +145,11 @@ describe Recaptcha::Verify do
       assert_nil @controller.flash[:recaptcha_error]
     end
 
-    describe 'when recaptcha response is empty' do
-      before do
-        @controller.params = { 'g-recaptcha-response' => ""}
-      end
-
-      it "should not make request to google" do
-        assert_not_requested :get, /https:\/\/www\.google\.com\.*/
-      end
-
-      it "should be false" do
-        assert_equal false, @controller.verify_recaptcha
-      end
-
-      it "should set error message" do
-        @controller.verify_recaptcha
-        assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
-      end
+    it "does not verify via http call when user did not click anything" do
+      @controller.params = { 'g-recaptcha-response' => ""}
+      assert_not_requested :get, %r{\.google\.com}
+      assert_equal false, @controller.verify_recaptcha
+      assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
     end
 
     describe ':hostname' do
