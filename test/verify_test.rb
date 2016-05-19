@@ -9,7 +9,7 @@ describe Recaptcha::Verify do
     @expected_post_data["remoteip"]   = @controller.request.remote_ip
     @expected_post_data["response"]   = "response"
 
-    @controller.params = {:recaptcha_response_field => "response"}
+    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response' => 'string'}
     @expected_post_data["secret"] = Recaptcha.configuration.private_key
 
     @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
@@ -145,6 +145,25 @@ describe Recaptcha::Verify do
       assert_nil @controller.flash[:recaptcha_error]
     end
 
+    describe 'when recaptcha response is empty' do
+      before do
+        @controller.params = { 'g-recaptcha-response' => ""}
+      end
+
+      it "should not make request to google" do
+        assert_not_requested :get, /https:\/\/www\.google\.com\.*/
+      end
+
+      it "should be false" do
+        assert_equal false, @controller.verify_recaptcha
+      end
+
+      it "should set error message" do
+        @controller.verify_recaptcha
+        assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+      end
+    end
+
     describe ':hostname' do
       let(:hostname) { 'fake.hostname.com' }
 
@@ -199,6 +218,6 @@ describe Recaptcha::Verify do
   end
 
   def expect_http_post(private_key: Recaptcha.configuration.private_key)
-    stub_request(:get, "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=&secret=#{private_key}")
+    stub_request(:get, "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{private_key}")
   end
 end
