@@ -15,16 +15,7 @@ module Recaptcha
       recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
 
       begin
-        # env['REMOTE_ADDR'] to retrieve IP for Grape API
-        remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
-        verify_hash = {
-          "secret"    => private_key,
-          "remoteip"  => remote_ip.to_s,
-          "response"  => recaptcha_response
-        }
-
-        raw_reply = Recaptcha.get(verify_hash, options)
-        reply = JSON.parse(raw_reply)
+        reply = get_parsed_response(request, private_key, recaptcha_response, options)
         answer = reply['success']
 
         if hostname_valid?(reply['hostname'], options[:hostname]) && answer.to_s == 'true'
@@ -63,6 +54,21 @@ module Recaptcha
     end
 
     private
+
+    def get_parsed_response(request, private_key, recaptcha_response, options)
+      return {} if recaptcha_response.empty?
+
+      # env['REMOTE_ADDR'] to retrieve IP for Grape API
+      remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
+      verify_hash = {
+        "secret"    => private_key,
+        "remoteip"  => remote_ip.to_s,
+        "response"  => recaptcha_response
+      }
+
+      raw_reply = Recaptcha.get(verify_hash, options)
+      JSON.parse(raw_reply)
+    end
 
     def hostname_valid?(hostname, validation)
       case validation
