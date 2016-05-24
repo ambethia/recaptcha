@@ -72,6 +72,8 @@ module Recaptcha
     end
 
     def recaptcha_hostname_valid?(hostname, validation)
+      validation ||= Recaptcha.configuration.hostname
+
       case validation
       when nil, FalseClass then true
       when String then validation == hostname
