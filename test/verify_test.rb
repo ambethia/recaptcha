@@ -191,6 +191,37 @@ describe Recaptcha::Verify do
           @controller.verify_recaptcha(hostname: 0)
         end
       end
+
+      describe "default" do
+
+        it "passes when default hostname validation matches" do
+          Recaptcha.with_configuration(hostname: hostname) do
+            assert @controller.verify_recaptcha
+            assert_nil @controller.flash[:recaptcha_error]
+          end
+        end
+
+        it "fails when default hostname validation doesn't match" do
+          Recaptcha.with_configuration(hostname: "not_#{hostname}") do
+            refute @controller.verify_recaptcha
+            assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+          end
+        end
+
+        it "passes when default hostname validation doesn't match but the custom does" do
+          Recaptcha.with_configuration(hostname: "not_#{hostname}") do
+            assert @controller.verify_recaptcha(hostname: hostname)
+            assert_nil @controller.flash[:recaptcha_error]
+          end
+        end
+
+        it "fails when default hostname validation matches but the custom doesn't" do
+          Recaptcha.with_configuration(hostname: hostname) do
+            refute @controller.verify_recaptcha(hostname: "not_#{hostname}")
+            assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+          end
+        end
+      end
     end
   end
 
