@@ -201,10 +201,8 @@ describe Recaptcha::Verify do
         end
 
         it "fails when custom validation does not match" do
-          Recaptcha.with_configuration(hostname: hostname) do
-            refute @controller.verify_recaptcha(hostname: "not_#{hostname}")
-            assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
-          end
+          refute @controller.verify_recaptcha(hostname: "not_#{hostname}")
+          assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
         end
       end
 
