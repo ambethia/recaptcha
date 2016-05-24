@@ -40,10 +40,9 @@ module Recaptcha
       configuration.send("#{key}=", value)
     end
 
-    result = yield if block_given?
-
+    yield if block_given?
+  ensure
     original_config.each { |key, value| configuration.send("#{key}=", value) }
-    result
   end
 
   def self.get(verify_hash, options)
