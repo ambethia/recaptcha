@@ -30,6 +30,21 @@ describe Recaptcha::Configuration do
     Recaptcha.configuration.public_key.must_equal outside
   end
 
+  it "cleans up block configuration after block raises an exception" do
+    outside = '0000000000000000000000000000000000000000'
+    Recaptcha.configuration.public_key.must_equal outside
+
+    begin
+      Recaptcha.with_configuration(public_key: '12345') do
+        Recaptcha.configuration.public_key.must_equal '12345'
+        raise "an exception"
+      end
+    rescue => e
+    end
+
+    Recaptcha.configuration.public_key.must_equal outside
+  end
+
   describe "#api_version=" do
     it "warns when assigning v2" do
       Recaptcha.configuration.expects(:warn)
