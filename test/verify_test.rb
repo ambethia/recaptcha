@@ -192,34 +192,33 @@ describe Recaptcha::Verify do
         end
       end
 
-      describe "default" do
+      describe "when default hostname validation matches" do
+        around { |test| Recaptcha.with_configuration(hostname: hostname, &test) }
 
-        it "passes when default hostname validation matches" do
-          Recaptcha.with_configuration(hostname: hostname) do
-            assert @controller.verify_recaptcha
-            assert_nil @controller.flash[:recaptcha_error]
-          end
+        it "passes" do
+          assert @controller.verify_recaptcha
+          assert_nil @controller.flash[:recaptcha_error]
         end
 
-        it "fails when default hostname validation doesn't match" do
-          Recaptcha.with_configuration(hostname: "not_#{hostname}") do
-            refute @controller.verify_recaptcha
-            assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
-          end
-        end
-
-        it "passes when default hostname validation doesn't match but the custom does" do
-          Recaptcha.with_configuration(hostname: "not_#{hostname}") do
-            assert @controller.verify_recaptcha(hostname: hostname)
-            assert_nil @controller.flash[:recaptcha_error]
-          end
-        end
-
-        it "fails when default hostname validation matches but the custom doesn't" do
+        it "fails when custom validation does not match" do
           Recaptcha.with_configuration(hostname: hostname) do
             refute @controller.verify_recaptcha(hostname: "not_#{hostname}")
             assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
           end
+        end
+      end
+
+      describe "when default hostname validation does not match" do
+        around { |test| Recaptcha.with_configuration(hostname: "not_#{hostname}", &test) }
+
+        it "fails" do
+          refute @controller.verify_recaptcha
+          assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+        end
+
+        it "passes when custom validation matches" do
+          assert @controller.verify_recaptcha(hostname: hostname)
+          assert_nil @controller.flash[:recaptcha_error]
         end
       end
     end

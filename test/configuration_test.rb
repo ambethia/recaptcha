@@ -31,18 +31,16 @@ describe Recaptcha::Configuration do
   end
 
   it "cleans up block configuration after block raises an exception" do
-    outside = '0000000000000000000000000000000000000000'
-    Recaptcha.configuration.public_key.must_equal outside
+    before = Recaptcha.configuration.public_key.dup
 
-    begin
+    assert_raises NoMemoryError do
       Recaptcha.with_configuration(public_key: '12345') do
         Recaptcha.configuration.public_key.must_equal '12345'
-        raise "an exception"
+        raise NoMemoryError, "an exception"
       end
-    rescue => e
     end
 
-    Recaptcha.configuration.public_key.must_equal outside
+    Recaptcha.configuration.public_key.must_equal before
   end
 
   describe "#api_version=" do
