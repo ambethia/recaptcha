@@ -1,3 +1,13 @@
+## 2.3.0 - 2016-05-25
+* enable ssl verification by default ... disable via `disable_ssl_verification = true`
+
+## 2.2.0 - 2016-05-23
+* Add global hostname validator config
+* Clean up after with_configuration exception
+
+## 2.1.0 - 2016-05-19
+* do not query google if repactcha was not submitted
+
 ## 2.0.0 - 2016-05-17
 * remove stoken support, must use custom domain verification or domain whitelist
 

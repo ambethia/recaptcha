@@ -28,7 +28,7 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :use_ssl_by_default, :hostname
+    attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :use_ssl_by_default, :hostname, :disable_ssl_verification
 
     def initialize #:nodoc:
       @skip_verify_env            = SKIP_VERIFY_ENV
