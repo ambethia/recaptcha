@@ -66,7 +66,6 @@ Some of the options available:
 
 | Option      | Description |
 |-------------|-------------|
-| :ssl        | Uses secure http for captcha widget (default `false`, but can be changed by setting `config.use_ssl_by_default`)|
 | :noscript   | Include <noscript> content (default `true`)|
 | :display    | Takes a hash containing the `theme` and `tabindex` options per the API. (default `nil`), options: 'red', 'white', 'blackglass', 'clean', 'custom'|
 | :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
@@ -133,7 +132,6 @@ Recaptcha.configure do |config|
   config.private_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
   # Uncomment the following line if you are using a proxy server:
   # config.proxy = 'http://myproxy.com.au:8080'
-  # config.disable_ssl_verification # if you do not want to verify ssl connection
 end
 ```
 

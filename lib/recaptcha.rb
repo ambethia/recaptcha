@@ -6,8 +6,7 @@ require 'net/http'
 
 module Recaptcha
   CONFIG = {
-    'server_url' => '//www.google.com/recaptcha/api.js',
-    'secure_server_url' => 'https://www.google.com/recaptcha/api.js',
+    'server_url' => 'https://www.google.com/recaptcha/api.js',
     'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
   }
 
@@ -56,12 +55,7 @@ module Recaptcha
     uri = URI.parse(Recaptcha.configuration.verify_url + '?' + query)
     http_instance = http.new(uri.host, uri.port)
     http_instance.read_timeout = http_instance.open_timeout = options[:timeout] || DEFAULT_TIMEOUT
-    if uri.port == 443
-      http_instance.use_ssl = true
-      if Recaptcha.configuration.disable_ssl_verification
-        http_instance.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-    end
+    http_instance.use_ssl = true if uri.port == 443
     request = Net::HTTP::Get.new(uri.request_uri)
     http_instance.request(request).body
   end

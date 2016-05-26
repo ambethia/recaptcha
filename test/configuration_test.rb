@@ -3,19 +3,7 @@ require_relative 'helper'
 describe Recaptcha::Configuration do
   describe "#api_server_url" do
     it "serves the default" do
-      Recaptcha.configuration.api_server_url.must_equal "//www.google.com/recaptcha/api.js"
-    end
-
-    it "servers the default for nil" do
-      Recaptcha.configuration.api_server_url(ssl: nil).must_equal "//www.google.com/recaptcha/api.js"
-    end
-
-    it "knows ssl" do
-      Recaptcha.configuration.api_server_url(ssl: true).must_equal "https://www.google.com/recaptcha/api.js"
-    end
-
-    it "knows non-ssl" do
-      Recaptcha.configuration.api_server_url(ssl: false).must_equal "//www.google.com/recaptcha/api.js"
+      Recaptcha.configuration.api_server_url.must_equal "https://www.google.com/recaptcha/api.js"
     end
   end
 
@@ -41,25 +29,5 @@ describe Recaptcha::Configuration do
     end
 
     Recaptcha.configuration.public_key.must_equal before
-  end
-
-  describe "#api_version=" do
-    it "warns when assigning v2" do
-      Recaptcha.configuration.expects(:warn)
-      Recaptcha.configuration.api_version = "v2"
-    end
-
-    it "raises when assigning v1" do
-      assert_raises ArgumentError do
-        Recaptcha.configuration.api_version = "v1"
-      end
-    end
-  end
-
-  describe "#api_version" do
-    it "warns" do
-      Recaptcha.configuration.expects(:warn)
-      Recaptcha.configuration.api_version.must_equal "v2"
-    end
   end
 end

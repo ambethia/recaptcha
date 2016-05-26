@@ -28,12 +28,11 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :use_ssl_by_default, :hostname, :disable_ssl_verification
+    attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :hostname
 
     def initialize #:nodoc:
       @skip_verify_env            = SKIP_VERIFY_ENV
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
-      @use_ssl_by_default         = USE_SSL_BY_DEFAULT
 
       @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
       @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
@@ -47,27 +46,12 @@ module Recaptcha
       public_key || raise(RecaptchaError, "No public key specified.")
     end
 
-    def api_server_url(ssl: nil)
-      ssl = use_ssl_by_default if ssl.nil?
-      key = (ssl ? 'secure_server_url' : 'server_url')
-      CONFIG.fetch(key)
+    def api_server_url
+      CONFIG.fetch('server_url')
     end
 
     def verify_url
       CONFIG.fetch('verify_url')
-    end
-
-    def api_version=(v)
-      if v == 'v2'
-        warn 'setting api_version is deprecated and will be removed shortly, only v2 is supported'
-      else
-        raise ArgumentError, "only v2 is supported, not #{v.inspect}"
-      end
-    end
-
-    def api_version
-      warn 'getting api_version is deprecated and will be removed shortly, only v2 is supported'
-      'v2'
     end
   end
 end
