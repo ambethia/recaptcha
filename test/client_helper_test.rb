@@ -5,28 +5,8 @@ require 'active_support/core_ext/hash'
 describe Recaptcha::ClientHelper do
   include Recaptcha::ClientHelper
 
-  describe "ssl" do
-    def url(options={})
-      "\"#{Recaptcha.configuration.api_server_url(options)}\""
-    end
-
-    it "uses ssl when ssl by default is on" do
-      Recaptcha.configuration.use_ssl_by_default = true
-      recaptcha_tags.must_include url(ssl: true)
-    end
-
-    it "does not use ssl when ssl by default is off" do
-      recaptcha_tags.must_include url(ssl: false)
-    end
-
-    it "does not use ssl when ssl by default is overwritten" do
-      Recaptcha.configuration.use_ssl_by_default = true
-      recaptcha_tags(ssl: false).must_include url(ssl: false)
-    end
-
-    it "uses ssl when ssl by default is overwritten to true" do
-      recaptcha_tags(ssl: true).must_include url(ssl: true)
-    end
+  it "uses ssl" do
+    recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""
   end
 
   describe "noscript" do
