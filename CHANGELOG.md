@@ -1,3 +1,6 @@
+## 3.0.0 - 2016-05-27
+* remove all non-ssl options
+
 ## 2.3.0 - 2016-05-25
 * enable ssl verification by default ... disable via `disable_ssl_verification = true`
 
