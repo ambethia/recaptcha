@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry-byebug"
   s.add_development_dependency "bump"
   s.add_development_dependency "webmock"
+  s.add_development_dependency "rubocop"
 end

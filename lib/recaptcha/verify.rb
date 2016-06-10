@@ -5,7 +5,7 @@ module Recaptcha
     # Your private API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def verify_recaptcha(options = {})
-      options = {:model => options} unless options.is_a? Hash
+      options = {model: options} unless options.is_a? Hash
       return true if Recaptcha::Verify.skip?(options[:env])
 
       model = options[:model]
@@ -51,7 +51,12 @@ module Recaptcha
     end
 
     def verify_recaptcha!(options = {})
-      verify_recaptcha(options) or raise VerifyError
+      verify_recaptcha(options) || raise(VerifyError)
+    end
+
+    def self.skip?(env)
+      env ||= ENV['RACK_ENV'] || ENV['RAILS_ENV'] || (Rails.env if defined? Rails.env)
+      Recaptcha.configuration.skip_verify_env.include? env
     end
 
     private
@@ -82,7 +87,7 @@ module Recaptcha
     end
 
     def recaptcha_error(model, attribute, message, key, default)
-      message = message || Recaptcha.i18n(key, default)
+      message ||= Recaptcha.i18n(key, default)
       if model
         model.errors.add attribute, message
       else
@@ -92,11 +97,6 @@ module Recaptcha
 
     def recaptcha_flash_supported?
       request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
-    end
-
-    def self.skip?(env)
-      env ||= ENV['RACK_ENV'] || ENV['RAILS_ENV'] || (Rails.env if defined? Rails.env)
-      Recaptcha.configuration.skip_verify_env.include? env
     end
   end
 end

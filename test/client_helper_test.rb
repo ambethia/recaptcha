@@ -21,7 +21,9 @@ describe Recaptcha::ClientHelper do
 
   it "can include size" do
     html = recaptcha_tags(size: 10)
-    html.must_include "<div class=\"g-recaptcha\" data-size=\"10\" data-sitekey=\"0000000000000000000000000000000000000000\""
+    html.must_include(
+      "<div class=\"g-recaptcha\" data-size=\"10\" data-sitekey=\"0000000000000000000000000000000000000000\""
+    )
   end
 
   it "raises withut public key" do

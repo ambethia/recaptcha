@@ -3,10 +3,13 @@ module Recaptcha
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
-      raise(RecaptchaError, "Secure Token is deprecated. Please remove 'stoken' from your calls to recaptcha_tags.") if
-          options.key?(:stoken)
-      raise(RecaptchaError, "SSL is now always true. Please remove 'ssl' from your calls to recaptcha_tags.") if options
-                                                                                                                 .key?(:ssl)
+      if options.key?(:stoken)
+        raise(RecaptchaError, "Secure Token is deprecated. Please remove 'stoken' from your calls to recaptcha_tags.")
+      end
+      if options.key?(:ssl)
+        raise(RecaptchaError, "SSL is now always true. Please remove 'ssl' from your calls to recaptcha_tags.")
+      end
+
       public_key = options[:public_key] || Recaptcha.configuration.public_key!
 
       script_url = Recaptcha.configuration.api_server_url
@@ -18,10 +21,10 @@ module Recaptcha
         a[k] = v if data_attributes.include?(k)
       end
       data_attributes[:sitekey] = public_key
-      data_attributes = data_attributes.map { |k,v| %{data-#{k.to_s.tr('_','-')}="#{v}"} }.join(" ")
+      data_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
 
-      html = %{<script src="#{script_url}" async defer></script>\n}
-      html << %{<div class="g-recaptcha" #{data_attributes}></div>\n}
+      html = %(<script src="#{script_url}" async defer></script>\n)
+      html << %(<div class="g-recaptcha" #{data_attributes}></div>\n)
 
       if options[:noscript] != false
         html << <<-HTML

@@ -8,11 +8,11 @@ module Recaptcha
   CONFIG = {
     'server_url' => 'https://www.google.com/recaptcha/api.js',
     'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
-  }
+  }.freeze
 
   USE_SSL_BY_DEFAULT              = false
   HANDLE_TIMEOUTS_GRACEFULLY      = true
-  SKIP_VERIFY_ENV = ['test', 'cucumber']
+  SKIP_VERIFY_ENV = ['test', 'cucumber'].freeze
   DEFAULT_TIMEOUT = 3
 
   # Gives access to the current Configuration.
@@ -67,7 +67,6 @@ module Recaptcha
       default
     end
   end
-
 
   class RecaptchaError < StandardError
   end
