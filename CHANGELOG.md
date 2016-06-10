@@ -1,3 +1,7 @@
+## 3.1.0 - 2016-06-10
+* better error messages
+* frozen constants
+
 ## 3.0.0 - 2016-05-27
 * remove all non-ssl options
 
