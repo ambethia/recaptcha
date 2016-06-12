@@ -12,7 +12,7 @@ module Recaptcha
 
   USE_SSL_BY_DEFAULT              = false
   HANDLE_TIMEOUTS_GRACEFULLY      = true
-  SKIP_VERIFY_ENV = ['test', 'cucumber'].freeze
+  SKIP_VERIFY_ENV = ['test', 'cucumber']
   DEFAULT_TIMEOUT = 3
 
   # Gives access to the current Configuration.
