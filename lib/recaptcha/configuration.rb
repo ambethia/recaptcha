@@ -31,7 +31,7 @@ module Recaptcha
     attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :hostname
 
     def initialize #:nodoc:
-      @skip_verify_env            = SKIP_VERIFY_ENV
+      @skip_verify_env            = %w(test cucumber)
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
 
       @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
