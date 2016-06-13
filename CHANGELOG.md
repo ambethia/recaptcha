@@ -1,3 +1,6 @@
+## 3.2.0 - 2016-06-13
+* remove SKIP_VERIFY_ENV constant, use `skip_verify_env` instance variable instead
+
 ## 3.1.0 - 2016-06-10
 * better error messages
 * frozen constants
