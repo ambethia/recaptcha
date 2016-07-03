@@ -26,11 +26,12 @@ module Recaptcha
       data_attributes[:sitekey] = public_key
       data_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
 
-      data_attributes << %( id="#{options[:id]}") if options[:id]
+      tag_attributes = ""
+      tag_attributes << %(id="#{options[:id]}") if options[:id]
 
       html = ""
-      html << %(<script src="#{script_url}" async defer></script>\n) if options[:script]
-      html << %(<div class="g-recaptcha" #{data_attributes}></div>\n)
+      html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
+      html << %(<div class="g-recaptcha" #{data_attributes} #{tag_attributes}></div>\n)
 
       if options[:noscript] != false
         html << <<-HTML

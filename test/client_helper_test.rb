@@ -33,14 +33,14 @@ describe Recaptcha::ClientHelper do
     end
   end
 
-  it "including id in tag" do
+  it "should include id to div attribute" do
     html = recaptcha_tags(id: 'my_id')
     html.must_include(
       " id=\"my_id\""
     )
   end
 
-  it "shoudn't include <script> tag" do
+  it "shouldn't include <script> tag" do
     html = recaptcha_tags(script: false)
     html.wont_include(
       "<script"
