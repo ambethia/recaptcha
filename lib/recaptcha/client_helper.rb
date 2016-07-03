@@ -12,9 +12,6 @@ module Recaptcha
 
       public_key = options[:public_key] || Recaptcha.configuration.public_key!
 
-      # recaptcha url script connected manualy if script is false option
-      options[:script] = true if options[:script].nil?
-
       script_url = Recaptcha.configuration.api_server_url
       script_url += "?hl=#{options[:hl]}" unless options[:hl].to_s == ""
       fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{public_key}"
@@ -24,14 +21,15 @@ module Recaptcha
         a[k] = v if data_attributes.include?(k)
       end
       data_attributes[:sitekey] = public_key
-      data_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
+      tag_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
 
-      tag_attributes = ""
-      tag_attributes << %(id="#{options[:id]}") if options[:id]
+      if id = options[:id]
+        tag_attributes << %( id="#{id}")
+      end
 
       html = ""
       html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
-      html << %(<div class="g-recaptcha" #{data_attributes} #{tag_attributes}></div>\n)
+      html << %(<div class="g-recaptcha" #{tag_attributes}></div>\n)
 
       if options[:noscript] != false
         html << <<-HTML
