@@ -74,7 +74,7 @@ Some of the options available:
 | :size       | Specify a size (default `nil`)|
 | :hl         | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
 | :id         | Specify an html id attribute (default `nil`)|
-| :script     | If you do not need to add a script tag by helper you can set the option to false. Usially, it heppens when you add a script tag manualy (default `true`)|
+| :script     | If you do not need to add a script tag by helper you can set the option to false. It's necessary when you add a script tag manualy (default `true`)|
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
 elements, if CSS isn't your thing. Inspect the source of `recaptcha_tags` to see these options.
