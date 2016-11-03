@@ -113,7 +113,7 @@ Also you can translate API response errors to human friendly by adding translati
 en:
   recaptcha:
     errors:
-      incorrect-captcha-sol: 'Fail'
+      verification_failed: 'Fail'
 ```
 
 ## Testing
