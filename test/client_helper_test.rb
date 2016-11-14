@@ -26,8 +26,8 @@ describe Recaptcha::ClientHelper do
     )
   end
 
-  it "raises withut public key" do
-    Recaptcha.configuration.public_key = nil
+  it "raises withut site key" do
+    Recaptcha.configuration.site_key = nil
     assert_raises Recaptcha::RecaptchaError do
       recaptcha_tags
     end

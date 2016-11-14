@@ -10,17 +10,17 @@ module Recaptcha
         raise(RecaptchaError, "SSL is now always true. Please remove 'ssl' from your calls to recaptcha_tags.")
       end
 
-      public_key = options[:public_key] || Recaptcha.configuration.public_key!
+      site_key = options[:site_key] || Recaptcha.configuration.site_key!
 
       script_url = Recaptcha.configuration.api_server_url
       script_url += "?hl=#{options[:hl]}" unless options[:hl].to_s == ""
-      fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{public_key}"
+      fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
 
       data_attributes = [:theme, :type, :callback, :expired_callback, :size]
       data_attributes = options.each_with_object({}) do |(k, v), a|
         a[k] = v if data_attributes.include?(k)
       end
-      data_attributes[:sitekey] = public_key
+      data_attributes[:sitekey] = site_key
       tag_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
 
       if id = options[:id]
