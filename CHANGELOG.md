@@ -1,3 +1,9 @@
+## 4.0.0 - 2016-11-14
+* public_key -> site_key and private_key -> secret_key
+
+## 3.4.0 - 2016-11-01
+* Update fallback html
+
 ## 3.2.0 - 2016-06-13
 * remove SKIP_VERIFY_ENV constant, use `skip_verify_env` instance variable instead
 
