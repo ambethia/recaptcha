@@ -15,7 +15,7 @@ module Recaptcha
   # Your are able to customize all attributes listed below. All values have
   # sensitive default and will very likely not need to be changed.
   #
-  # Please note that the public and private key for the reCAPTCHA API Access
+  # Please note that the site and secret key for the reCAPTCHA API Access
   # have no useful default value. The keys may be set via the Shell enviroment
   # or using this configuration. Settings within this configuration always take
   # precedence.
@@ -23,27 +23,27 @@ module Recaptcha
   # Setting the keys with this Configuration
   #
   #   Recaptcha.configure do |config|
-  #     config.public_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-  #     config.private_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+  #     config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  #     config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :private_key, :public_key, :proxy, :handle_timeouts_gracefully, :hostname
+    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
 
     def initialize #:nodoc:
       @skip_verify_env            = %w[test cucumber]
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
 
-      @private_key           = ENV['RECAPTCHA_PRIVATE_KEY']
-      @public_key            = ENV['RECAPTCHA_PUBLIC_KEY']
+      @secret_key           = ENV['RECAPTCHA_SECRET_KEY']
+      @site_key             = ENV['RECAPTCHA_SITE_KEY']
     end
 
-    def private_key!
-      private_key || raise(RecaptchaError, "No private key specified.")
+    def secret_key!
+      secret_key || raise(RecaptchaError, "No secret key specified.")
     end
 
-    def public_key!
-      public_key || raise(RecaptchaError, "No public key specified.")
+    def site_key!
+      site_key || raise(RecaptchaError, "No site key specified.")
     end
 
     def api_server_url

@@ -9,25 +9,25 @@ describe Recaptcha::Configuration do
 
   it "can overwrite configuration in a block" do
     outside = '0000000000000000000000000000000000000000'
-    Recaptcha.configuration.public_key.must_equal outside
+    Recaptcha.configuration.site_key.must_equal outside
 
-    Recaptcha.with_configuration(public_key: '12345') do
-      Recaptcha.configuration.public_key.must_equal '12345'
+    Recaptcha.with_configuration(site_key: '12345') do
+      Recaptcha.configuration.site_key.must_equal '12345'
     end
 
-    Recaptcha.configuration.public_key.must_equal outside
+    Recaptcha.configuration.site_key.must_equal outside
   end
 
   it "cleans up block configuration after block raises an exception" do
-    before = Recaptcha.configuration.public_key.dup
+    before = Recaptcha.configuration.site_key.dup
 
     assert_raises NoMemoryError do
-      Recaptcha.with_configuration(public_key: '12345') do
-        Recaptcha.configuration.public_key.must_equal '12345'
+      Recaptcha.with_configuration(site_key: '12345') do
+        Recaptcha.configuration.site_key.must_equal '12345'
         raise NoMemoryError, "an exception"
       end
     end
 
-    Recaptcha.configuration.public_key.must_equal before
+    Recaptcha.configuration.site_key.must_equal before
   end
 end

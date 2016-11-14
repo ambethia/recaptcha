@@ -10,7 +10,7 @@ describe Recaptcha::Verify do
     @expected_post_data["response"]   = "response"
 
     @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response' => 'string'}
-    @expected_post_data["secret"] = Recaptcha.configuration.private_key
+    @expected_post_data["secret"] = Recaptcha.configuration.secret_key
 
     @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
   end
@@ -40,15 +40,15 @@ describe Recaptcha::Verify do
       assert_nil @controller.flash[:recaptcha_error]
     end
 
-    it "raises without private key" do
-      Recaptcha.configuration.private_key = nil
+    it "raises without secret key" do
+      Recaptcha.configuration.secret_key = nil
       assert_raises Recaptcha::RecaptchaError do
         @controller.verify_recaptcha
       end
     end
 
-    it "returns false when private key is invalid" do
-      expect_http_post.to_return(body: %({"foo":"false", "bar":"invalid-site-private-key"}))
+    it "returns false when secret key is invalid" do
+      expect_http_post.to_return(body: %({"foo":"false", "bar":"invalid-site-secret-key"}))
 
       refute @controller.verify_recaptcha
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
@@ -68,9 +68,9 @@ describe Recaptcha::Verify do
     it "returns true on success with optional key" do
       key = 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post(private_key: key).to_return(body: '{"success":true}')
+      expect_http_post(secret_key: key).to_return(body: '{"success":true}')
 
-      assert @controller.verify_recaptcha(private_key: key)
+      assert @controller.verify_recaptcha(secret_key: key)
       assert_nil @controller.flash[:recaptcha_error]
     end
 
@@ -241,10 +241,10 @@ describe Recaptcha::Verify do
     end
   end
 
-  def expect_http_post(private_key: Recaptcha.configuration.private_key)
+  def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
     stub_request(
       :get,
-      "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{private_key}"
+      "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
     )
   end
 end

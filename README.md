@@ -25,8 +25,8 @@ Set in production and locally use [dotenv](https://github.com/bkeepers/dotenv), 
 Otherwise see [Alternative API key setup](#alternative-api-key-setup).
 
 ```
-export RECAPTCHA_PUBLIC_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+export RECAPTCHA_SITE_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
 Add `recaptcha_tags` to the forms you want to protect.
@@ -69,7 +69,7 @@ Some of the options available:
 | :noscript   | Include <noscript> content (default `true`)|
 | :display    | Takes a hash containing the `theme` and `tabindex` options per the API. (default `nil`), options: 'red', 'white', 'blackglass', 'clean', 'custom'|
 | :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
-| :public_key | Override public API key |
+| :site_key   | Override site API key |
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
 | :size       | Specify a size (default `nil`)|
 | :hl         | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
@@ -93,7 +93,7 @@ Some of the options available:
 | :model       | Model to set errors.
 | :attribute   | Model attribute to receive errors. (default :base)
 | :message     | Custom error message.
-| :private_key | Override private API key.
+| :secret_key  | Override secret API key.
 | :timeout     | The number of seconds to wait for reCAPTCHA servers before give up. (default `3`)
 | :response    | Custom response parameter. (default: params['g-recaptcha-response'])
 | :hostname    | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`, but can be changed by setting `config.hostname`)
@@ -131,8 +131,8 @@ Recaptcha.configuration.skip_verify_env.delete("test")
 ```Ruby
 # config/initializers/recaptcha.rb
 Recaptcha.configure do |config|
-  config.public_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-  config.private_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+  config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
   # Uncomment the following line if you are using a proxy server:
   # config.proxy = 'http://myproxy.com.au:8080'
 end
@@ -143,8 +143,8 @@ end
 For temporary overwrites (not thread safe).
 
 ```Ruby
-Recaptcha.with_configuration(public_key: '12345') do
-  # Do stuff with the overwritten public_key.
+Recaptcha.with_configuration(site_key: '12345') do
+  # Do stuff with the overwritten site_key.
 end
 ```
 
@@ -153,11 +153,11 @@ end
 Pass in keys as options at runtime, for code base with multiple reCAPTCHA setups:
 
 ```Ruby
-recaptcha_tags public_key: '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+recaptcha_tags site_key: '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 
 and
 
-verify_recaptcha private_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+verify_recaptcha secret_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
 ## Misc
