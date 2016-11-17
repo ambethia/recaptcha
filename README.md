@@ -67,7 +67,7 @@ Some of the options available:
 | Option      | Description |
 |-------------|-------------|
 | :noscript   | Include <noscript> content (default `true`)|
-| :display    | Takes a hash containing the `theme` and `tabindex` options per the API. (default `nil`), options: 'red', 'white', 'blackglass', 'clean', 'custom'|
+| :theme      | Specify the theme to be used per the API. Available options: `dark` and `light`. (default `light`)|
 | :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
 | :site_key   | Override site API key |
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
