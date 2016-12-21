@@ -16,7 +16,7 @@ module Recaptcha
       script_url += "?hl=#{options[:hl]}" unless options[:hl].to_s == ""
       fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
 
-      data_attributes = [:theme, :type, :callback, :expired_callback, :size]
+      data_attributes = [:badge, :theme, :type, :callback, :expired_callback, :size]
       data_attributes = options.each_with_object({}) do |(k, v), a|
         a[k] = v if data_attributes.include?(k)
       end
