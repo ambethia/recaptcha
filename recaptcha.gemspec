@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/ambethia/recaptcha"
   s.summary     = s.description = "Helpers for the reCAPTCHA API"
   s.license     = "MIT"
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 1.9.3'
 
   s.files       = `git ls-files lib README.md CHANGELOG.md LICENSE`.split("\n")
 
