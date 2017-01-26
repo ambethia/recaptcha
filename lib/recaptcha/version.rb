@@ -1,3 +1,3 @@
 module Recaptcha
-  VERSION = "4.0.1".freeze
+  VERSION = "4.0.1"
 end
