@@ -43,7 +43,7 @@
     }
   </script>
   <%= form_tag "/captchas", id: "invisible-recaptcha-form" do %>
-    <%= invisible_recaptcha_tags callback: 'onSubmitCallback' %>
+    <%= invisible_recaptcha_tags callback: 'onSubmitCallback', text: 'Save changes' %>
   <% end %>
 <% else %>
   <%= form_tag "/captchas" do %>

@@ -72,7 +72,7 @@ module Recaptcha
     # Invisible reCAPTCHA implementation
     def invisible_recaptcha_tags(options = {})
       html, tag_attributes = build_html(options)
-      html << %(<button type="submit" #{tag_attributes}>#{options[:button_text]}</button>\n)
+      html << %(<button type="submit" #{tag_attributes}>#{options[:text]}</button>\n)
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
   end
