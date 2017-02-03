@@ -36,11 +36,21 @@
     <%= submit_tag %>
   <% end %>
   <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-  <%= link_to 'Single ?', '?' %>
+<% elsif params[:invisible] %>
+  <script>
+    var onSubmitCallback = function() {
+      document.getElementById("invisible-recaptcha-form").submit();
+    }
+  </script>
+  <%= form_tag "/captchas", id: "invisible-recaptcha-form" do %>
+    <%= invisible_recaptcha_tags callback: 'onSubmitCallback', text: 'Save changes' %>
+  <% end %>
 <% else %>
   <%= form_tag "/captchas" do %>
     <%= recaptcha_tags %>
     <%= submit_tag %>
   <% end %>
-  <%= link_to 'Multi ?', '?multi=1' %>
 <% end %>
+<%= link_to 'Single ?', '?' if params[:multi] or params[:invisible] %>
+<%= link_to 'Multi ?', '?multi=1' unless params[:multi] %>
+<%= link_to 'Invisible ?', '?invisible=1' unless params[:invisible] %>
