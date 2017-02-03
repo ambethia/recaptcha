@@ -1,30 +1,5 @@
 module Recaptcha
   module ClientHelper
-    def build_html(options = {})
-      site_key = options[:site_key] || Recaptcha.configuration.site_key!
-      script_url = Recaptcha.configuration.api_server_url
-      script_url += "?hl=#{options[:hl]}" unless options[:hl].to_s == ""
-
-      data_attributes = [:badge, :theme, :type, :callback, :expired_callback, :size]
-      data_attributes = options.each_with_object({}) do |(k, v), a|
-        a[k] = v if data_attributes.include?(k)
-      end
-      data_attributes[:sitekey] = site_key
-
-      tag_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
-      if id = options[:id]
-        tag_attributes << %( id="#{id}")
-      end
-      tag_attributes << %( class="g-recaptcha #{options[:class]}")
-
-      html = ""
-      html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
-
-      fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
-
-      [html, tag_attributes, fallback_uri]
-    end
-
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
@@ -35,7 +10,7 @@ module Recaptcha
         raise(RecaptchaError, "SSL is now always true. Please remove 'ssl' from your calls to recaptcha_tags.")
       end
 
-      html, tag_attributes, fallback_uri = build_html(options)
+      html, tag_attributes, fallback_uri = Recaptcha::ClientHelper.recaptcha_components(options)
       html << %(<div #{tag_attributes}></div>\n)
 
       if options[:noscript] != false
@@ -70,9 +45,34 @@ module Recaptcha
 
     # Invisible reCAPTCHA implementation
     def invisible_recaptcha_tags(options = {})
-      html, tag_attributes = build_html(options)
+      html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
       html << %(<button type="submit" #{tag_attributes}>#{options[:text]}</button>\n)
       html.respond_to?(:html_safe) ? html.html_safe : html
+    end
+
+    def self.recaptcha_components(options = {})
+      site_key = options[:site_key] || Recaptcha.configuration.site_key!
+      script_url = Recaptcha.configuration.api_server_url
+      script_url += "?hl=#{options[:hl]}" unless options[:hl].to_s == ""
+
+      data_attributes = [:badge, :theme, :type, :callback, :expired_callback, :size]
+      data_attributes = options.each_with_object({}) do |(k, v), a|
+        a[k] = v if data_attributes.include?(k)
+      end
+      data_attributes[:sitekey] = site_key
+
+      tag_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
+      if id = options[:id]
+        tag_attributes << %( id="#{id}")
+      end
+      tag_attributes << %( class="g-recaptcha #{options[:class]}")
+
+      html = ""
+      html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
+
+      fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
+
+      [html, tag_attributes, fallback_uri]
     end
   end
 end
