@@ -19,11 +19,10 @@ module Recaptcha
 
       html = ""
       html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
-      html
 
       fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
 
-      return html, tag_attributes, fallback_uri
+      [html, tag_attributes, fallback_uri]
     end
 
     # Your public API can be specified in the +options+ hash or preferably
