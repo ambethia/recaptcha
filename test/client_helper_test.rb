@@ -10,7 +10,7 @@ describe Recaptcha::ClientHelper do
   end
 
   describe "noscript" do
-    it "does not adds noscript tags when noscript is given" do
+    it "does not add noscript tags when noscript is given" do
       recaptcha_tags(noscript: false).wont_include "noscript"
     end
 
@@ -26,7 +26,7 @@ describe Recaptcha::ClientHelper do
     )
   end
 
-  it "raises withut site key" do
+  it "raises without site key" do
     Recaptcha.configuration.site_key = nil
     assert_raises Recaptcha::RecaptchaError do
       recaptcha_tags
@@ -45,5 +45,32 @@ describe Recaptcha::ClientHelper do
     html.wont_include(
       "<script"
     )
+  end
+
+  describe "invisible recatpcha" do
+    it "uses ssl" do
+      invisible_recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""
+    end
+
+    it "raises without site key" do
+      Recaptcha.configuration.site_key = nil
+      assert_raises Recaptcha::RecaptchaError do
+        invisible_recaptcha_tags
+      end
+    end
+
+    it "includes id as button attribute" do
+      html = invisible_recaptcha_tags(id: 'my_id')
+      html.must_include(
+        " id=\"my_id\""
+      )
+    end
+
+    it "does not include <script> tag when setting script: false" do
+      html = invisible_recaptcha_tags(script: false)
+      html.wont_include(
+        "<script"
+      )
+    end
   end
 end

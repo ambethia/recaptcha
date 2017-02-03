@@ -60,5 +60,25 @@ module Recaptcha
 
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
+
+    # Invisible reCAPTCHA implementation
+    def invisible_recaptcha_tags(options = {})
+      site_key = options[:site_key] || Recaptcha.configuration.site_key!
+      script_url = Recaptcha.configuration.api_server_url
+      data_attributes = [:badge, :theme, :type, :callback, :expired_callback, :size, :tabindex]
+      data_attributes = options.each_with_object({}) do |(k, v), a|
+        a[k] = v if data_attributes.include?(k)
+      end
+      data_attributes[:sitekey] = site_key
+      tag_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
+      if id = options[:id]
+        tag_attributes << %( id="#{id}")
+      end
+      class_ = options[:class]
+      html = ""
+      html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
+      html << %(<button type="submit" class="g-recaptcha #{class_}" #{tag_attributes}>Submit</button>\n)
+      html.respond_to?(:html_safe) ? html.html_safe : html
+    end
   end
 end
