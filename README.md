@@ -100,23 +100,18 @@ Some of the options available:
 | :env         | Current environment. The request to verify will be skipped if the environment is specified in configuration under `skip_verify_env`
 
 ## invisible_recaptcha_tags
-Since 4.1.0, this gem supports [Invisible reCAPTCHA](https://developers.google.com/recaptcha/docs/invisible). Unlike `recaptcha_tags`, `invisible_recaptcha_tags` has two major differences in implementation:
 
-1. You must specify a callback function, which would be called after verification with Google's reCAPTCHA service. Ideally, this callback function would submit the actual form.
-2. The `invisible_recaptcha_tags` will generate a submit button for you. You should not need to add a `f.submit` or `submit_tag` to your form.
+[Invisible reCAPTCHA](https://developers.google.com/recaptcha/docs/invisible) has two differences:
 
-Here is an example in Rails:
-
-First, add `invisible_recaptcha_tags` to your form and specify a callback name. Also, be sure to specify an id or some kind of identifier for your form. In this example, the callback is "submitInvisibleRecaptchaForm" and the id is "invisible-recaptcha-form".
+1. Needs a callback function, which is called after verification with Google's reCAPTCHA service. This callback function must submit the form.
+2. The `invisible_recaptcha_tags` generates a submit button.
 
 ```Erb
 <%= form_for @foo, html: {id: 'invisible-recaptcha-form'} do |f| %>
   # ... other tags
-  <%= invisible_recaptcha_tags, callback: 'submitInvisibleRecaptchaForm' %>
+  <%= invisible_recaptcha_tags callback: 'submitInvisibleRecaptchaForm' %>
 <% end %>
 ```
-
-Then, in your javascript, create a function that would submit the form. This function name should be the same name as specified in the callback.
 
 ```Javascript
 // app/assets/javascripts/application.js
@@ -125,17 +120,8 @@ var submitInvisibleRecaptchaForm = function () {
 };
 ```
 
-Finally, add `verify_recaptcha` to your controller action.
+Finally, add `verify_recaptcha` to your controller as seen [above](#rails-installation).
 
-```Ruby
-# app/controllers/foos_controller.rb
-@foo = Foo.new(params[:foo].permit(:name))
-if verify_recaptcha(model: @foo) && @foo.save
-  redirect_to @foo
-else
-  render 'new'
-end
-```
 
 ## I18n support
 reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem
