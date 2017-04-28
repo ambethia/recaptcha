@@ -74,6 +74,8 @@ module Recaptcha
         end
       end
 
+      attributes["data-sitekey"] = site_key
+
       # Append whatever that's left of options to be attributes on the tag.
       tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
 
