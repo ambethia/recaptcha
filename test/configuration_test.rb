@@ -1,9 +1,34 @@
 require_relative 'helper'
+require 'pry-byebug'
 
 describe Recaptcha::Configuration do
   describe "#api_server_url" do
     it "serves the default" do
       Recaptcha.configuration.api_server_url.must_equal "https://www.google.com/recaptcha/api.js"
+    end
+
+    describe "when api_server_url is overwritten" do
+      it "serves the overwritten url" do
+        proxied_api_server_url = 'https://127.0.0.1:8080/recaptcha/api.js'
+        Recaptcha.with_configuration(api_server_url: proxied_api_server_url) do
+          Recaptcha.configuration.api_server_url.must_equal proxied_api_server_url
+        end
+      end
+    end
+  end
+
+  describe "#verify_url" do
+    it "serves the default" do
+      Recaptcha.configuration.verify_url.must_equal "https://www.google.com/recaptcha/api/siteverify"
+    end
+
+    describe "when api_server_url is overwritten" do
+      it "serves the overwritten url" do
+        proxied_verify_url = 'https://127.0.0.1:8080/recaptcha/api/siteverify'
+        Recaptcha.with_configuration(verify_url: proxied_verify_url) do
+          Recaptcha.configuration.verify_url.must_equal proxied_verify_url
+        end
+      end
     end
   end
 
