@@ -10,10 +10,12 @@ module Recaptcha
         raise(RecaptchaError, "SSL is now always true. Please remove 'ssl' from your calls to recaptcha_tags.")
       end
 
+      noscript = options.delete(:noscript)
+
       html, tag_attributes, fallback_uri = Recaptcha::ClientHelper.recaptcha_components(options)
       html << %(<div #{tag_attributes}></div>\n)
 
-      if options[:noscript] != false
+      if noscript != false
         html << <<-HTML
           <noscript>
             <div>
@@ -45,32 +47,35 @@ module Recaptcha
 
     # Invisible reCAPTCHA implementation
     def invisible_recaptcha_tags(options = {})
+      text = options.delete(:text)
       html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
-      html << %(<button type="submit" #{tag_attributes}>#{options[:text]}</button>\n)
+
+      html << %(<button type="submit" #{tag_attributes}>#{text}</button>\n)
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
 
     def self.recaptcha_components(options = {})
-      site_key = options[:site_key] || Recaptcha.configuration.site_key!
-      script_url = Recaptcha.configuration.api_server_url
-      script_url += "?hl=#{options[:hl]}" unless options[:hl].to_s == ""
-
-      data_attributes = [:badge, :theme, :type, :callback, :expired_callback, :size]
-      data_attributes = options.each_with_object({}) do |(k, v), a|
-        a[k] = v if data_attributes.include?(k)
-      end
-      data_attributes[:sitekey] = site_key
-
-      tag_attributes = data_attributes.map { |k, v| %(data-#{k.to_s.tr('_', '-')}="#{v}") }.join(" ")
-      if id = options[:id]
-        tag_attributes << %( id="#{id}")
-      end
-      tag_attributes << %( class="g-recaptcha #{options[:class]}")
-
+      site_key = options.delete(:site_key) || Recaptcha.configuration.site_key!
       html = ""
-      html << %(<script src="#{script_url}" async defer></script>\n) if options.fetch(:script, true)
+      attributes = {
+        class: ["g-recaptcha", options.delete(:class)].join(" ")
+      }
 
+      hl = options.delete(:hl)
+      script_url = Recaptcha.configuration.api_server_url
+      script_url += "?hl=#{hl}" unless hl.to_s == ""
+      html << %(<script src="#{script_url}" async defer></script>\n) unless options.delete(:script) == false
       fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
+
+      # Pull out reCaptcha specific data attributes.
+      [:badge, :theme, :type, :callback, :expired_callback, :size].each do |data_attribute|
+        if value = options.delete(data_attribute)
+          attributes["data-#{data_attribute}"] = value
+        end
+      end
+
+      # Append whatever that's left of options to be attributes on the tag.
+      tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
 
       [html, tag_attributes, fallback_uri]
     end
