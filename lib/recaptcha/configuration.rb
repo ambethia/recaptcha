@@ -37,9 +37,6 @@ module Recaptcha
 
       @secret_key           = ENV['RECAPTCHA_SECRET_KEY']
       @site_key             = ENV['RECAPTCHA_SITE_KEY']
-
-      @api_server_url       = ENV['RECAPTCHA_API_SERVER_URL']
-      @verify_url           = ENV['RECAPTCHA_VERIFY_URL']
     end
 
     def secret_key!
