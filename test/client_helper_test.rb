@@ -41,6 +41,11 @@ describe Recaptcha::ClientHelper do
     html.wont_include("<script")
   end
 
+  it "includes the site key in the button attributes" do
+    html = invisible_recaptcha_tags
+    html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
+  end
+
   describe "invisible recatpcha" do
     it "uses ssl" do
       invisible_recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""
@@ -66,6 +71,11 @@ describe Recaptcha::ClientHelper do
     it "renders other attributes" do
       html = invisible_recaptcha_tags(foo_attr: 'foo_value')
       html.must_include(" foo_attr=\"foo_value\"")
+    end
+
+    it "includes the site key in the button attributes" do
+      html = invisible_recaptcha_tags
+      html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
     end
   end
 end
