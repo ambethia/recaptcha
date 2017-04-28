@@ -62,5 +62,10 @@ describe Recaptcha::ClientHelper do
       html = invisible_recaptcha_tags(script: false)
       html.wont_include("<script")
     end
+
+    it "renders other attributes" do
+      html = invisible_recaptcha_tags(foo_attr: 'foo_value')
+      html.must_include(" foo_attr=\"foo_value\"")
+    end
   end
 end
