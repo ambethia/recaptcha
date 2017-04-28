@@ -1,5 +1,4 @@
 require_relative 'helper'
-require 'pry-byebug'
 
 describe Recaptcha::Configuration do
   describe "#api_server_url" do
