@@ -109,7 +109,7 @@ Some of the options available:
 ```Erb
 <%= form_for @foo, html: {id: 'invisible-recaptcha-form'} do |f| %>
   # ... other tags
-  <%= invisible_recaptcha_tags callback: 'submitInvisibleRecaptchaForm' %>
+  <%= invisible_recaptcha_tags callback: 'submitInvisibleRecaptchaForm', text: 'Submit form' %>
 <% end %>
 ```
 
