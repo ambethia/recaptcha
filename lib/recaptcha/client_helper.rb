@@ -70,7 +70,7 @@ module Recaptcha
       # Pull out reCaptcha specific data attributes.
       [:badge, :theme, :type, :callback, :expired_callback, :size].each do |data_attribute|
         if value = options.delete(data_attribute)
-          attributes["data-#{data_attribute}"] = value
+          attributes["data-#{data_attribute.to_s.tr('_', '-')}"] = value
         end
       end
 
