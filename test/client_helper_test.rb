@@ -81,7 +81,7 @@ describe Recaptcha::ClientHelper do
     it "doesn't render script tag when verification is disabled" do
       html = invisible_recaptcha_tags(env: "test")
       html.wont_include("<script")
-      html.wont_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
+      html.wont_include("data-sitekey=")
     end
   end
 end
