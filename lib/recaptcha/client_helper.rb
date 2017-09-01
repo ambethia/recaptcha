@@ -57,23 +57,25 @@ module Recaptcha
     def self.recaptcha_components(options = {})
       site_key = options.delete(:site_key) || Recaptcha.configuration.site_key!
       html = ""
-      attributes = {
-        class: ["g-recaptcha", options.delete(:class)].join(" ")
-      }
+      attributes = {}
+      fallback_uri = ""
+
+      attributes["class"] = %(g-recaptcha #{options.delete(:class)})
 
       unless Recaptcha::Verify.skip?(options[:env])
-        hl = options.delete(:hl)
+        hl = options.delete(:hl).to_s
         script_url = Recaptcha.configuration.api_server_url
-        script_url += "?hl=#{hl}" unless hl.to_s == ""
+        script_url << "?hl=#{hl}" unless hl == ""
         html << %(<script src="#{script_url}" async defer></script>\n) unless options.delete(:script) == false
-        fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
+        fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
 
         # Pull out reCaptcha specific data attributes.
         [:badge, :theme, :type, :callback, :expired_callback, :size].each do |data_attribute|
-          if value = options.delete(data_attribute)
-            attributes["data-#{data_attribute}"] = value
-          end
+          value = options.delete(data_attribute)
+
+          attributes["data-#{data_attribute}"] = value if value
         end
+
         attributes["data-sitekey"] = site_key
       end
 
