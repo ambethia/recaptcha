@@ -57,24 +57,27 @@ module Recaptcha
     def self.recaptcha_components(options = {})
       site_key = options.delete(:site_key) || Recaptcha.configuration.site_key!
       html = ""
-      attributes = {
-        class: ["g-recaptcha", options.delete(:class)].join(" ")
-      }
+      attributes = {}
+      fallback_uri = ""
 
-      hl = options.delete(:hl)
-      script_url = Recaptcha.configuration.api_server_url
-      script_url += "?hl=#{hl}" unless hl.to_s == ""
-      html << %(<script src="#{script_url}" async defer></script>\n) unless options.delete(:script) == false
-      fallback_uri = "#{script_url.chomp('.js')}/fallback?k=#{site_key}"
+      attributes["class"] = "g-recaptcha #{options.delete(:class)}"
 
-      # Pull out reCaptcha specific data attributes.
-      [:badge, :theme, :type, :callback, :expired_callback, :size].each do |data_attribute|
-        if value = options.delete(data_attribute)
-          attributes["data-#{data_attribute}"] = value
+      unless Recaptcha::Verify.skip?(options[:env])
+        hl = options.delete(:hl).to_s
+        script_url = Recaptcha.configuration.api_server_url
+        script_url << "?hl=#{hl}" unless hl == ""
+        html << %(<script src="#{script_url}" async defer></script>\n) unless options.delete(:script) == false
+        fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
+
+        # Pull out reCaptcha specific data attributes.
+        [:badge, :theme, :type, :callback, :expired_callback, :size].each do |data_attribute|
+          value = options.delete(data_attribute)
+
+          attributes["data-#{data_attribute}"] = value if value
         end
-      end
 
-      attributes["data-sitekey"] = site_key
+        attributes["data-sitekey"] = site_key
+      end
 
       # Append whatever that's left of options to be attributes on the tag.
       tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
