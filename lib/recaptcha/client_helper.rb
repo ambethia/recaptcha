@@ -60,7 +60,7 @@ module Recaptcha
       attributes = {}
       fallback_uri = ""
 
-      attributes["class"] = %(g-recaptcha #{options.delete(:class)})
+      attributes["class"] = "g-recaptcha #{options.delete(:class)}"
 
       unless Recaptcha::Verify.skip?(options[:env])
         hl = options.delete(:hl).to_s
