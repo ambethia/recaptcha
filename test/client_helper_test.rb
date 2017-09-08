@@ -41,12 +41,24 @@ describe Recaptcha::ClientHelper do
     html.wont_include("<script")
   end
 
+  it "adds :hl option to the url" do
+    html = recaptcha_tags(hl: 'en')
+    html.must_include("?hl=en")
+
+    html = recaptcha_tags(hl: 'ru')
+    html.wont_include("?hl=en")
+    html.must_include("?hl=ru")
+
+    html = recaptcha_tags
+    html.wont_include("?hl=")
+  end
+
   it "includes the site key in the button attributes" do
     html = invisible_recaptcha_tags
     html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
   end
 
-  describe "invisible recatpcha" do
+  describe "invisible recaptcha" do
     it "uses ssl" do
       invisible_recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""
     end
