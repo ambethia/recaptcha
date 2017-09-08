@@ -65,7 +65,7 @@ module Recaptcha
       unless Recaptcha::Verify.skip?(options[:env])
         hl = options.delete(:hl).to_s
         script_url = Recaptcha.configuration.api_server_url
-        script_url << "?hl=#{hl}" unless hl == ""
+        script_url += "?hl=#{hl}" unless hl == ""
         html << %(<script src="#{script_url}" async defer></script>\n) unless options.delete(:script) == false
         fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
 
