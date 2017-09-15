@@ -22,7 +22,7 @@ GEM
       safe_yaml (~> 1.0.0)
     hashdiff (0.2.3)
     i18n (0.7.0)
-    json (1.8.3)
+    json (1.8.6)
     maxitest (1.5.4)
       minitest (>= 5.0.0, < 5.9.0)
     metaclass (0.0.4)
@@ -76,4 +76,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
