@@ -95,5 +95,15 @@ describe Recaptcha::ClientHelper do
       html.wont_include("<script")
       html.wont_include("data-sitekey=")
     end
+
+    it "renders default callback if no callback is given" do
+      html = invisible_recaptcha_tags
+      html.must_include("var invisibleRecaptchaSubmit")
+    end
+
+    it "doesn't render default callback script if a callback is given" do
+      html = invisible_recaptcha_tags(callback: 'customCallback')
+      html.wont_include("var invisibleRecaptchaSubmit")
+    end
   end
 end
