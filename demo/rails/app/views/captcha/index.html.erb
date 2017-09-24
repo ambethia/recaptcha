@@ -37,13 +37,8 @@
   <% end %>
   <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 <% elsif params[:invisible] %>
-  <script>
-    var onSubmitCallback = function() {
-      document.getElementById("invisible-recaptcha-form").submit();
-    }
-  </script>
   <%= form_tag "/captchas", id: "invisible-recaptcha-form" do %>
-    <%= invisible_recaptcha_tags callback: 'onSubmitCallback', text: 'Save changes' %>
+    <%= invisible_recaptcha_tags text: 'Save changes' %>
   <% end %>
 <% else %>
   <%= form_tag "/captchas" do %>

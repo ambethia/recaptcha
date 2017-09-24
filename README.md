@@ -101,10 +101,25 @@ Some of the options available:
 
 ## invisible_recaptcha_tags
 
-[Invisible reCAPTCHA](https://developers.google.com/recaptcha/docs/invisible) has two differences:
+Make sure to read [Invisible reCAPTCHA](https://developers.google.com/recaptcha/docs/invisible).
 
-1. Needs a callback function, which is called after verification with Google's reCAPTCHA service. This callback function must submit the form.
-2. The `invisible_recaptcha_tags` generates a submit button.
+### With a single form on a page
+
+1. The `invisible_recaptcha_tags` generates a submit button for you.
+
+```Erb
+<%= form_for @foo do |f| %>
+  # ... other tags
+  <%= invisible_recaptcha_tags text: 'Submit form' %>
+<% end %>
+```
+
+Then, add `verify_recaptcha` to your controller as seen [above](#rails-installation).
+
+### With multiple forms on a page
+
+1. You will need a custom callback function, which is called after verification with Google's reCAPTCHA service. This callback function must submit the form. Optionally, `invisible_recaptcha_tags` currently implements a JS function called `invisibleRecaptchaSubmit` that is called when no `callback` is passed. Should you wish to override `invisibleRecaptchaSubmit`, you will need to use `invisible_recaptcha_tags script: false`, see lib/recaptcha/client_helper.rb for details.
+2. The `invisible_recaptcha_tags` generates a submit button for you.
 
 ```Erb
 <%= form_for @foo, html: {id: 'invisible-recaptcha-form'} do |f| %>
