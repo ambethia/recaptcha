@@ -76,8 +76,12 @@ describe Recaptcha::Verify do
 
     it "returns true on success without remote_ip" do
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post_without_ip.to_return(body: '{"success":true}')
-
+      secret_key = Recaptcha.configuration.secret_key
+      stub_request(
+        :get,
+        "https://www.google.com/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
+      ).to_return(body: '{"success":true}')
+      
       assert @controller.verify_recaptcha(skip_remote_ip: true)
       assert_nil @controller.flash[:recaptcha_error]
     end
@@ -253,13 +257,6 @@ describe Recaptcha::Verify do
     stub_request(
       :get,
       "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
-    )
-  end
-
-  def expect_http_post_without_ip(secret_key: Recaptcha.configuration.secret_key)
-    stub_request(
-      :get,
-      "https://www.google.com/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
     )
   end
 end

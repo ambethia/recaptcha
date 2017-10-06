@@ -70,14 +70,14 @@ module Recaptcha
         "response"  => recaptcha_response
       }
 
-      verify_hash["remoteip"] = remote_ip.to_s  unless options[:skip_remote_ip]
+      verify_hash["remoteip"] = remote_ip(request).to_s  unless options[:skip_remote_ip]
 
       reply = JSON.parse(Recaptcha.get(verify_hash, options))
       reply['success'].to_s == "true" &&
         recaptcha_hostname_valid?(reply['hostname'], options[:hostname])
     end
 
-    def remote_ip
+    def remote_ip(request)
       (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
     end
 
