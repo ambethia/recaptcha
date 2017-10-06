@@ -81,7 +81,7 @@ describe Recaptcha::Verify do
         :get,
         "https://www.google.com/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
       ).to_return(body: '{"success":true}')
-      
+
       assert @controller.verify_recaptcha(skip_remote_ip: true)
       assert_nil @controller.flash[:recaptcha_error]
     end

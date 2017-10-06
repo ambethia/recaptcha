@@ -63,7 +63,6 @@ module Recaptcha
 
     def recaptcha_verify_via_api_call(request, recaptcha_response, options)
       secret_key = options[:secret_key] || Recaptcha.configuration.secret_key!
-      
 
       verify_hash = {
         "secret"    => secret_key,
