@@ -63,17 +63,21 @@ module Recaptcha
 
     def recaptcha_verify_via_api_call(request, recaptcha_response, options)
       secret_key = options[:secret_key] || Recaptcha.configuration.secret_key!
-      remote_ip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
 
       verify_hash = {
         "secret"    => secret_key,
-        "remoteip"  => remote_ip.to_s,
         "response"  => recaptcha_response
       }
+
+      verify_hash["remoteip"] = remote_ip(request).to_s  unless options[:skip_remote_ip]
 
       reply = JSON.parse(Recaptcha.get(verify_hash, options))
       reply['success'].to_s == "true" &&
         recaptcha_hostname_valid?(reply['hostname'], options[:hostname])
+    end
+
+    def remote_ip(request)
+      (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
     end
 
     def recaptcha_hostname_valid?(hostname, validation)
