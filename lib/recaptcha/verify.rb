@@ -70,7 +70,7 @@ module Recaptcha
         "response"  => recaptcha_response
       }
 
-      verify_hash.merge!( "remoteip"  => remote_ip.to_s ) unless options[:skip_remote_ip]
+      verify_hash["remoteip"] = remote_ip.to_s  unless options[:skip_remote_ip]
 
       reply = JSON.parse(Recaptcha.get(verify_hash, options))
       reply['success'].to_s == "true" &&
