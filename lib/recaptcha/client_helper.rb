@@ -47,9 +47,10 @@ module Recaptcha
 
     # Invisible reCAPTCHA implementation
     def invisible_recaptcha_tags(options = {})
+      options = {callback: 'invisibleRecaptchaSubmit'}.merge options
       text = options.delete(:text)
-      html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
-
+      html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options.dup)
+      html << recaptcha_default_callback if recaptcha_default_callback_required?(options)
       html << %(<button type="submit" #{tag_attributes}>#{text}</button>\n)
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
@@ -83,6 +84,38 @@ module Recaptcha
       tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
 
       [html, tag_attributes, fallback_uri]
+    end
+
+    private
+
+    def recaptcha_default_callback
+      <<-HTML
+        <script>
+          var invisibleRecaptchaSubmit = function () {
+            var closestForm = function (ele) {
+              var curEle = ele.parentNode;
+              while (curEle.nodeName !== 'FORM' && curEle.nodeName !== 'BODY'){
+                curEle = curEle.parentNode;
+              }
+              return curEle.nodeName === 'FORM' ? curEle : null
+            };
+
+            var eles = document.getElementsByClassName('g-recaptcha');
+            if (eles.length > 0) {
+              var form = closestForm(eles[0]);
+              if (form) {
+                form.submit();
+              }
+            }
+          };
+        </script>
+      HTML
+    end
+
+    def recaptcha_default_callback_required?(options)
+      options[:callback] == 'invisibleRecaptchaSubmit' &&
+      !Recaptcha::Verify.skip?(options[:env]) &&
+      options[:script] != false
     end
   end
 end
