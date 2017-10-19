@@ -37,8 +37,8 @@ describe Recaptcha::ClientHelper do
   end
 
   it "includes tabindex attribute" do
-    html = invisible_recaptcha_tags
-    html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
+    html = recaptcha_tags(tabindex: 123)
+    html.must_include(" data-tabindex=\"123\"")
   end
 
   it "does not include <script> tag when setting script: false" do
