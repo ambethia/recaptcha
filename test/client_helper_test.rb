@@ -91,8 +91,8 @@ describe Recaptcha::ClientHelper do
     end
 
     it "includes the site key in the button attributes" do
-      html = recaptcha_tags(tabindex: 0)
-      html.must_include(" data-tabindex=\"0\"")
+      html = invisible_recaptcha_tags
+      html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
     end
 
     it "doesn't render script tag when verification is disabled" do
