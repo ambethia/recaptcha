@@ -71,7 +71,7 @@ module Recaptcha
         fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
 
         # Pull out reCaptcha specific data attributes.
-        [:badge, :theme, :type, :callback, :expired_callback, :size].each do |data_attribute|
+        [:badge, :theme, :type, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
           value = options.delete(data_attribute)
 
           attributes["data-#{data_attribute}"] = value if value
