@@ -36,6 +36,11 @@ describe Recaptcha::ClientHelper do
     html.must_include(" id=\"my_id\"")
   end
 
+  it "includes tabindex attribute" do
+    html = recaptcha_tags(tabindex: 123)
+    html.must_include(" data-tabindex=\"123\"")
+  end
+
   it "does not include <script> tag when setting script: false" do
     html = recaptcha_tags(script: false)
     html.wont_include("<script")
