@@ -194,7 +194,7 @@ Pass in keys as options at runtime, for code base with multiple reCAPTCHA setups
 ```Ruby
 recaptcha_tags site_key: '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 
-and
+# and
 
 verify_recaptcha secret_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
