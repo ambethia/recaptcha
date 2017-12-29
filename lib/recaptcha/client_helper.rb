@@ -56,7 +56,6 @@ module Recaptcha
     end
 
     def self.recaptcha_components(options = {})
-      site_key = options.delete(:site_key) || Recaptcha.configuration.site_key!
       html = ""
       attributes = {}
       fallback_uri = ""
@@ -64,6 +63,7 @@ module Recaptcha
       attributes["class"] = "g-recaptcha #{options.delete(:class)}"
 
       unless Recaptcha::Verify.skip?(options[:env])
+        site_key = options.delete(:site_key) || Recaptcha.configuration.site_key!
         hl = options.delete(:hl).to_s
         script_url = Recaptcha.configuration.api_server_url
         script_url += "?hl=#{hl}" unless hl == ""
