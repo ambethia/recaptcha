@@ -2,8 +2,12 @@ language: ruby
 cache: bundler
 sudo: false
 rvm:
-  - 2.0.0
-  - 2.1.6
-  - 2.2.3
+  - 2.0
+  - 2.1
+  - 2.2
+  - 2.3
+  - 2.4
+  - 2.5
 matrix:
   fast_finish: true
+
