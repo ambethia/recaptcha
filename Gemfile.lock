@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    recaptcha (4.6.3)
+    recaptcha (4.6.4)
       json
 
 GEM
@@ -76,4 +76,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
