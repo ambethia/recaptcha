@@ -63,6 +63,11 @@ describe Recaptcha::ClientHelper do
     html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
   end
 
+  it "dasherizes the expired_callback attribute name" do
+    html = recaptcha_tags(expired_callback: 'my_expired_callback')
+    html.must_include(" data-expired-callback=\"my_expired_callback\"")
+  end
+
   describe "invisible recaptcha" do
     it "uses ssl" do
       invisible_recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""

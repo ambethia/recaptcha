@@ -75,7 +75,7 @@ module Recaptcha
         [:badge, :theme, :type, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
           value = options.delete(data_attribute)
 
-          attributes["data-#{data_attribute}"] = value if value
+          attributes["data-#{data_attribute.to_s.dasherize}"] = value if value
         end
 
         attributes["data-sitekey"] = site_key
