@@ -95,6 +95,11 @@ describe Recaptcha::ClientHelper do
       html.must_include(" foo_attr=\"foo_value\"")
     end
 
+    it "renders other attributes when verification is disabled" do
+      html = invisible_recaptcha_tags(env: "test", foo_attr: 'foo_value')
+      html.must_include(" foo_attr=\"foo_value\"")
+    end
+
     it "includes the site key in the button attributes" do
       html = invisible_recaptcha_tags
       html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
@@ -104,6 +109,13 @@ describe Recaptcha::ClientHelper do
       html = invisible_recaptcha_tags(env: "test")
       html.wont_include("<script")
       html.wont_include("data-sitekey=")
+    end
+
+    it "doesn't include recaptcha attributes when verification is disabled" do
+      html = invisible_recaptcha_tags(env: "test")
+      [:badge, :theme, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
+        html.wont_include("#{data_attribute}=")
+      end
     end
 
     it "renders default callback if no callback is given" do
