@@ -163,6 +163,12 @@ By default, reCAPTCHA is skipped in "test" and "cucumber" env. To enable it duri
 Recaptcha.configuration.skip_verify_env.delete("test")
 ```
 
+If you need to skip reCAPTCHA for any reason in another environment you can temporarily disable it by running:
+
+```
+export DISABLE_RECAPTCHA=true
+```
+
 ## Alternative API key setup
 
 ### Recaptcha.configure
