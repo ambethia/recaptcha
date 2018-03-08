@@ -27,6 +27,7 @@ Otherwise see [Alternative API key setup](#alternative-api-key-setup).
 ```
 export RECAPTCHA_SITE_KEY  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+export RECAPTCHA_DISABLE = (true|false) # Optional
 ```
 
 Add `recaptcha_tags` to the forms you want to protect.
@@ -174,6 +175,8 @@ Recaptcha.configure do |config|
   config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
   # Uncomment the following line if you are using a proxy server:
   # config.proxy = 'http://myproxy.com.au:8080'
+  # Uncomment the following line to disable Recaptcha functionality
+  # config.disable = true
 end
 ```
 
