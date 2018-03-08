@@ -28,7 +28,7 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :secret_key, :site_key, :api_server_url, :verify_url, :proxy,
+    attr_accessor :skip_verify_env, :secret_key, :site_key, :disable, :api_server_url, :verify_url, :proxy,
       :handle_timeouts_gracefully, :hostname
 
     def initialize #:nodoc:
@@ -37,6 +37,8 @@ module Recaptcha
 
       @secret_key           = ENV['RECAPTCHA_SECRET_KEY']
       @site_key             = ENV['RECAPTCHA_SITE_KEY']
+      # Calling @disable will not hit the setter below
+      self.disable          = ['1', 'true', 'yes'].include? ENV['RECAPTCHA_DISABLE']
     end
 
     def secret_key!
@@ -47,12 +49,25 @@ module Recaptcha
       site_key || raise(RecaptchaError, "No site key specified.")
     end
 
+    def disable=(val)
+      if val
+        @skip_verify_env |= [fetch_env]
+      else
+        @skip_verify_env.delete(fetch_env)
+      end
+      @disable = val
+    end
+
     def api_server_url
       @api_server_url || CONFIG.fetch('server_url')
     end
 
     def verify_url
       @verify_url || CONFIG.fetch('verify_url')
+    end
+
+    def fetch_env
+      ENV['RACK_ENV'] || ENV['RAILS_ENV'] || (Rails.env if defined? Rails.env)
     end
   end
 end

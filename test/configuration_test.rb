@@ -1,6 +1,25 @@
 require_relative 'helper'
 
 describe Recaptcha::Configuration do
+  describe "#disable" do
+    it "it doesn't modify skip_verify_env when false" do
+      before = Recaptcha.configuration.skip_verify_env.dup
+      Recaptcha.with_configuration(disable: false) do
+        Recaptcha.configuration.skip_verify_env.must_equal before
+      end
+    end
+
+    it "it modifies skip_verify_env when true" do
+      ENV['RACK_ENV'] = 'verify'
+      before = Recaptcha.configuration.skip_verify_env.dup
+      Recaptcha.with_configuration(disable: true) do
+        Recaptcha.configuration.skip_verify_env.must_equal (before + ['verify'])
+      end
+      Recaptcha.configuration.skip_verify_env.must_equal before
+      ENV.delete('RACK_ENV')
+    end
+  end
+
   describe "#api_server_url" do
     it "serves the default" do
       Recaptcha.configuration.api_server_url.must_equal "https://www.google.com/recaptcha/api.js"

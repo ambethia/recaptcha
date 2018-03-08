@@ -47,6 +47,15 @@ describe Recaptcha::Verify do
       end
     end
 
+    it "returns true when disable is set" do
+      Recaptcha.with_configuration(disable: true) do
+        expect_http_post.to_return(body: %({"foo":"false", "bar":"invalid-site-secret-key"}))
+
+        assert @controller.verify_recaptcha
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+    end
+
     it "returns false when secret key is invalid" do
       expect_http_post.to_return(body: %({"foo":"false", "bar":"invalid-site-secret-key"}))
 
