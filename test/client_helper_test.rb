@@ -1,4 +1,4 @@
-require_relative 'helper'
+require File.dirname(__FILE__) + '/helper'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash'
 
@@ -11,7 +11,7 @@ describe Recaptcha::ClientHelper do
 
   describe "noscript" do
     it "does not add noscript tags when noscript is given" do
-      recaptcha_tags(noscript: false).wont_include "noscript"
+      recaptcha_tags(:noscript => false).wont_include "noscript"
     end
 
     it "does not add noscript tags" do
@@ -20,7 +20,7 @@ describe Recaptcha::ClientHelper do
   end
 
   it "can include size" do
-    html = recaptcha_tags(size: 10)
+    html = recaptcha_tags(:size => 10)
     html.must_include("data-size=\"10\"")
   end
 
@@ -32,25 +32,25 @@ describe Recaptcha::ClientHelper do
   end
 
   it "includes id as div attribute" do
-    html = recaptcha_tags(id: 'my_id')
+    html = recaptcha_tags(:id => 'my_id')
     html.must_include(" id=\"my_id\"")
   end
 
   it "includes tabindex attribute" do
-    html = recaptcha_tags(tabindex: 123)
+    html = recaptcha_tags(:tabindex => 123)
     html.must_include(" data-tabindex=\"123\"")
   end
 
   it "does not include <script> tag when setting script: false" do
-    html = recaptcha_tags(script: false)
+    html = recaptcha_tags(:script => false)
     html.wont_include("<script")
   end
 
   it "adds :hl option to the url" do
-    html = recaptcha_tags(hl: 'en')
+    html = recaptcha_tags(:hl => 'en')
     html.must_include("?hl=en")
 
-    html = recaptcha_tags(hl: 'ru')
+    html = recaptcha_tags(:hl => 'ru')
     html.wont_include("?hl=en")
     html.must_include("?hl=ru")
 
@@ -64,7 +64,7 @@ describe Recaptcha::ClientHelper do
   end
 
   it "dasherizes the expired_callback attribute name" do
-    html = recaptcha_tags(expired_callback: 'my_expired_callback')
+    html = recaptcha_tags(:expired_callback => 'my_expired_callback')
     html.must_include(" data-expired-callback=\"my_expired_callback\"")
   end
 
@@ -81,22 +81,22 @@ describe Recaptcha::ClientHelper do
     end
 
     it "includes id as button attribute" do
-      html = invisible_recaptcha_tags(id: 'my_id')
+      html = invisible_recaptcha_tags(:id => 'my_id')
       html.must_include(" id=\"my_id\"")
     end
 
     it "does not include <script> tag when setting script: false" do
-      html = invisible_recaptcha_tags(script: false)
+      html = invisible_recaptcha_tags(:script => false)
       html.wont_include("<script")
     end
 
     it "renders other attributes" do
-      html = invisible_recaptcha_tags(foo_attr: 'foo_value')
+      html = invisible_recaptcha_tags(:foo_attr => 'foo_value')
       html.must_include(" foo_attr=\"foo_value\"")
     end
 
     it "renders other attributes when verification is disabled" do
-      html = invisible_recaptcha_tags(env: "test", foo_attr: 'foo_value')
+      html = invisible_recaptcha_tags(:env => "test", :foo_attr => 'foo_value')
       html.must_include(" foo_attr=\"foo_value\"")
     end
 
@@ -106,13 +106,13 @@ describe Recaptcha::ClientHelper do
     end
 
     it "doesn't render script tag when verification is disabled" do
-      html = invisible_recaptcha_tags(env: "test")
+      html = invisible_recaptcha_tags(:env => "test")
       html.wont_include("<script")
       html.wont_include("data-sitekey=")
     end
 
     it "doesn't include recaptcha attributes when verification is disabled" do
-      html = invisible_recaptcha_tags(env: "test")
+      html = invisible_recaptcha_tags(:env => "test")
       [:badge, :theme, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
         html.wont_include("#{data_attribute}=")
       end
@@ -124,7 +124,7 @@ describe Recaptcha::ClientHelper do
     end
 
     it "doesn't render default callback script if a callback is given" do
-      html = invisible_recaptcha_tags(callback: 'customCallback')
+      html = invisible_recaptcha_tags(:callback => 'customCallback')
       html.wont_include("var invisibleRecaptchaSubmit")
     end
   end

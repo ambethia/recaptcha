@@ -1,5 +1,6 @@
 require 'bundler/setup'
-require 'maxitest/autorun'
+require 'minitest/autorun'
+require 'minitest/hooks/default'
 require 'mocha/setup'
 require 'webmock/minitest'
 require 'cgi'
@@ -11,7 +12,7 @@ ENV.delete('RACK_ENV')
 
 I18n.enforce_available_locales = false
 
-Minitest::Test.send(:prepend, Module.new do
+Minitest::Test.send(:include, Module.new do
   def setup
     super
     Recaptcha.configure do |config|
