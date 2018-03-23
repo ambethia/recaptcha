@@ -3,6 +3,7 @@ require 'recaptcha/client_helper'
 require 'recaptcha/verify'
 require 'uri'
 require 'net/http'
+require 'rack/utils'
 
 module Recaptcha
   CONFIG = {
@@ -50,7 +51,7 @@ module Recaptcha
     else
       Net::HTTP
     end
-    query = URI.encode_www_form(verify_hash)
+    query = Rack::Utils.build_query(verify_hash)
     uri = URI.parse(Recaptcha.configuration.verify_url + '?' + query)
     http_instance = http.new(uri.host, uri.port)
     http_instance.read_timeout = http_instance.open_timeout = options[:timeout] || DEFAULT_TIMEOUT
@@ -61,7 +62,7 @@ module Recaptcha
 
   def self.i18n(key, default)
     if defined?(I18n)
-      I18n.translate(key, default: default)
+      I18n.translate(key, :default => default)
     else
       default
     end

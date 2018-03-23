@@ -5,7 +5,7 @@ module Recaptcha
     # Your private API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def verify_recaptcha(options = {})
-      options = {model: options} unless options.is_a? Hash
+      options = { :model => options } unless options.is_a? Hash
       return true if Recaptcha::Verify.skip?(options[:env])
 
       model = options[:model]
