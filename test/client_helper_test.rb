@@ -41,6 +41,11 @@ describe Recaptcha::ClientHelper do
     html.must_include(" data-tabindex=\"123\"")
   end
 
+  it "includes nonce attribute" do
+    html = recaptcha_tags(nonce: 'P9Y0b6dLSkApYRdOULGW57XHcYNJJKeLwxA2az/Ka9s=')
+    html.must_include(" nonce='P9Y0b6dLSkApYRdOULGW57XHcYNJJKeLwxA2az/Ka9s='")
+  end
+
   it "does not include <script> tag when setting script: false" do
     html = recaptcha_tags(script: false)
     html.wont_include("<script")

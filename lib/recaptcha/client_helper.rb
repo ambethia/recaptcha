@@ -68,6 +68,7 @@ module Recaptcha
       class_attribute = options.delete(:class)
       site_key = options.delete(:site_key)
       hl = options.delete(:hl).to_s
+      nonce = options.delete(:nonce)
       skip_script = (options.delete(:script) == false)
       data_attributes = {}
       [:badge, :theme, :type, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
@@ -79,7 +80,8 @@ module Recaptcha
         site_key ||= Recaptcha.configuration.site_key!
         script_url = Recaptcha.configuration.api_server_url
         script_url += "?hl=#{hl}" unless hl == ""
-        html << %(<script src="#{script_url}" async defer></script>\n) unless skip_script
+        nonce_attr = " nonce='#{nonce}'" if nonce
+        html << %(<script src="#{script_url}" async defer#{nonce_attr}></script>\n) unless skip_script
         fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
         attributes["data-sitekey"] = site_key
         attributes.merge! data_attributes

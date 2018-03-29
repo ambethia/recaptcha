@@ -73,6 +73,7 @@ Some of the options available:
 | :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
 | :size       | Specify a size (default `nil`)|
 | :hl         | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
+| :nonce      | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default `nil`)|
 | :id         | Specify an html id attribute (default `nil`)|
 | :script     | If you do not need to add a script tag by helper you can set the option to false. It's necessary when you add a script tag manualy (default `true`)|
 
