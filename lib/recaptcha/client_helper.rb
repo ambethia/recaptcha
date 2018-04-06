@@ -71,7 +71,7 @@ module Recaptcha
       nonce = options.delete(:nonce)
       skip_script = (options.delete(:script) == false)
       data_attributes = {}
-      [:badge, :theme, :type, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
+      [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size, :tabindex].each do |data_attribute|
         value = options.delete(data_attribute)
         data_attributes["data-#{data_attribute.to_s.tr('_', '-')}"] = value if value
       end
