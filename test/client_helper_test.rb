@@ -73,6 +73,11 @@ describe Recaptcha::ClientHelper do
     html.must_include(" data-expired-callback=\"my_expired_callback\"")
   end
 
+  it "dasherizes error_callback attribute name" do
+    html = recaptcha_tags(error_callback: 'my_error_callback')
+    html.must_include(" data-error-callback=\"my_error_callback\"")
+  end
+
   describe "invisible recaptcha" do
     it "uses ssl" do
       invisible_recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""
@@ -118,7 +123,7 @@ describe Recaptcha::ClientHelper do
 
     it "doesn't include recaptcha attributes when verification is disabled" do
       html = invisible_recaptcha_tags(env: "test")
-      [:badge, :theme, :callback, :expired_callback, :size, :tabindex].each do |data_attribute|
+      [:badge, :theme, :callback, :expired_callback, :error_callback, :size, :tabindex].each do |data_attribute|
         html.wont_include("#{data_attribute}=")
       end
     end

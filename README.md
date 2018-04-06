@@ -64,18 +64,21 @@ See [sinatra demo](/demo/sinatra) for details.
 
 Some of the options available:
 
-| Option      | Description |
-|-------------|-------------|
-| :noscript   | Include <noscript> content (default `true`)|
-| :theme      | Specify the theme to be used per the API. Available options: `dark` and `light`. (default `light`)|
-| :ajax       | Render the dynamic AJAX captcha per the API. (default `false`)|
-| :site_key   | Override site API key |
-| :error      | Override the error code returned from the reCAPTCHA API (default `nil`)|
-| :size       | Specify a size (default `nil`)|
-| :hl         | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
-| :nonce      | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default `nil`)|
-| :id         | Specify an html id attribute (default `nil`)|
-| :script     | If you do not need to add a script tag by helper you can set the option to false. It's necessary when you add a script tag manualy (default `true`)|
+| Option            | Description |
+|-------------------|-------------|
+| :noscript         | Include <noscript> content (default `true`)|
+| :theme            | Specify the theme to be used per the API. Available options: `dark` and `light`. (default `light`)|
+| :ajax             | Render the dynamic AJAX captcha per the API. (default `false`)|
+| :site_key         | Override site API key |
+| :error            | Override the error code returned from the reCAPTCHA API (default `nil`)|
+| :size             | Specify a size (default `nil`)|
+| :hl               | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
+| :nonce            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default `nil`)|
+| :id               | Specify an html id attribute (default `nil`)|
+| :script           | If you do not need to add a script tag by helper you can set the option to false. It's necessary when you add a script tag manualy (default `true`)|
+| :callback         | Optional. Name of success callback function, executed when the user submits a successful response |
+| :expired_callback | Optional. Name of expiration callback function, executed when the reCAPTCHA response expires and the user needs to re-verify. |
+| :error_callback   | Optional. Name of error callback function, executed when reCAPTCHA encounters an error (e.g. network connectivity) |
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
 elements, if CSS isn't your thing. Inspect the source of `recaptcha_tags` to see these options.
