@@ -1,17 +1,20 @@
+# frozen_string_literal: true
+
+require 'stringio'
+
 module Recaptcha
   module ClientHelper
     # Your public API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def recaptcha_tags(options = {})
       if options.key?(:stoken)
-        raise(RecaptchaError, "Secure Token is deprecated. Please remove 'stoken' from your calls to recaptcha_tags.")
+        raise(RecaptchaError, 'Secure Token is deprecated. Please remove \'stoken\' from your calls to recaptcha_tags.')
       end
       if options.key?(:ssl)
-        raise(RecaptchaError, "SSL is now always true. Please remove 'ssl' from your calls to recaptcha_tags.")
+        raise(RecaptchaError, 'SSL is now always true. Please remove \'ssl\' from your calls to recaptcha_tags.')
       end
 
       noscript = options.delete(:noscript)
-
       html, tag_attributes, fallback_uri = Recaptcha::ClientHelper.recaptcha_components(options)
       html << %(<div #{tag_attributes}></div>\n)
 
@@ -48,7 +51,7 @@ module Recaptcha
 
     # Invisible reCAPTCHA implementation
     def invisible_recaptcha_tags(options = {})
-      options = {callback: 'invisibleRecaptchaSubmit'}.merge options
+      options = { callback: 'invisibleRecaptchaSubmit' }.merge options
       text = options.delete(:text)
       html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
       html << recaptcha_default_callback if recaptcha_default_callback_required?(options)
@@ -57,9 +60,9 @@ module Recaptcha
     end
 
     def self.recaptcha_components(options = {})
-      html = ""
+      html = StringIO.new
       attributes = {}
-      fallback_uri = ""
+      fallback_uri = ''
 
       # Since leftover options get passed directly through as tag
       # attributes, we must unconditionally delete all our options
@@ -69,29 +72,32 @@ module Recaptcha
       site_key = options.delete(:site_key)
       hl = options.delete(:hl).to_s
       nonce = options.delete(:nonce)
-      skip_script = (options.delete(:script) == false)
+      skip_script = options.delete(:script) == false
       data_attributes = {}
-      [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size, :tabindex].each do |data_attribute|
+      %i[badge theme type callback expired_callback error_callback size tabindex].each do |data_attribute|
         value = options.delete(data_attribute)
         data_attributes["data-#{data_attribute.to_s.tr('_', '-')}"] = value if value
       end
 
       unless Recaptcha::Verify.skip?(env)
         site_key ||= Recaptcha.configuration.site_key!
-        script_url = Recaptcha.configuration.api_server_url
-        script_url += "?hl=#{hl}" unless hl == ""
+        script_url =
+          if hl == ''
+            Recaptcha.configuration.api_server_url
+          else
+            "#{Recaptcha.configuration.api_server_url}?hl=#{hl}"
+          end
         nonce_attr = " nonce='#{nonce}'" if nonce
         html << %(<script src="#{script_url}" async defer#{nonce_attr}></script>\n) unless skip_script
-        fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
-        attributes["data-sitekey"] = site_key
+        fallback_uri = %(#{script_url.chomp('.js')}/fallback?k=#{site_key})
+        attributes['data-sitekey'] = site_key
         attributes.merge! data_attributes
       end
 
       # Append whatever that's left of options to be attributes on the tag.
-      attributes["class"] = "g-recaptcha #{class_attribute}"
-      tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
-
-      [html, tag_attributes, fallback_uri]
+      attributes['class'] = "g-recaptcha #{class_attribute}"
+      tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(' ')
+      [html.string, tag_attributes, fallback_uri]
     end
 
     private
@@ -122,8 +128,8 @@ module Recaptcha
 
     def recaptcha_default_callback_required?(options)
       options[:callback] == 'invisibleRecaptchaSubmit' &&
-      !Recaptcha::Verify.skip?(options[:env]) &&
-      options[:script] != false
+        !Recaptcha::Verify.skip?(options[:env]) &&
+        options[:script] != false
     end
   end
 end

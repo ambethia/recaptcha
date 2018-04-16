@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recaptcha
   # This class enables detailed configuration of the recaptcha services.
   #
@@ -28,23 +30,22 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :secret_key, :site_key, :api_server_url, :verify_url, :proxy,
-      :handle_timeouts_gracefully, :hostname
+    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy,
+                  :handle_timeouts_gracefully, :hostname
 
     def initialize #:nodoc:
-      @skip_verify_env            = %w[test cucumber]
+      @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
-
-      @secret_key           = ENV['RECAPTCHA_SECRET_KEY']
-      @site_key             = ENV['RECAPTCHA_SITE_KEY']
+      @secret_key = ENV['RECAPTCHA_SECRET_KEY']
+      @site_key = ENV['RECAPTCHA_SITE_KEY']
     end
 
     def secret_key!
-      secret_key || raise(RecaptchaError, "No secret key specified.")
+      secret_key || raise(RecaptchaError, 'No secret key specified.')
     end
 
     def site_key!
-      site_key || raise(RecaptchaError, "No site key specified.")
+      site_key || raise(RecaptchaError, 'No site key specified.')
     end
 
     def api_server_url

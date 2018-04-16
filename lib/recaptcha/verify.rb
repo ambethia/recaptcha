@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 module Recaptcha
@@ -5,19 +7,19 @@ module Recaptcha
     # Your private API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def verify_recaptcha(options = {})
-      options = {model: options} unless options.is_a? Hash
+      options = { model: options } unless options.is_a? Hash
       return true if Recaptcha::Verify.skip?(options[:env])
 
       model = options[:model]
-      attribute = options[:attribute] || :base
-      recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
+      attribute = options.fetch(:attribute, :base)
+      recaptcha_response = options.fetch(:response, params['g-recaptcha-response'].to_s)
 
       begin
         verified = if recaptcha_response.empty?
-          false
-        else
-          recaptcha_verify_via_api_call(request, recaptcha_response, options)
-        end
+                     false
+                   else
+                     recaptcha_verify_via_api_call(request, recaptcha_response, options)
+                   end
 
         if verified
           flash.delete(:recaptcha_error) if recaptcha_flash_supported? && !model
@@ -27,8 +29,8 @@ module Recaptcha
             model,
             attribute,
             options[:message],
-            "recaptcha.errors.verification_failed",
-            "reCAPTCHA verification failed, please try again."
+            'recaptcha.errors.verification_failed',
+            'reCAPTCHA verification failed, please try again.'
           )
           false
         end
@@ -38,12 +40,12 @@ module Recaptcha
             model,
             attribute,
             options[:message],
-            "recaptcha.errors.recaptcha_unreachable",
-            "Oops, we failed to validate your reCAPTCHA response. Please try again."
+            'recaptcha.errors.recaptcha_unreachable',
+            'Oops, we failed to validate your reCAPTCHA response. Please try again.'
           )
           false
         else
-          raise RecaptchaError, "Recaptcha unreachable."
+          raise RecaptchaError, 'Recaptcha unreachable.'
         end
       rescue StandardError => e
         raise RecaptchaError, e.message, e.backtrace
@@ -62,21 +64,20 @@ module Recaptcha
     private
 
     def recaptcha_verify_via_api_call(request, recaptcha_response, options)
-      secret_key = options[:secret_key] || Recaptcha.configuration.secret_key!
+      secret_key = options.fetch(:secret_key, Recaptcha.configuration.secret_key!)
 
       verify_hash = {
-        "secret"    => secret_key,
-        "response"  => recaptcha_response
+        'secret' => secret_key,
+        'response' => recaptcha_response
       }
 
       unless options[:skip_remote_ip]
         remoteip = (request.respond_to?(:remote_ip) && request.remote_ip) || (env && env['REMOTE_ADDR'])
-        verify_hash["remoteip"] = remoteip.to_s
+        verify_hash['remoteip'] = remoteip.to_s
       end
 
       reply = JSON.parse(Recaptcha.get(verify_hash, options))
-      reply['success'].to_s == "true" &&
-        recaptcha_hostname_valid?(reply['hostname'], options[:hostname])
+      reply['success'].to_s == 'true' && recaptcha_hostname_valid?(reply['hostname'], options[:hostname])
     end
 
     def recaptcha_hostname_valid?(hostname, validation)
@@ -93,8 +94,8 @@ module Recaptcha
       message ||= Recaptcha.i18n(key, default)
       if model
         model.errors.add attribute, message
-      else
-        flash[:recaptcha_error] = message if recaptcha_flash_supported?
+      elsif recaptcha_flash_supported?
+        flash[:recaptcha_error] = message
       end
     end
 
