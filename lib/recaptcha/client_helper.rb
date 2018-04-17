@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'stringio'
-
 module Recaptcha
   module ClientHelper
     # Your public API can be specified in the +options+ hash or preferably
@@ -61,9 +59,9 @@ module Recaptcha
     end
 
     def self.recaptcha_components(options = {})
-      html = StringIO.new
+      html = ''.dup
       attributes = {}
-      fallback_uri = ''
+      fallback_uri = ''.dup
 
       # Since leftover options get passed directly through as tag
       # attributes, we must unconditionally delete all our options
