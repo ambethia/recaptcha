@@ -1,6 +1,13 @@
-# If you own a namespace and would like to enforce a different set of
-# rules, add a `.rubocop.yml` file to that directory. That configuration
-# can inherit from this file or override these rules entirely.
+AllCops:
+  TargetRubyVersion: 2.3
+  DisplayCopNames: true
+  Include:
+    - 'Rakefile'
+    - 'Gemfile'
+    - 'Rakefile'
+  Exclude:
+    - 'vendor/**/*'
+    - 'demo/**/*'
 
 LineLength:
   Max: 120
@@ -146,13 +153,3 @@ Style/IfInsideElse:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'test/**/*'
-
-AllCops:
-  TargetRubyVersion: 2.3
-  Include:
-    - 'Rakefile'
-    - 'Gemfile'
-    - 'Rakefile'
-  Exclude:
-    - 'vendor/**/*'
-    - 'demo/**/*'

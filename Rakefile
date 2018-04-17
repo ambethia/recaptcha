@@ -11,7 +11,7 @@ end
 
 desc "rubocop"
 task :rubocop do
-  sh "rubocop --display-cop-names"
+  sh "rubocop"
 end
 
 task default: [:test, :rubocop]
