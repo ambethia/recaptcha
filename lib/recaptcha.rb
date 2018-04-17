@@ -1,8 +1,13 @@
 require 'recaptcha/configuration'
-require 'recaptcha/client_helper'
-require 'recaptcha/verify'
 require 'uri'
 require 'net/http'
+
+if defined?(Rails)
+  require 'recaptcha/railtie'
+else
+  require 'recaptcha/client_helper'
+  require 'recaptcha/verify'
+end
 
 module Recaptcha
   CONFIG = {
