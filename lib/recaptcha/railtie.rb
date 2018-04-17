@@ -6,7 +6,7 @@ module Recaptcha
         include Recaptcha::ClientHelper
       end
 
-      ActiveSupport.on_load(:action_view) do
+      ActiveSupport.on_load(:action_controller) do
         require 'recaptcha/verify'
         include Recaptcha::Verify
       end
