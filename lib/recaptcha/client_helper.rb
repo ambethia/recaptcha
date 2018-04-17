@@ -93,7 +93,7 @@ module Recaptcha
       attributes["class"] = "g-recaptcha #{class_attribute}"
       tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
 
-      [html.string, tag_attributes, fallback_uri]
+      [html, tag_attributes, fallback_uri]
     end
 
     private
