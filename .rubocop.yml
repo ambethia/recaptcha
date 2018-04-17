@@ -152,3 +152,4 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'demo/**/*'
+    - 'test/**/*'
