@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'stringio'
+
 module Recaptcha
   module ClientHelper
     # Your public API can be specified in the +options+ hash or preferably
