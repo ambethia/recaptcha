@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recaptcha
   module ClientHelper
     # Your public API can be specified in the +options+ hash or preferably
@@ -57,9 +59,9 @@ module Recaptcha
     end
 
     def self.recaptcha_components(options = {})
-      html = ""
+      html = StringIO.new
       attributes = {}
-      fallback_uri = ""
+      fallback_uri = ''
 
       # Since leftover options get passed directly through as tag
       # attributes, we must unconditionally delete all our options
@@ -91,7 +93,7 @@ module Recaptcha
       attributes["class"] = "g-recaptcha #{class_attribute}"
       tag_attributes = attributes.merge(options).map { |k, v| %(#{k}="#{v}") }.join(" ")
 
-      [html, tag_attributes, fallback_uri]
+      [html.string, tag_attributes, fallback_uri]
     end
 
     private
