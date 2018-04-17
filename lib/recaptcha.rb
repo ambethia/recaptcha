@@ -1,8 +1,14 @@
+# frozen_string_literal: true
+
 require 'recaptcha/configuration'
-require 'recaptcha/client_helper'
-require 'recaptcha/verify'
 require 'uri'
 require 'net/http'
+if defined?(Rails)
+  require 'recaptcha/railtie'
+else
+  require 'recaptcha/client_helper'
+  require 'recaptcha/verify'
+end
 
 module Recaptcha
   CONFIG = {
@@ -10,8 +16,8 @@ module Recaptcha
     'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
   }.freeze
 
-  USE_SSL_BY_DEFAULT              = false
-  HANDLE_TIMEOUTS_GRACEFULLY      = true
+  USE_SSL_BY_DEFAULT = false
+  HANDLE_TIMEOUTS_GRACEFULLY = true
   DEFAULT_TIMEOUT = 3
 
   # Gives access to the current Configuration.
@@ -45,11 +51,11 @@ module Recaptcha
 
   def self.get(verify_hash, options)
     http = if Recaptcha.configuration.proxy
-      proxy_server = URI.parse(Recaptcha.configuration.proxy)
-      Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
-    else
-      Net::HTTP
-    end
+             proxy_server = URI.parse(Recaptcha.configuration.proxy)
+             Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
+           else
+             Net::HTTP
+           end
     query = URI.encode_www_form(verify_hash)
     uri = URI.parse(Recaptcha.configuration.verify_url + '?' + query)
     http_instance = http.new(uri.host, uri.port)
