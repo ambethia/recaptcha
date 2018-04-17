@@ -30,8 +30,8 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy,
-                  :handle_timeouts_gracefully, :hostname
+    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
+    attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
       @skip_verify_env = %w[test cucumber]
