@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "./lib/recaptcha/version"
 
 Gem::Specification.new do |s|

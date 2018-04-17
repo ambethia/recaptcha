@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'recaptcha/configuration'
 require 'uri'
 require 'net/http'

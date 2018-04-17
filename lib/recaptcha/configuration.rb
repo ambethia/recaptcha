@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recaptcha
   # This class enables detailed configuration of the recaptcha services.
   #

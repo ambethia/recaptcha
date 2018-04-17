@@ -143,8 +143,12 @@ Lint/NonLocalExitFromIterator:
 Style/IfInsideElse:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'test/**/*'
+
 AllCops:
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.3
   Include:
     - 'Rakefile'
     - 'Gemfile'

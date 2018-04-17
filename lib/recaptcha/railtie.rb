@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recaptcha
   class Railtie < Rails::Railtie
     initializer :recaptcha do
