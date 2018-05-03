@@ -44,7 +44,7 @@ And, add `verify_recaptcha` logic to each form action that you've protected.
 ```Ruby
 # app/controllers/users_controller.rb
 @user = User.new(params[:user].permit(:name))
-if verify_recaptcha(model: @user) && @user.save
+if @user.save && verify_recaptcha(model: @user)
   redirect_to @user
 else
   render 'new'
