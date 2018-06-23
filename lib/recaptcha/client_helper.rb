@@ -25,9 +25,8 @@ module Recaptcha
                 <div style="width: 302px; height: 422px; position: absolute;">
                   <iframe
                     src="#{fallback_uri}"
-                    frameborder="0" scrolling="no"
-                    style="width: 302px; height:422px; border-style: none;">
-                    title="ReCAPTCHA"
+                    scrolling="no" name="ReCAPTCHA"
+                    style="width: 302px; height: 422px; border-style: none; border: 0;">
                   </iframe>
                 </div>
               </div>
@@ -37,7 +36,7 @@ module Recaptcha
                 <textarea id="g-recaptcha-response" name="g-recaptcha-response"
                   class="g-recaptcha-response"
                   style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
-                  margin: 10px 25px; padding: 0px; resize: none;" value="">
+                  margin: 10px 25px; padding: 0px; resize: none;">
                 </textarea>
               </div>
             </div>
