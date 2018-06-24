@@ -16,7 +16,7 @@ which throws an error on failiure.
 [obtain a reCAPTCHA API key](https://www.google.com/recaptcha/admin). Note: Use localhost or 127.0.0.1 in domain if using localhost:3000.
 
 ```Ruby
-gem "recaptcha", require: "recaptcha/rails"
+gem "recaptcha"
 ```
 
 Keep keys out of the code base with environment variables.<br/>
