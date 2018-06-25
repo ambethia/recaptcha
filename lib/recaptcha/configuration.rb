@@ -30,15 +30,17 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :secret_key, :site_key, :api_server_url, :verify_url, :proxy,
-      :handle_timeouts_gracefully, :hostname
+    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
+    attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
-      @skip_verify_env            = %w[test cucumber]
+      @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = HANDLE_TIMEOUTS_GRACEFULLY
 
-      @secret_key           = ENV['RECAPTCHA_SECRET_KEY']
-      @site_key             = ENV['RECAPTCHA_SITE_KEY']
+      @secret_key = ENV['RECAPTCHA_SECRET_KEY']
+      @site_key = ENV['RECAPTCHA_SITE_KEY']
+      @verify_url = nil
+      @api_server_url = nil
     end
 
     def secret_key!
