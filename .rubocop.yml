@@ -1,6 +1,5 @@
 AllCops:
   TargetRubyVersion: 2.3
-  DisplayCopNames: true
   Include:
     - 'Rakefile'
     - 'Gemfile'
@@ -21,7 +20,7 @@ Style/StringLiterals:
 HashSyntax:
    EnforcedStyle: ruby19
 
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
 Lint/AmbiguousOperator:
@@ -42,8 +41,8 @@ Metrics/AbcSize:
 Style/WordArray:
   Enabled: false
 
-Lint/EndAlignment:
-  AlignWith: variable
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
 
 Style/StringLiteralsInInterpolation:
   Enabled: false
@@ -51,16 +50,16 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Style/FirstParameterIndentation:
+Layout/FirstParameterIndentation:
   Enabled: false
 
-Style/IndentHash:
+Layout/IndentHash:
   Enabled: false
 
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Enabled: false
 
 Metrics/ModuleLength:
@@ -81,19 +80,22 @@ Style/Documentation:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Enabled: false
 
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: trailing
 
 Style/SingleLineBlockParams:
   Enabled: false
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
   Enabled: false
 
 Style/PerlBackrefs:
@@ -140,7 +142,7 @@ Style/FormatString:
 Metrics/BlockNesting:
   Enabled: false
 
-Style/IndentationWidth:
+Layout/IndentationWidth:
   Width: 2
 
 Lint/NonLocalExitFromIterator:
@@ -153,3 +155,6 @@ Style/IfInsideElse:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'test/**/*'
+
+Style/SymbolArray:
+  Enabled: false

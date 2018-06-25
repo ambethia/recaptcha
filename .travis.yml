@@ -2,12 +2,16 @@ language: ruby
 cache: bundler
 sudo: false
 rvm:
-  - 2.0
-  - 2.1
-  - 2.2
-  - 2.3
-  - 2.4
-  - 2.5
+- 2.3
+- 2.4
+- 2.5
+env:
+- TASK=test
+matrix:
+  include:
+  - rvm: 2.3 # keep same as lowest ruby version
+    env: TASK=rubocop
+script: bundle exec rake $TASK
 branches:
   only: master
 matrix:
