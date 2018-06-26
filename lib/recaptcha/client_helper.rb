@@ -52,7 +52,7 @@ module Recaptcha
       options = {callback: 'invisibleRecaptchaSubmit'}.merge options
       text = options.delete(:text)
       html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
-      html << recaptcha_default_callback if recaptcha_default_callback_required?(options)
+      html << recaptcha_default_callback(options) if recaptcha_default_callback_required?(options)
       html << %(<button type="submit" #{tag_attributes}>#{text}</button>\n)
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
@@ -97,9 +97,12 @@ module Recaptcha
 
     private
 
-    def recaptcha_default_callback
+    def recaptcha_default_callback(options = {})
+      nonce = options[:nonce]
+      nonce_attr = " nonce='#{nonce}'" if nonce
+
       <<-HTML
-        <script>
+        <script#{nonce_attr}>
           var invisibleRecaptchaSubmit = function () {
             var closestForm = function (ele) {
               var curEle = ele.parentNode;
