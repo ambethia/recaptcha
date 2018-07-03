@@ -137,5 +137,10 @@ describe Recaptcha::ClientHelper do
       html = invisible_recaptcha_tags(callback: 'customCallback')
       html.wont_include("var invisibleRecaptchaSubmit")
     end
+
+    it "includes a nonce if provided" do
+      html = invisible_recaptcha_tags(nonce: "dummyNonce")
+      html.must_include("<script nonce='dummyNonce'>")
+    end
   end
 end
