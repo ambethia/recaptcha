@@ -142,5 +142,17 @@ describe Recaptcha::ClientHelper do
       html = invisible_recaptcha_tags(nonce: "dummyNonce")
       html.must_include("<script nonce='dummyNonce'>")
     end
+
+    it "renders a div if UI is invisible" do
+      html = invisible_recaptcha_tags(ui: :invisible)
+      html.must_include("<div data-size=\"invisible\"")
+      html.wont_include("<button")
+    end
+
+    it "raises an error on an invalid ui option" do
+      assert_raises Recaptcha::RecaptchaError do
+        invisible_recaptcha_tags(ui: :foo)
+      end
+    end
   end
 end

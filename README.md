@@ -141,6 +141,34 @@ var submitInvisibleRecaptchaForm = function () {
 
 Finally, add `verify_recaptcha` to your controller as seen [above](#rails-installation).
 
+### Programmatically invoke
+
+1. Specify `ui` option
+
+```Erb
+<%= form_for @foo, html: {id: 'invisible-recaptcha-form'} do |f| %>
+  # ... other tags
+  <button type="button" id="submit-btn">
+    Submit
+  </button>
+  <%= invisible_recaptcha_tags ui: :invisible, callback: 'submitInvisibleRecaptchaForm' %>
+<% end %>
+```
+
+```Javascript
+// app/assets/javascripts/application.js
+document.getElementById('submit-btn').addEventListener('click', function (e) {
+  // do some validation
+  if(isValid) {
+    // call reCAPTCHA check
+    grecaptcha.execute();
+  }
+});
+
+var submitInvisibleRecaptchaForm = function () {
+  document.getElementById("invisible-recaptcha-form").submit();
+};
+```
 
 ## I18n support
 reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem

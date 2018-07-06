@@ -49,11 +49,18 @@ module Recaptcha
 
     # Invisible reCAPTCHA implementation
     def invisible_recaptcha_tags(options = {})
-      options = {callback: 'invisibleRecaptchaSubmit'}.merge options
+      options = {callback: 'invisibleRecaptchaSubmit', ui: :button}.merge options
       text = options.delete(:text)
       html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
       html << recaptcha_default_callback(options) if recaptcha_default_callback_required?(options)
-      html << %(<button type="submit" #{tag_attributes}>#{text}</button>\n)
+      case options[:ui]
+      when :button
+        html << %(<button type="submit" #{tag_attributes}>#{text}</button>\n)
+      when :invisible
+        html << %(<div data-size="invisible" #{tag_attributes}></div>\n)
+      else
+        raise(RecaptchaError, "ReCAPTCHA ui `#{options[:ui]}` is not valid.")
+      end
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
 
