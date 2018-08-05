@@ -1,3 +1,6 @@
+## 4.11.0 - 2018-08-06
+* prefer RAILS_ENV over RACK_ENV #286
+
 ## 4.0.0 - 2016-11-14
 * public_key -> site_key and private_key -> secret_key
 
