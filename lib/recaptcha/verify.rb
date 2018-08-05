@@ -57,7 +57,7 @@ module Recaptcha
     end
 
     def self.skip?(env)
-      env ||= ENV['RACK_ENV'] || ENV['RAILS_ENV'] || (Rails.env if defined? Rails.env)
+      env ||= ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       Recaptcha.configuration.skip_verify_env.include? env
     end
 
