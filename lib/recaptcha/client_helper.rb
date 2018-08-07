@@ -78,8 +78,12 @@ module Recaptcha
       hl = options.delete(:hl).to_s
       nonce = options.delete(:nonce)
       skip_script = (options.delete(:script) == false)
+      ui = options.delete(:ui)
+
+      data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size]
+      data_attribute_keys << :tabindex unless ui == :button
       data_attributes = {}
-      [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size, :tabindex].each do |data_attribute|
+      data_attribute_keys.each do |data_attribute|
         value = options.delete(data_attribute)
         data_attributes["data-#{data_attribute.to_s.tr('_', '-')}"] = value if value
       end
