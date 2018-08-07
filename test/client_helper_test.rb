@@ -36,9 +36,14 @@ describe Recaptcha::ClientHelper do
     html.must_include(" id=\"my_id\"")
   end
 
-  it "includes tabindex attribute" do
+  it "translates tabindex attribute to data- attribute for recaptcha_tags" do
     html = recaptcha_tags(tabindex: 123)
     html.must_include(" data-tabindex=\"123\"")
+  end
+
+  it "leaves tabindex attribute as-is for invisible_recaptcha_tags" do
+    html = invisible_recaptcha_tags(tabindex: 123)
+    html.must_include(" tabindex=\"123\"")
   end
 
   it "includes nonce attribute" do
