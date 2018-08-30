@@ -154,6 +154,13 @@ describe Recaptcha::ClientHelper do
       html.wont_include("<button")
     end
 
+    it "renders an input element if UI is input" do
+      html = invisible_recaptcha_tags(ui: :input)
+      html.must_include("<input type=\"submit\"")
+      html.must_include("</input>")
+      html.wont_include("<button")
+    end
+
     it "raises an error on an invalid ui option" do
       assert_raises Recaptcha::RecaptchaError do
         invisible_recaptcha_tags(ui: :foo)
