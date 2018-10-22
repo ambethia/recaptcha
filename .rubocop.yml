@@ -1,6 +1,7 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
   Include:
+    - 'lib/**/*'
     - 'Rakefile'
     - 'Gemfile'
     - 'Rakefile'
