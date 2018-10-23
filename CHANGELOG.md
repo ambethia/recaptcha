@@ -1,3 +1,9 @@
+## 4.12.0 - 2018-08-30
+* add `input` option to `invisible_recaptcha_tags`'s `ui` setting
+
+## 4.11.1 - 2018-08-08
+* leave `tabindex` attribute alone for `invisible_recaptcha_tags`
+
 ## 4.11.0 - 2018-08-06
 * prefer RAILS_ENV over RACK_ENV #286
 
