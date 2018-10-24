@@ -67,9 +67,9 @@ module Recaptcha
     end
 
     def self.recaptcha_components(options = {})
-      html = ''.dup
+      html = +''
       attributes = {}
-      fallback_uri = ''.dup
+      fallback_uri = +''
 
       # Since leftover options get passed directly through as tag
       # attributes, we must unconditionally delete all our options
