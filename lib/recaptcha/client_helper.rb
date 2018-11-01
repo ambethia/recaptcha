@@ -95,11 +95,11 @@ module Recaptcha
       unless Recaptcha::Verify.skip?(env)
         site_key ||= Recaptcha.configuration.site_key!
         script_url = Recaptcha.configuration.api_server_url
-        query_params = hash_to_query({
+        query_params = hash_to_query(
           hl: hl,
           onload: onload,
           render: render
-        })
+        )
         script_url += "?#{query_params}" unless query_params.empty?
         nonce_attr = " nonce='#{nonce}'" if nonce
         html << %(<script src="#{script_url}" async defer#{nonce_attr}></script>\n) unless skip_script
@@ -151,11 +151,7 @@ module Recaptcha
     end
 
     private_class_method def self.hash_to_query(hash)
-      hash
-        .delete_if { |_, val| val.nil? || val.empty? }
-        .to_a
-        .map { |pair| pair.join('=') }
-        .join('&')
+      hash.delete_if { |_, val| val.nil? || val.empty? }.to_a.map { |pair| pair.join('=') }.join('&')
     end
   end
 end
