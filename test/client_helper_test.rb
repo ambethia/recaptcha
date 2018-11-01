@@ -58,14 +58,46 @@ describe Recaptcha::ClientHelper do
 
   it "adds :hl option to the url" do
     html = recaptcha_tags(hl: 'en')
-    html.must_include("?hl=en")
+    html.must_include("hl=en")
 
     html = recaptcha_tags(hl: 'ru')
-    html.wont_include("?hl=en")
-    html.must_include("?hl=ru")
+    html.wont_include("hl=en")
+    html.must_include("hl=ru")
 
     html = recaptcha_tags
-    html.wont_include("?hl=")
+    html.wont_include("hl=")
+  end
+
+  it "adds :onload option to the url" do
+    html = recaptcha_tags(onload: 'foobar')
+    html.must_include("onload=foobar")
+
+    html = recaptcha_tags(onload: 'anotherFoobar')
+    html.wont_include("onload=foobar")
+    html.must_include("onload=anotherFoobar")
+
+    html = recaptcha_tags
+    html.wont_include("onload=")
+  end
+
+  it "adds :render option to the url" do
+    html = recaptcha_tags(render: 'onload')
+    html.must_include("render=onload")
+
+    html = recaptcha_tags(render: 'explicit')
+    html.wont_include("render=onload")
+    html.must_include("render=explicit")
+
+    html = recaptcha_tags
+    html.wont_include("render=")
+  end
+
+  it "adds query params to the url" do
+    html = recaptcha_tags(hl: 'en', onload: 'foobar')
+    html.must_include("?")
+    html.must_include("hl=en")
+    html.must_include("&")
+    html.must_include("onload=foobar")
   end
 
   it "includes the site key in the button attributes" do

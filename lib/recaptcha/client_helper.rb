@@ -77,7 +77,9 @@ module Recaptcha
       env = options.delete(:env)
       class_attribute = options.delete(:class)
       site_key = options.delete(:site_key)
-      hl = options.delete(:hl).to_s
+      hl = options.delete(:hl)
+      onload = options.delete(:onload)
+      render = options.delete(:render)
       nonce = options.delete(:nonce)
       skip_script = (options.delete(:script) == false)
       ui = options.delete(:ui)
@@ -93,7 +95,12 @@ module Recaptcha
       unless Recaptcha::Verify.skip?(env)
         site_key ||= Recaptcha.configuration.site_key!
         script_url = Recaptcha.configuration.api_server_url
-        script_url += "?hl=#{hl}" unless hl == ""
+        query_params = hash_to_query(
+          hl: hl,
+          onload: onload,
+          render: render
+        )
+        script_url += "?#{query_params}" unless query_params.empty?
         nonce_attr = " nonce='#{nonce}'" if nonce
         html << %(<script src="#{script_url}" async defer#{nonce_attr}></script>\n) unless skip_script
         fallback_uri = %(#{script_url.chomp(".js")}/fallback?k=#{site_key})
@@ -141,6 +148,10 @@ module Recaptcha
       options[:callback] == 'invisibleRecaptchaSubmit' &&
       !Recaptcha::Verify.skip?(options[:env]) &&
       options[:script] != false
+    end
+
+    private_class_method def self.hash_to_query(hash)
+      hash.delete_if { |_, val| val.nil? || val.empty? }.to_a.map { |pair| pair.join('=') }.join('&')
     end
   end
 end

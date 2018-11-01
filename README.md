@@ -73,6 +73,8 @@ Some of the options available:
 | :error            | Override the error code returned from the reCAPTCHA API (default `nil`)|
 | :size             | Specify a size (default `nil`)|
 | :hl               | Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified. (See [language codes](https://developers.google.com/recaptcha/docs/language)) |
+| :onload           | Optional. The name of your callback function to be executed once all the dependencies have loaded. (See [explicit rendering](https://developers.google.com/recaptcha/docs/display#explicit_render))|
+| :render           | Optional. Whether to render the widget explicitly. Defaults to `onload`, which will render the widget in the first g-recaptcha tag it finds. (See [explicit rendering](https://developers.google.com/recaptcha/docs/display#explicit_render))|
 | :nonce            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default `nil`)|
 | :id               | Specify an html id attribute (default `nil`)|
 | :script           | If you do not need to add a script tag by helper you can set the option to false. It's necessary when you add a script tag manualy (default `true`)|
