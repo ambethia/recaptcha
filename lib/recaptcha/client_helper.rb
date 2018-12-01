@@ -59,7 +59,7 @@ module Recaptcha
       when :invisible
         html << %(<div data-size="invisible" #{tag_attributes}></div>\n)
       when :input
-        html << %(<input type="submit" #{tag_attributes}>#{text}</input>\n)
+        html << %(<input type="submit" #{tag_attributes} value="#{text}"/>\n)
       else
         raise(RecaptchaError, "ReCAPTCHA ui `#{options[:ui]}` is not valid.")
       end
