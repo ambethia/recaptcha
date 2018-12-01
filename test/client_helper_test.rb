@@ -186,10 +186,10 @@ describe Recaptcha::ClientHelper do
       html.wont_include("<button")
     end
 
-    it "renders an input element if UI is input" do
-      html = invisible_recaptcha_tags(ui: :input)
+    it "renders an input element with supplied text if UI is input" do
+      html = invisible_recaptcha_tags(ui: :input, text: 'Send')
       html.must_include("<input type=\"submit\"")
-      html.must_include("</input>")
+      html.must_include("value=\"Send\"/>")
       html.wont_include("<button")
     end
 
