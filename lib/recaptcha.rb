@@ -14,7 +14,8 @@ end
 module Recaptcha
   CONFIG = {
     'server_url' => 'https://www.google.com/recaptcha/api.js',
-    'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
+    'verify_url' => 'https://www.google.com/recaptcha/api/siteverify',
+    'minimum_score' => 0.5
   }.freeze
 
   USE_SSL_BY_DEFAULT              = false

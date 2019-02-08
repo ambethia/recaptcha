@@ -30,7 +30,8 @@ module Recaptcha
   #   end
   #
   class Configuration
-    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
+    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully,
+                  :hostname, :minimum_score
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
@@ -41,6 +42,7 @@ module Recaptcha
       @site_key = ENV['RECAPTCHA_SITE_KEY']
       @verify_url = nil
       @api_server_url = nil
+      @minimum_score = nil
     end
 
     def secret_key!
@@ -57,6 +59,10 @@ module Recaptcha
 
     def verify_url
       @verify_url || CONFIG.fetch('verify_url')
+    end
+
+    def minimum_score
+      @minimum_score || CONFIG.fetch('minimum_score')
     end
   end
 end

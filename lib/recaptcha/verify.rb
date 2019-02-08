@@ -77,8 +77,13 @@ module Recaptcha
       end
 
       reply = JSON.parse(Recaptcha.get(verify_hash, options))
+      check_reply(reply, options)
+    end
+
+    def check_reply(reply, options)
       reply['success'].to_s == "true" &&
-        recaptcha_hostname_valid?(reply['hostname'], options[:hostname])
+        recaptcha_hostname_valid?(reply['hostname'], options[:hostname]) &&
+        (!reply['score'] || reply['score'] >= Recaptcha.configuration.minimum_score)
     end
 
     def recaptcha_hostname_valid?(hostname, validation)
