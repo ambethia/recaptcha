@@ -13,8 +13,8 @@ end
 
 module Recaptcha
   CONFIG = {
-    'server_url' => 'https://www.google.com/recaptcha/api.js',
-    'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
+    'server_url' => 'https://recaptcha.net/recaptcha/api.js',
+    'verify_url' => 'https://recaptcha.net/recaptcha/api/siteverify'
   }.freeze
 
   USE_SSL_BY_DEFAULT              = false
