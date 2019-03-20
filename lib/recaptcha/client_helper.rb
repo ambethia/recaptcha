@@ -26,7 +26,7 @@ module Recaptcha
                   <iframe
                     src="#{fallback_uri}"
                     name="ReCAPTCHA"
-                    style="width: 302px; height: 422px; border-style: none; border: 0;">
+                    style="width: 302px; height: 422px; border-style: none; border: 0; overflow: hidden;">
                   </iframe>
                 </div>
               </div>
