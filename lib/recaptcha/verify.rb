@@ -4,6 +4,7 @@ require 'json'
 
 module Recaptcha
   module Verify
+    G_RESPONSE_LIMIT = 4000
     # Your private API can be specified in the +options+ hash or preferably
     # using the Configuration.
     def verify_recaptcha(options = {})
@@ -15,7 +16,7 @@ module Recaptcha
       recaptcha_response = options[:response] || params['g-recaptcha-response'].to_s
 
       begin
-        verified = if recaptcha_response.empty?
+        verified = if recaptcha_response.empty? || recaptcha_response.length > G_RESPONSE_LIMIT
           false
         else
           recaptcha_verify_via_api_call(request, recaptcha_response, options)
