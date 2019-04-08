@@ -6,3 +6,4 @@ pkg
 
 .gems
 .rbenv-gemsets
+.yardoc

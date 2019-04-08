@@ -105,6 +105,11 @@ describe Recaptcha::ClientHelper do
     html.must_include(" data-sitekey=\"#{Recaptcha.configuration.site_key}\"")
   end
 
+  it "lets you override the site_key from configuration via options hash" do
+    html = invisible_recaptcha_tags(site_key: 'different_key')
+    html.must_include(" data-sitekey=\"different_key\"")
+  end
+
   it "dasherizes the expired_callback attribute name" do
     html = recaptcha_tags(expired_callback: 'my_expired_callback')
     html.must_include(" data-expired-callback=\"my_expired_callback\"")

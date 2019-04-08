@@ -4,13 +4,6 @@ require 'recaptcha/configuration'
 require 'uri'
 require 'net/http'
 
-if defined?(Rails)
-  require 'recaptcha/railtie'
-else
-  require 'recaptcha/client_helper'
-  require 'recaptcha/verify'
-end
-
 module Recaptcha
   CONFIG = {
     'server_url' => 'https://www.google.com/recaptcha/api.js',
@@ -50,22 +43,6 @@ module Recaptcha
     original_config.each { |key, value| configuration.send("#{key}=", value) }
   end
 
-  def self.get(verify_hash, options)
-    http = if Recaptcha.configuration.proxy
-      proxy_server = URI.parse(Recaptcha.configuration.proxy)
-      Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
-    else
-      Net::HTTP
-    end
-    query = URI.encode_www_form(verify_hash)
-    uri = URI.parse(Recaptcha.configuration.verify_url + '?' + query)
-    http_instance = http.new(uri.host, uri.port)
-    http_instance.read_timeout = http_instance.open_timeout = options[:timeout] || DEFAULT_TIMEOUT
-    http_instance.use_ssl = true if uri.port == 443
-    request = Net::HTTP::Get.new(uri.request_uri)
-    http_instance.request(request).body
-  end
-
   def self.i18n(key, default)
     if defined?(I18n)
       I18n.translate(key, default: default)
@@ -76,7 +53,11 @@ module Recaptcha
 
   class RecaptchaError < StandardError
   end
+end
 
-  class VerifyError < RecaptchaError
-  end
+if defined?(Rails)
+  require 'recaptcha/railtie'
+else
+  require 'recaptcha/client_helper'
+  require 'recaptcha/verify'
 end

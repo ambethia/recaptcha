@@ -158,3 +158,6 @@ Style/FrozenStringLiteralComment:
 
 Style/SymbolArray:
   Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
