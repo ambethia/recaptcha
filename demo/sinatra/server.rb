@@ -8,8 +8,8 @@ Recaptcha.configure do |config|
   config.secret_key = '6Le7oRETAAAAAL5a8yOmEdmDi3b2pH7mq5iH1bYK'
 end
 
-include Recaptcha::ClientHelper
-include Recaptcha::Verify
+include Recaptcha::Adapters::Controller
+include Recaptcha::Adapters::View
 
 get '/' do
   <<-HTML

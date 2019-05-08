@@ -45,7 +45,7 @@ GEM
       pry (~> 0.10)
     public_suffix (3.0.2)
     rainbow (3.0.0)
-    rake (12.3.1)
+    rake (12.3.2)
     rubocop (0.59.2)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)

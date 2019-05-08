@@ -1,24 +1,17 @@
 # frozen_string_literal: true
 
-require 'recaptcha/configuration'
 require 'uri'
 require 'net/http'
-
+require 'recaptcha/configuration'
+require 'recaptcha/client_helper'
+require 'recaptcha/verify'
+require 'recaptcha/adapters/controller'
+require 'recaptcha/adapters/view'
 if defined?(Rails)
   require 'recaptcha/railtie'
-else
-  require 'recaptcha/client_helper'
-  require 'recaptcha/verify'
 end
 
 module Recaptcha
-  CONFIG = {
-    'server_url' => 'https://www.google.com/recaptcha/api.js',
-    'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
-  }.freeze
-
-  USE_SSL_BY_DEFAULT              = false
-  HANDLE_TIMEOUTS_GRACEFULLY      = true
   DEFAULT_TIMEOUT = 3
 
   # Gives access to the current Configuration.

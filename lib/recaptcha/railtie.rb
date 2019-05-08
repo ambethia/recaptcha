@@ -3,13 +3,11 @@
 module Recaptcha
   class Railtie < Rails::Railtie
     ActiveSupport.on_load(:action_view) do
-      require 'recaptcha/client_helper'
-      include Recaptcha::ClientHelper
+      include Recaptcha::Adapters::View
     end
 
     ActiveSupport.on_load(:action_controller) do
-      require 'recaptcha/verify'
-      include Recaptcha::Verify
+      include Recaptcha::Adapters::Controller
     end
   end
 end

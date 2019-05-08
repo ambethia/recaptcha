@@ -1,13 +1,13 @@
 PATH
   remote: ../..
   specs:
-    recaptcha (0.6.0)
+    recaptcha (4.14.0)
       json
 
 GEM
   remote: https://rubygems.org/
   specs:
-    json (1.8.1)
+    json (2.2.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -25,4 +25,4 @@ DEPENDENCIES
   sinatra
 
 BUNDLED WITH
-   1.10.6
+   1.16.1
