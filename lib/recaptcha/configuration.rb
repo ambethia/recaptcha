@@ -35,10 +35,11 @@ module Recaptcha
       'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
     }.freeze
 
-    attr_accessor :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
+    attr_accessor :default_env, :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
+      @default_env = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true
 

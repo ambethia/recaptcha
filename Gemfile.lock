@@ -7,11 +7,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.3)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     ast (2.4.0)
@@ -54,9 +49,6 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.6)
     ruby-progressbar (1.10.0)
     safe_yaml (1.0.5)
-    thread_safe (0.3.6)
-    tzinfo (1.2.5)
-      thread_safe (~> 0.1)
     unicode-display_width (1.5.0)
     webmock (3.5.1)
       addressable (>= 2.3.6)
@@ -67,7 +59,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
   bump
   i18n
   maxitest

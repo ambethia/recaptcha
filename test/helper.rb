@@ -1,13 +1,14 @@
+# set default_env to nil
+ENV.delete('RAILS_ENV')
+ENV.delete('RACK_ENV')
+
 require 'bundler/setup'
 require 'maxitest/autorun'
 require 'mocha/setup'
 require 'webmock/minitest'
 require 'cgi'
-require 'recaptcha'
 require 'i18n'
-
-ENV.delete('RAILS_ENV')
-ENV.delete('RACK_ENV')
+require 'recaptcha'
 
 I18n.enforce_available_locales = false
 

@@ -1,9 +1,7 @@
 require_relative 'helper'
-require 'active_support/core_ext/object/blank'
-require 'active_support/core_ext/hash'
 
-describe Recaptcha::ClientHelper do
-  include Recaptcha::ClientHelper
+describe 'View helpers' do
+  include Recaptcha::Adapters::ViewMethods
 
   it "uses ssl" do
     recaptcha_tags.must_include "\"#{Recaptcha.configuration.api_server_url}\""
