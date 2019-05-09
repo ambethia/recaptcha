@@ -1,3 +1,7 @@
+## Next
+* Renamed `Recaptcha::ClientHelper` to `Recaptcha::Adapters::ViewMethods`
+* Renamed `Recaptcha::Verify` to `Recaptcha::Adapters::ControllerMethods`
+
 ## 4.12.0 - 2018-08-30
 * add `input` option to `invisible_recaptcha_tags`'s `ui` setting
 
