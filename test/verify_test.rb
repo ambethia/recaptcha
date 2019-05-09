@@ -1,6 +1,6 @@
 require_relative 'helper'
 
-describe Recaptcha::Verify do
+describe 'controller helpers' do
   before do
     @controller = TestController.new
     @controller.request = stub(remote_ip: "1.1.1.1", format: :html)
@@ -255,12 +255,16 @@ describe Recaptcha::Verify do
   private
 
   class TestController
-    include Recaptcha::Verify
+    include Recaptcha::Adapters::ControllerMethods
+
     attr_accessor :request, :params, :flash
 
     def initialize
       @flash = {}
     end
+
+    public :verify_recaptcha
+    public :verify_recaptcha!
   end
 
   def expect_http_post(secret_key: Recaptcha.configuration.secret_key)

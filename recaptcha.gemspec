@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "json"
   s.add_development_dependency "mocha"
   s.add_development_dependency "rake"
-  s.add_development_dependency "activesupport"
   s.add_development_dependency "i18n"
   s.add_development_dependency "maxitest"
   s.add_development_dependency "pry-byebug"

@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 
-require 'recaptcha/configuration'
-require 'uri'
+require 'json'
 require 'net/http'
+require 'uri'
 
+require 'recaptcha/configuration'
+require 'recaptcha/helpers'
+require 'recaptcha/adapters/controller_methods'
+require 'recaptcha/adapters/view_methods'
 if defined?(Rails)
   require 'recaptcha/railtie'
-else
-  require 'recaptcha/client_helper'
-  require 'recaptcha/verify'
 end
 
 module Recaptcha
-  CONFIG = {
-    'server_url' => 'https://www.google.com/recaptcha/api.js',
-    'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
-  }.freeze
-
-  USE_SSL_BY_DEFAULT              = false
-  HANDLE_TIMEOUTS_GRACEFULLY      = true
   DEFAULT_TIMEOUT = 3
+  RESPONSE_LIMIT = 4000
+
+  class RecaptchaError < StandardError
+  end
+
+  class VerifyError < RecaptchaError
+  end
 
   # Gives access to the current Configuration.
   def self.configuration
@@ -50,33 +51,47 @@ module Recaptcha
     original_config.each { |key, value| configuration.send("#{key}=", value) }
   end
 
-  def self.get(verify_hash, options)
-    http = if Recaptcha.configuration.proxy
-      proxy_server = URI.parse(Recaptcha.configuration.proxy)
+  def self.skip_env?(env)
+    configuration.skip_verify_env.include?(env || configuration.default_env)
+  end
+
+  def self.invalid_response?(resp)
+    resp.empty? || resp.length > RESPONSE_LIMIT
+  end
+
+  def self.verify_via_api_call(response, options)
+    secret_key = options.fetch(:secret_key) { configuration.secret_key! }
+    verify_hash = { 'secret' => secret_key, 'response' => response }
+    verify_hash['remoteip'] = options[:remote_ip] if options.key?(:remote_ip)
+
+    reply = api_verification(verify_hash, timeout: options[:timeout])
+    reply['success'].to_s == 'true' &&
+      hostname_valid?(reply['hostname'], options[:hostname])
+  end
+
+  def self.hostname_valid?(hostname, validation)
+    validation ||= configuration.hostname
+
+    case validation
+    when nil, FalseClass then true
+    when String then validation == hostname
+    else validation.call(hostname)
+    end
+  end
+
+  def self.api_verification(verify_hash, timeout: DEFAULT_TIMEOUT)
+    http = if configuration.proxy
+      proxy_server = URI.parse(configuration.proxy)
       Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
     else
       Net::HTTP
     end
     query = URI.encode_www_form(verify_hash)
-    uri = URI.parse(Recaptcha.configuration.verify_url + '?' + query)
+    uri = URI.parse(configuration.verify_url + '?' + query)
     http_instance = http.new(uri.host, uri.port)
-    http_instance.read_timeout = http_instance.open_timeout = options[:timeout] || DEFAULT_TIMEOUT
+    http_instance.read_timeout = http_instance.open_timeout = timeout
     http_instance.use_ssl = true if uri.port == 443
     request = Net::HTTP::Get.new(uri.request_uri)
-    http_instance.request(request).body
-  end
-
-  def self.i18n(key, default)
-    if defined?(I18n)
-      I18n.translate(key, default: default)
-    else
-      default
-    end
-  end
-
-  class RecaptchaError < StandardError
-  end
-
-  class VerifyError < RecaptchaError
+    JSON.parse(http_instance.request(request).body)
   end
 end

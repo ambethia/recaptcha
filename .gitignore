@@ -6,3 +6,5 @@ pkg
 
 .gems
 .rbenv-gemsets
+
+/demo/*/Gemfile.lock

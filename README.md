@@ -57,8 +57,8 @@ See [sinatra demo](/demo/sinatra) for details.
 
  - add `gem 'recaptcha'` to `Gemfile`
  - set env variables
- - `include Recaptcha::ClientHelper` where you need `recaptcha_tags`
- - `include Recaptcha::Verify` where you need `verify_recaptcha`
+ - `include Recaptcha::Adapters::ViewMethods` where you need `recaptcha_tags`
+ - `include Recaptcha::Adapters::ControllerMethods` where you need `verify_recaptcha`
 
 ## recaptcha_tags
 

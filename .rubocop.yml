@@ -50,10 +50,10 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Layout/FirstParameterIndentation:
+Layout/IndentFirstArgument:
   Enabled: false
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   Enabled: false
 
 Layout/AlignParameters:
@@ -66,9 +66,6 @@ Metrics/ModuleLength:
   Enabled: false
 
 Metrics/PerceivedComplexity:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
   Enabled: false
 
 Style/DoubleNegation:

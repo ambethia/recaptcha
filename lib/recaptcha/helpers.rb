@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 module Recaptcha
-  module ClientHelper
-    # Your public API can be specified in the +options+ hash or preferably
-    # using the Configuration.
-    def recaptcha_tags(options = {})
+  module Helpers
+    DEFAULT_ERRORS = {
+      recaptcha_unreachable: 'Oops, we failed to validate your reCAPTCHA response. Please try again.',
+      verification_failed: 'reCAPTCHA verification failed, please try again.'
+    }.freeze
+
+    def self.recaptcha_tags(options)
       if options.key?(:stoken)
         raise(RecaptchaError, "Secure Token is deprecated. Please remove 'stoken' from your calls to recaptcha_tags.")
       end
@@ -14,7 +17,7 @@ module Recaptcha
 
       noscript = options.delete(:noscript)
 
-      html, tag_attributes, fallback_uri = Recaptcha::ClientHelper.recaptcha_components(options)
+      html, tag_attributes, fallback_uri = components(options.dup)
       html << %(<div #{tag_attributes}></div>\n)
 
       if noscript != false
@@ -47,12 +50,12 @@ module Recaptcha
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
 
-    # Invisible reCAPTCHA implementation
-    def invisible_recaptcha_tags(options = {})
-      options = {callback: 'invisibleRecaptchaSubmit', ui: :button}.merge options
+    def self.invisible_recaptcha_tags(custom)
+      options = {callback: 'invisibleRecaptchaSubmit', ui: :button}.merge(custom)
       text = options.delete(:text)
-      html, tag_attributes = Recaptcha::ClientHelper.recaptcha_components(options)
-      html << recaptcha_default_callback(options) if recaptcha_default_callback_required?(options)
+      html, tag_attributes = components(options.dup)
+      html << default_callback(options) if default_callback_required?(options)
+
       case options[:ui]
       when :button
         html << %(<button type="submit" #{tag_attributes}>#{text}</button>\n)
@@ -66,14 +69,26 @@ module Recaptcha
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
 
-    def self.recaptcha_components(options = {})
+    def self.to_error_message(key)
+      default = DEFAULT_ERRORS.fetch(key) { raise ArgumentError "Unknown reCAPTCHA error - #{key}" }
+      to_message("recaptcha.errors.#{key}", default)
+    end
+
+    if defined?(I18n)
+      def self.to_message(key, default)
+        I18n.translate(key, default: default)
+      end
+    else
+      def self.to_message(_key, default)
+        default
+      end
+    end
+
+    private_class_method def self.components(options)
       html = +''
       attributes = {}
       fallback_uri = +''
 
-      # Since leftover options get passed directly through as tag
-      # attributes, we must unconditionally delete all our options
-      options = options.dup
       env = options.delete(:env)
       class_attribute = options.delete(:class)
       site_key = options.delete(:site_key)
@@ -92,7 +107,7 @@ module Recaptcha
         data_attributes["data-#{data_attribute.to_s.tr('_', '-')}"] = value if value
       end
 
-      unless Recaptcha::Verify.skip?(env)
+      unless Recaptcha.skip_env?(env)
         site_key ||= Recaptcha.configuration.site_key!
         script_url = Recaptcha.configuration.api_server_url
         query_params = hash_to_query(
@@ -115,9 +130,7 @@ module Recaptcha
       [html, tag_attributes, fallback_uri]
     end
 
-    private
-
-    def recaptcha_default_callback(options = {})
+    private_class_method def self.default_callback(options = {})
       nonce = options[:nonce]
       nonce_attr = " nonce='#{nonce}'" if nonce
 
@@ -144,9 +157,9 @@ module Recaptcha
       HTML
     end
 
-    def recaptcha_default_callback_required?(options)
+    private_class_method def self.default_callback_required?(options)
       options[:callback] == 'invisibleRecaptchaSubmit' &&
-      !Recaptcha::Verify.skip?(options[:env]) &&
+      !Recaptcha.skip_env?(options[:env]) &&
       options[:script] != false
     end
 
