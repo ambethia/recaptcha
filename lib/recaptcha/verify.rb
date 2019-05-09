@@ -68,8 +68,8 @@ module Recaptcha
       secret_key = options[:secret_key] || Recaptcha.configuration.secret_key!
 
       verify_hash = {
-        "secret"    => secret_key,
-        "response"  => recaptcha_response
+        "secret" => secret_key,
+        "response" => recaptcha_response
       }
 
       unless options[:skip_remote_ip]
