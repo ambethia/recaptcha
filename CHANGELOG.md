@@ -70,6 +70,11 @@
 * support disabling stoken
 * support Rails.env
 
+## 0.4.0 / 2015-03-22
+
+* Add support for ReCaptcha v2 API
+* V2 API requires `g-recaptcha-response` parameters; https://github.com/ambethia/recaptcha/pull/114
+
 ## 0.3.6 / 2012-01-07
 
 * Many documentation changes
