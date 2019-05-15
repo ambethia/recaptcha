@@ -372,7 +372,9 @@ To deal with this, it is recommended to call the "execute" in your form's submit
 immediately before sending to the server to verify if not using a form) rather than using the
 response token that gets generated when the page first loads. The `executeRecaptchaFor{action}`
 function mentioned above can be used if you want it to invoke a callback, or the
-`executeRecaptchaFor{action}Async` variant if you want a `Promise` that you can `await`.
+`executeRecaptchaFor{action}Async` variant if you want a `Promise` that you can `await`. See
+[demo/rails/app/views/v3_captchas/index.html.erb](demo/rails/app/views/v3_captchas/index.html.erb)
+for an example of this.
 
 This helper is similar to the [`recaptcha_tags`](#recaptcha_tags)/[`invisible_recaptcha_tags`](#invisible_recaptcha_tags) helpers
 but only accepts the following options:
