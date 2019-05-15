@@ -1,0 +1,45 @@
+<% if params[:multi] %>
+  <%= form_tag "/#{controller_name}/create_multi" do |f| %>
+    <%= recaptcha_v3 action: 'demo_a' %>
+    <%= recaptcha_v3 action: 'demo_b', external_script: false %>
+    <%= submit_tag %>
+  <% end %>
+
+<% elsif params[:custom_callback] %>
+  <script type="text/javascript">
+    var myCallback = function(action, response) {
+      alert(`Response for ${action} action: ${response}`);
+    };
+  </script>
+  <%= recaptcha_v3 action: 'demo', callback: 'myCallback' %>
+
+<% elsif params[:execute_on_submit] %>
+  <%= form_tag "/#{controller_name}" do %>
+    <%= recaptcha_v3 action: 'demo' %>
+    <%= submit_tag %>
+  <% end %>
+
+  <script type="text/javascript">
+    const form = document.forms.item(0)
+    const hiddenInput = document.getElementById('g-recaptcha-response-demo')
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      console.log('Submitted form. Getting fresh reCAPTCHA response token…')
+      const response = await window.executeRecaptchaForDemoAsync()
+      console.log(`Response was: ${response}`)
+      hiddenInput.value = response
+      form.submit()
+    });
+  </script>
+
+<% else %>
+  <%= form_tag "/#{controller_name}" do %>
+    <%= recaptcha_v3 action: 'demo' %>
+    <%= submit_tag %>
+  <% end %>
+<% end %>
+
+<%= link_to 'Single', '?' if params[:multi] || params[:custom_callback] || params[:execute_on_submit] %>
+<%= link_to 'Multi',             '?multi=1'             unless params[:multi] %>
+<%= link_to 'Custom callback',   '?custom_callback=1'   unless params[:custom_callback] %>
+<%= link_to 'Execute on submit', '?execute_on_submit=1' unless params[:execute_on_submit] %>
