@@ -1,4 +1,5 @@
 ## Next
+* Add v3 API support
 * Renamed `Recaptcha::ClientHelper` to `Recaptcha::Adapters::ViewMethods`
 * Renamed `Recaptcha::Verify` to `Recaptcha::Adapters::ControllerMethods`
 

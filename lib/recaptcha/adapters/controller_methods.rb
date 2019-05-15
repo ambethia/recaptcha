@@ -13,7 +13,7 @@ module Recaptcha
 
         model = options[:model]
         attribute = options.fetch(:attribute, :base)
-        recaptcha_response = options.fetch(:response) { params['g-recaptcha-response'].to_s }
+        recaptcha_response = options[:response] || recaptcha_response_token(options[:action])
 
         begin
           verified = if Recaptcha.invalid_response?(recaptcha_response)
@@ -68,6 +68,19 @@ module Recaptcha
 
       def recaptcha_flash_supported?
         request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
+      end
+
+      # Extracts response token from params. params['g-recaptcha-response'] should either be a
+      # string or a hash with the action name(s) as keys. If it is a hash, then `action` is used as
+      # the key.
+      # @return [String] A response token if one was passed in the params; otherwise, `''`
+      def recaptcha_response_token(action = nil)
+        response_param = params['g-recaptcha-response']
+        if response_param&.respond_to?(:to_h) # Includes ActionController::Parameters
+          response_param[action].to_s
+        else
+          response_param.to_s
+        end
       end
     end
   end

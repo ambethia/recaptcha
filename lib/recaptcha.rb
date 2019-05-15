@@ -66,7 +66,9 @@ module Recaptcha
 
     reply = api_verification(verify_hash, timeout: options[:timeout])
     reply['success'].to_s == 'true' &&
-      hostname_valid?(reply['hostname'], options[:hostname])
+      hostname_valid?(reply['hostname'], options[:hostname]) &&
+      action_valid?(reply['action'], options[:action]) &&
+      score_above_threshold?(reply['score'], options[:minimum_score])
   end
 
   def self.hostname_valid?(hostname, validation)
@@ -76,6 +78,24 @@ module Recaptcha
     when nil, FalseClass then true
     when String then validation == hostname
     else validation.call(hostname)
+    end
+  end
+
+  def self.action_valid?(action, expected_action)
+    case expected_action
+    when nil, FalseClass then true
+    else action == expected_action
+    end
+  end
+
+  # Returns true iff score is greater or equal to (>=) minimum_score, or if no minimum_score was specified
+  def self.score_above_threshold?(score, minimum_score)
+    return true if minimum_score.nil?
+    return false if score.nil?
+
+    case minimum_score
+    when nil, FalseClass then true
+    else score >= minimum_score
     end
   end
 
