@@ -250,6 +250,76 @@ describe 'controller helpers' do
         end
       end
     end
+
+    describe 'action_valid?' do
+      let(:default_response_hash) { {
+        success: true,
+        action: 'homepage',
+      } }
+
+      before do
+        expect_http_post.to_return(body: success_body)
+      end
+
+      it "fails when action from response does not match expected action" do
+        expect_http_post.to_return(body: success_body(action: "not_homepage"))
+
+        refute verify_recaptcha(action: 'homepage')
+        assert_flash_error
+      end
+
+      it "passes with string that matches" do
+        assert verify_recaptcha(action: 'homepage')
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "passes with nil" do
+        assert verify_recaptcha(action: nil)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "passes with false" do
+        assert verify_recaptcha(action: false)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+    end
+
+    describe 'score_above_threshold?' do
+      let(:default_response_hash) { {
+        success: true,
+        action: 'homepage',
+      } }
+
+      before do
+        expect_http_post.to_return(body: success_body(score: 0.4))
+      end
+
+      it "fails when score is below minimum_score" do
+        refute verify_recaptcha(minimum_score: 0.5)
+        assert_flash_error
+      end
+
+      it "fails when response doesn't include a score" do
+        expect_http_post.to_return(body: success_body())
+        refute verify_recaptcha(minimum_score: 0.4)
+        assert_flash_error
+      end
+
+      it "passes with score exactly at minimum_score" do
+        assert verify_recaptcha(minimum_score: 0.4)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "passes when minimum_score not specified or nil" do
+        assert verify_recaptcha()
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "passes with false" do
+        assert verify_recaptcha(minimum_score: false)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+    end
   end
 
   private
@@ -272,5 +342,25 @@ describe 'controller helpers' do
       :get,
       "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
     )
+  end
+
+  def success_body(other = {})
+    default_response_hash.
+      merge(other).
+      to_json
+  end
+
+  def error_body(error_code = "bad-news")
+    { "error-codes" => [error_code] }.
+      to_json
+  end
+
+  def verify_recaptcha(options = {})
+    options[:action] = 'homepage' unless options.key?(:action)
+    @controller.verify_recaptcha(options)
+  end
+
+  def assert_flash_error
+    assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
   end
 end
