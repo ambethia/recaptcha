@@ -23,4 +23,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "bump"
   s.add_development_dependency "webmock"
   s.add_development_dependency "rubocop"
+
+  s.metadata = { "source_code_uri" => "https://github.com/ambethia/recaptcha" }
 end
