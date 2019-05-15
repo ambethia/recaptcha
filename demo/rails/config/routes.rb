@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: "captcha#index"
-  post "/captchas" => "captcha#create"
+  root to: redirect('/captchas')
+  resources :captchas, only: [:index, :create]
   resources :users
 end
