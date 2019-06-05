@@ -3,7 +3,7 @@ require_relative 'helper'
 describe Recaptcha::Configuration do
   describe "#api_server_url" do
     it "serves the default" do
-      Recaptcha.configuration.api_server_url.must_equal "https://www.google.com/recaptcha/api.js"
+      Recaptcha.configuration.api_server_url.must_equal "https://www.recaptcha.net/recaptcha/api.js"
     end
 
     describe "when api_server_url is overwritten" do
@@ -18,7 +18,7 @@ describe Recaptcha::Configuration do
 
   describe "#verify_url" do
     it "serves the default" do
-      Recaptcha.configuration.verify_url.must_equal "https://www.google.com/recaptcha/api/siteverify"
+      Recaptcha.configuration.verify_url.must_equal "https://www.recaptcha.net/recaptcha/api/siteverify"
     end
 
     describe "when api_server_url is overwritten" do
