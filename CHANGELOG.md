@@ -1,4 +1,7 @@
 ## Next
+
+## 5.0.0
+* Changed host to Recaptcha.net
 * Add v3 API support
 * Renamed `Recaptcha::ClientHelper` to `Recaptcha::Adapters::ViewMethods`
 * Renamed `Recaptcha::Verify` to `Recaptcha::Adapters::ControllerMethods`
