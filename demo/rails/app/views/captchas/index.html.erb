@@ -35,7 +35,7 @@
     <div id="example3"></div>
     <%= submit_tag %>
   <% end %>
-  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+  <script src="https://www.recaptcha.net/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 <% elsif params[:invisible] %>
   <%= form_tag "/captchas", id: "invisible-recaptcha-form" do %>
     <%= invisible_recaptcha_tags text: 'Save changes' %>
