@@ -43,8 +43,8 @@ module Recaptcha
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true
 
-      @secret_key = ENV['RECAPTCHA_SECRET_KEY']
-      @site_key = ENV['RECAPTCHA_SITE_KEY']
+      @secret_key = ENV['RECAPTCHA_SECRET_KEY'] || Rails.application.credentials[:RECAPTCHA_SECRET_KEY]
+      @site_key = ENV['RECAPTCHA_SITE_KEY'] || Rails.application.credentials[:RECAPTCHA_SITE_KEY]
       @verify_url = nil
       @api_server_url = nil
     end

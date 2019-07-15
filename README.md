@@ -36,7 +36,7 @@ Note: Enter `localhost` or `127.0.0.1` as the domain if using in development wit
 gem "recaptcha"
 ```
 
-You can keep keys out of the code base with environment variables or with Rails [secrets](https://api.rubyonrails.org/classes/Rails/Application.html#method-i-secrets).<br/>
+You can keep keys out of the code base with environment variables, with Rails [secrets](https://api.rubyonrails.org/classes/Rails/Application.html#method-i-secrets) or with Rails [encrypted credentials](https://guides.rubyonrails.org/security.html#custom-credentials).<br/>
 
 In development, you can use the [dotenv](https://github.com/bkeepers/dotenv) gem. (Make sure to add it above `gem 'recaptcha'`.)
 
@@ -48,6 +48,13 @@ documentation.
 ```shell
 export RECAPTCHA_SITE_KEY   = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+```
+
+If you use Rails encrypted credentials, make sure the keys are at the top level of the yml file:
+
+```ruby
+RECAPTCHA_SITE_KEY: 6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy
+RECAPTCHA_SECRET_KEY: 6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx
 ```
 
 Add `recaptcha_tags` to the forms you want to protect:
