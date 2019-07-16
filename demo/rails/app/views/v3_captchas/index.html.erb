@@ -5,6 +5,22 @@
     <%= submit_tag %>
   <% end %>
 
+<% elsif action_name == 'create_with_v2_fallback' || params[:with_v2_fallback] %>
+  <% if @recaptcha_verify_returned %>
+    <%= @recaptcha_verify_result.pretty_inspect %>
+  <% end %>
+  <%= form_tag "/#{controller_name}/create_with_v2_fallback" do %>
+    <% if @show_checkbox_recaptcha %>
+      <p>Automatic v3 verification failed. Falling back to a v3 challange...</p>
+      <%= recaptcha_tags %>
+      <%= submit_tag 'Submit' %>
+    <% else %>
+      <%= recaptcha_v3 action: 'login', site_key: ENV['RECAPTCHA_SITE_KEY_V3'] %>
+      <%= submit_tag 'Succes' %>
+      <%= submit_tag 'Failure' %>
+    <% end %>
+  <% end %>
+
 <% elsif params[:custom_callback] %>
   <script type="text/javascript">
     var myCallback = function(action, response) {
@@ -32,7 +48,7 @@
     });
   </script>
 
-<% else %>
+<% else # Single %>
   <%= form_tag "/#{controller_name}" do %>
     <%= recaptcha_v3 action: 'demo' %>
     <%= submit_tag %>
@@ -40,6 +56,7 @@
 <% end %>
 
 <%= link_to 'Single', '?' if params[:multi] || params[:custom_callback] || params[:execute_on_submit] %>
+<%= link_to 'with v2 fallback',  '/v3_captchas/?with_v2_fallback=1'  unless params[:with_v2_fallback] %>
 <%= link_to 'Multi',             '?multi=1'             unless params[:multi] %>
 <%= link_to 'Custom callback',   '?custom_callback=1'   unless params[:custom_callback] %>
 <%= link_to 'Execute on submit', '?execute_on_submit=1' unless params[:execute_on_submit] %>

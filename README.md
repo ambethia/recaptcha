@@ -270,7 +270,8 @@ For more information, refer to the [v3 documentation](https://developers.google.
 ### Examples
 
 With v3, you can let all users log in without any intervention at all if their score is above some
-threshold, and only show a v2 checkbox recaptcha challenge if it is below the threshold:
+threshold, and only show a v2 checkbox recaptcha challenge (fall back to v2) if it is below the
+threshold:
 
 ```erb
   …
@@ -286,7 +287,7 @@ threshold, and only show a v2 checkbox recaptcha challenge if it is below the th
 # app/controllers/sessions_controller.rb
 def create
   success = verify_recaptcha(action: 'login', minimum_score: 0.5)
-  checkbox_success = verify_recaptcha_tags unless success
+  checkbox_success = verify_recaptcha unless success
   if success || checkbox_success
     # Perform action
   else
@@ -297,6 +298,8 @@ def create
   end
 end
 ```
+
+(You can also find this [example](demo/rails/app/controllers/v3_captchas_controller.rb) in the demo app.)
 
 Another example:
 
@@ -332,7 +335,7 @@ end
 
 Adds an inline script tag that calls `grecaptcha.execute` for the given `site_key` and `action` and
 calls the `callback` with the resulting response token. You need to verify this token with
-[`verify_recaptcha`](#verify_recaptcha_use_with_v3) in your controller in order to get the
+[`verify_recaptcha`](#verify_recaptcha-use-with-v3) in your controller in order to get the
 [score](https://developers.google.com/recaptcha/docs/v3#score).
 
 By default, this inserts a hidden `<input type="hidden" class="g-recaptcha-response">` tag. The
