@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :v3_captchas, only: [:index, :create] do
     collection do
       post :create_multi
+      post :create_with_v2_fallback
     end
   end
   resources :users
