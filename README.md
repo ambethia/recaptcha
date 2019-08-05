@@ -440,20 +440,17 @@ It is recommended to pass `external_script: false` on all but one of the calls t
 `recaptcha` since you only need to include the script tag once for a given `site_key`.
 
 ## I18n support
-reCAPTCHA passes two types of error explanation to a linked model. It will use the I18n gem
-to translate the default error message if I18n is available. To customize the messages to your locale,
-add these keys to your I18n backend:
 
-`recaptcha.errors.verification_failed` error message displayed if the captcha words didn't match
-`recaptcha.errors.recaptcha_unreachable` displayed if a timeout error occured while attempting to verify the captcha
-
-Also you can translate API response errors to human friendly by adding translations to the locale (`config/locales/en.yml`):
+reCAPTCHA supports the I18n gem (it comes with English translations)
+To override or add new languages, add to `config/locales/*.yml`
 
 ```yaml
+# config/locales/en.yml
 en:
   recaptcha:
     errors:
-      verification_failed: 'Fail'
+      verification_failed: 'reCAPTCHA was incorrect, please try again.'
+      recaptcha_unreachable: 'reCAPTCHA verification server error, please try again.'
 ```
 
 ## Testing
