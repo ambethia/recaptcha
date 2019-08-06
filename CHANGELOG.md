@@ -1,5 +1,9 @@
 ## Next
 
+## 5.1.0
+* Added default translations for rails/i18n
+* use recaptcha.net for the script tag
+
 ## 5.0.0
 * Changed host to Recaptcha.net
 * Add v3 API support
