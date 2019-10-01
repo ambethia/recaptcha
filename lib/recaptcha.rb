@@ -99,7 +99,8 @@ module Recaptcha
     end
   end
 
-  def self.api_verification(verify_hash, timeout: DEFAULT_TIMEOUT)
+  def self.api_verification(verify_hash, timeout: nil)
+    timeout ||= DEFAULT_TIMEOUT
     http = if configuration.proxy
       proxy_server = URI.parse(configuration.proxy)
       Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
