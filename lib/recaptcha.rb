@@ -64,7 +64,7 @@ module Recaptcha
     verify_hash = { 'secret' => secret_key, 'response' => response }
     verify_hash['remoteip'] = options[:remote_ip] if options.key?(:remote_ip)
 
-    reply = api_verification(verify_hash, options[:timeout])
+    reply = api_verification(verify_hash, timeout: options[:timeout])
     reply['success'].to_s == 'true' &&
       hostname_valid?(reply['hostname'], options[:hostname]) &&
       action_valid?(reply['action'], options[:action]) &&
@@ -99,7 +99,7 @@ module Recaptcha
     end
   end
 
-  def self.api_verification(verify_hash, timeout)
+  def self.api_verification(verify_hash, timeout: nil)
     timeout ||= DEFAULT_TIMEOUT
     http = if configuration.proxy
       proxy_server = URI.parse(configuration.proxy)
