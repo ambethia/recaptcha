@@ -217,7 +217,6 @@ module Recaptcha
             var element = document.getElementById(id);
             element.value = token;
           }
-        </script>
       HTML
     end
 
