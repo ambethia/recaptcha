@@ -208,5 +208,10 @@ describe 'View helpers' do
       html = recaptcha_v3 action: :foo
       html.must_include('<input type="hidden" name="g-recaptcha-response[foo]" id="g-recaptcha-response-foo" data-sitekey="0000000000000000000000000000000000000000" class="g-recaptcha g-recaptcha-response "/>')
     end
+
+    it "does not have obsole closing script tag" do
+      html = recaptcha_v3 action: :foo
+      assert html.scan(/script/).length.even?
+    end
   end
 end
