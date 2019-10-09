@@ -283,13 +283,13 @@ module Recaptcha
     # Returns a camelized string that is safe for use in a JavaScript variable/function name.
     # sanitize_action_for_js('my/action') => 'MyAction'
     private_class_method def self.sanitize_action_for_js(action)
-      action.to_s.gsub(/\W/, '_').camelize
+      action.to_s.gsub(/\W/, '_').split(/\/|_/).map(&:capitalize).join
     end
 
     # Returns a dasherized string that is safe for use as an HTML ID
     # dasherize_action('my/action') => 'my-action'
     private_class_method def self.dasherize_action(action)
-      action.to_s.gsub(/\W/, '-').dasherize
+      action.to_s.gsub(/\W/, '-').tr('_', '-')
     end
 
     private_class_method def self.hash_to_query(hash)
