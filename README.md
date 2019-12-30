@@ -60,7 +60,7 @@ Add `recaptcha_tags` to the forms you want to protect:
 <% end %>
 ```
 
-Then, add `verify_recaptcha` logic to each form action that you've protected:
+Next, add `verify_recaptcha` logic to each form action that you've protected:
 
 ```ruby
 # app/controllers/users_controller.rb
@@ -69,6 +69,19 @@ if verify_recaptcha(model: @user) && @user.save
   redirect_to @user
 else
   render 'new'
+end
+```
+
+Then make sure that you write an initializer for this gem with the relevant
+configuration settings:
+
+```ruby
+# config/initializers/recaptcha.rb
+Recaptcha.configuration do |config|
+  config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+  # Uncomment the following line if you are using a proxy server:
+  # config.proxy = 'http://myproxy.com.au:8080'
 end
 ```
 
@@ -463,17 +476,6 @@ Recaptcha.configuration.skip_verify_env.delete("test")
 
 ## Alternative API key setup
 
-### Recaptcha.configure
-
-```ruby
-# config/initializers/recaptcha.rb
-Recaptcha.configure do |config|
-  config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-  config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
-  # Uncomment the following line if you are using a proxy server:
-  # config.proxy = 'http://myproxy.com.au:8080'
-end
-```
 
 ### Recaptcha.with_configuration
 
