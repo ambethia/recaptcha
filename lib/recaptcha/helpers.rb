@@ -10,8 +10,9 @@ module Recaptcha
     def self.recaptcha_v3(options = {})
       site_key = options[:site_key] ||= Recaptcha.configuration.site_key!
       action = options.delete(:action) || raise(Recaptcha::RecaptchaError, 'action is required')
-      id   = options.delete(:id)   || "g-recaptcha-response-" + dasherize_action(action)
+      id = options.delete(:id) || "g-recaptcha-response-" + dasherize_action(action)
       name = options.delete(:name) || "g-recaptcha-response[#{action}]"
+      turbolinks = options.delete(:turbolinks)
       options[:render] = site_key
       options[:script_async] ||= false
       options[:script_defer] ||= false
@@ -22,9 +23,12 @@ module Recaptcha
       end
       options[:class] = "g-recaptcha-response #{options[:class]}"
 
+      if turbolinks
+        options[:onload] = recaptcha_v3_execute_function_name(action)
+      end
       html, tag_attributes = components(options)
       if recaptcha_v3_inline_script?(options)
-        html << recaptcha_v3_inline_script(site_key, action, callback, id, options)
+        html << recaptcha_v3_inline_script(site_key, action, callback, id, options, turbolinks)
       end
       case element
       when :input
@@ -170,7 +174,7 @@ module Recaptcha
 
     # Renders a script that calls `grecaptcha.execute` for the given `site_key` and `action` and
     # calls the `callback` with the resulting response token.
-    private_class_method def self.recaptcha_v3_inline_script(site_key, action, callback, id, options = {})
+    private_class_method def self.recaptcha_v3_inline_script(site_key, action, callback, id, options = {}, turbolinks)
       nonce = options[:nonce]
       nonce_attr = " nonce='#{nonce}'" if nonce
 
@@ -187,19 +191,22 @@ module Recaptcha
             });
           };
           // Invoke immediately
+          #{unless turbolinks
+              "
           #{recaptcha_v3_execute_function_name(action)}()
 
           // Async variant so you can await this function from another async function (no need for
           // an explicit callback function then!)
           // Returns a Promise that resolves with the response token.
           async function #{recaptcha_v3_async_execute_function_name(action)}() {
-            return new Promise((resolve, reject) => {
-              grecaptcha.ready(async function() {
-                resolve(await grecaptcha.execute('#{site_key}', {action: '#{action}'}))
-              });
-            })
+              return new Promise((resolve, reject) => {
+                grecaptcha.ready(async function() {
+                  resolve(await grecaptcha.execute('#{site_key}', {action: '#{action}'}))
+                });
+              })
           };
-
+          "
+            end}
           #{recaptcha_v3_define_default_callback(callback) if recaptcha_v3_define_default_callback?(callback, action, options)}
         </script>
       HTML
