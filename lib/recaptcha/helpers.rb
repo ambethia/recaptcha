@@ -214,7 +214,7 @@ module Recaptcha
     private_class_method def self.recaptcha_v3_onload_script(site_key, action, callback, id, options = {})
       nonce = options[:nonce]
       nonce_attr = " nonce='#{nonce}'" if nonce
-
+      console.log("test")
       <<-HTML
         <script#{nonce_attr}>
           // Define function so that we can call it again later if we need to reset it
