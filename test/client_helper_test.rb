@@ -80,12 +80,12 @@ describe 'View helpers' do
 
   describe "turbolinks" do
     it "adds onload to defined function" do
-      html = recaptcha_v3(turbolinks: true)
+      html = recaptcha_v3(action: 'request', turbolinks: true)
       html.must_include("onload=executeRecaptchaForRequest")
     end
 
     it "overrides specified onload" do
-      html = recaptcha_v3(onload: "foobar", turbolinks: true)
+      html = recaptcha_v3(action: 'request', onload: "foobar", turbolinks: true)
       html.wont_include("onload=foobar")
       html.must_include("onload=executeRecaptchaForRequest")
     end
