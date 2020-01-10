@@ -1,5 +1,11 @@
 ## Next
 
+## 5.3.0
+* turbolinks support
+
+## 5.2.0
+* remove dependency on rails methods
+
 ## 5.1.0
 * Added default translations for rails/i18n
 * use recaptcha.net for the script tag
