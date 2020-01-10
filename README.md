@@ -393,6 +393,7 @@ but only accepts the following options:
 | `:script`           | Same as setting both `:inline_script` and `:external_script`. (default: `true`). |
 | `:inline_script`    | If `true`, adds an inline script tag that calls `grecaptcha.execute` for the given `site_key` and `action` and calls the `callback` with the resulting response token. Pass `false` if you want to handle calling `grecaptcha.execute` yourself. (default: `true`) |
 | `:element`          | The element to render, if any (default: `:input`)<br/>`:input`: Renders a hidden `<input type="hidden">` tag. The value of this will be set to the response token by the default `setInputWithRecaptchaResponseTokenFor{action}` callback.<br/>`false`: Doesn't render any tag. You'll have to add a custom callback that does something with the token. |
+| `:turbolinks`          | If `true`, calls the js function which executes reCAPTCHA after all the dependencies have been loaded. This cannot be used with the js param `:onload`. This makes reCAPTCHAv3 usable with turbolinks. |
 
 [JavaScript resource (api.js) parameters](https://developers.google.com/recaptcha/docs/invisible#js_param):
 
@@ -501,4 +502,3 @@ verify_recaptcha secret_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
  - Check out the [wiki](https://github.com/ambethia/recaptcha/wiki) and leave whatever you found valuable there.
  - [Add multiple widgets to the same page](https://github.com/ambethia/recaptcha/wiki/Add-multiple-widgets-to-the-same-page)
  - [Use Recaptcha with Devise](https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise)
-
