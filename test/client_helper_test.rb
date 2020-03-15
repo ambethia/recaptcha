@@ -219,7 +219,7 @@ describe 'View helpers' do
   describe "v3 recaptcha" do
     it "renders input" do
       html = recaptcha_v3 action: :foo
-      html.must_include('<input type="hidden" name="g-recaptcha-response[foo]" id="g-recaptcha-response-foo" data-sitekey="0000000000000000000000000000000000000000" class="g-recaptcha g-recaptcha-response "/>')
+      html.must_include('<input type="hidden" name="g-recaptcha-response-data[foo]" id="g-recaptcha-response-data-foo" data-sitekey="0000000000000000000000000000000000000000" class="g-recaptcha g-recaptcha-response "/>')
     end
 
     it "does not have obsole closing script tag" do

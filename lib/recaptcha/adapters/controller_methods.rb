@@ -75,7 +75,7 @@ module Recaptcha
       # the key.
       # @return [String] A response token if one was passed in the params; otherwise, `''`
       def recaptcha_response_token(action = nil)
-        response_param = params['g-recaptcha-response']
+        response_param = params['g-recaptcha-response-data']
         if response_param&.respond_to?(:to_h) # Includes ActionController::Parameters
           response_param[action].to_s
         else
