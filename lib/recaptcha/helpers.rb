@@ -10,8 +10,8 @@ module Recaptcha
     def self.recaptcha_v3(options = {})
       site_key = options[:site_key] ||= Recaptcha.configuration.site_key!
       action = options.delete(:action) || raise(Recaptcha::RecaptchaError, 'action is required')
-      id = options.delete(:id) || "g-recaptcha-response-" + dasherize_action(action)
-      name = options.delete(:name) || "g-recaptcha-response[#{action}]"
+      id = options.delete(:id) || "g-recaptcha-response-data-" + dasherize_action(action)
+      name = options.delete(:name) || "g-recaptcha-response-data[#{action}]"
       turbolinks = options.delete(:turbolinks)
       options[:render] = site_key
       options[:script_async] ||= false

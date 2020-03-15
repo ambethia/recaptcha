@@ -9,7 +9,7 @@ describe 'controller helpers' do
     @expected_post_data["remoteip"]   = @controller.request.remote_ip
     @expected_post_data["response"]   = "response"
 
-    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response' => 'string'}
+    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
     @expected_post_data["secret"] = Recaptcha.configuration.secret_key
 
     @expected_uri = URI.parse(Recaptcha.configuration.verify_url)

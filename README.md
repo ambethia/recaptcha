@@ -147,7 +147,7 @@ Some of the options available:
 | `:message`     | Custom error message.
 | `:secret_key`  | Override the secret API key from the configuration.
 | `:timeout`     | The number of seconds to wait for reCAPTCHA servers before give up. (default: `3`)
-| `:response`    | Custom response parameter. (default: `params['g-recaptcha-response']`)
+| `:response`    | Custom response parameter. (default: `params['g-recaptcha-response-data']`)
 | `:hostname`    | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`, but can be changed by setting `config.hostname`)
 | `:env`         | Current environment. The request to verify will be skipped if the environment is specified in configuration under `skip_verify_env`
 
@@ -344,7 +344,7 @@ function). This lets you include `recaptcha_v3` within a `<form>` tag and have i
 submit the token as part of the form submission.
 
 Note: reCAPTCHA actually already adds its own hidden tag, like `<textarea
-id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response">`,
+id="g-recaptcha-response-data-100000" name="g-recaptcha-response-data" class="g-recaptcha-response">`,
 immediately ater the reCAPTCHA badge in the bottom right of the page — but since it is not inside of
 any `<form>` element, and since it already passes the token to the callback, this hidden `textarea`
 isn't helpful to us.
@@ -353,7 +353,7 @@ If you need to submit the response token to the server in a different way than v
 submit, such as via [Ajax](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) or [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API),
 then you can either:
 1. just extract the token out of the hidden `<input>` or `<textarea>` (both of which will have a
-   predictable name/id), like `document.getElementById('g-recaptcha-response-my-action').value`, or
+   predictable name/id), like `document.getElementById('g-recaptcha-response-data-my-action').value`, or
 2. write and specify a custom `callback` function. You may also want to pass `element: false` if you
    don't have a use for the hidden input element.
 
@@ -388,8 +388,8 @@ but only accepts the following options:
 | `:action`           | The name of the [reCAPTCHA action](https://developers.google.com/recaptcha/docs/v3#actions). Actions may only contain alphanumeric characters and slashes, and must not be user-specific. |
 | `:nonce`            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default: `nil`) |
 | `:callback`         | Name of callback function to call with the token. When `element` is `:input`, this defaults to a function named `setInputWithRecaptchaResponseTokenFor#{sanitize_action(action)}` that sets the value of the hidden input to the token. |
-| `:id`               | Specify a unique `id` attribute for the `<input>` element if using `element: :input`. (default: `"g-recaptcha-response-"` + `action`) |
-| `:name`             | Specify a unique `name` attribute for the `<input>` element if using `element: :input`. (default: `g-recaptcha-response[action]`) |
+| `:id`               | Specify a unique `id` attribute for the `<input>` element if using `element: :input`. (default: `"g-recaptcha-response-data-"` + `action`) |
+| `:name`             | Specify a unique `name` attribute for the `<input>` element if using `element: :input`. (default: `g-recaptcha-response-data[action]`) |
 | `:script`           | Same as setting both `:inline_script` and `:external_script`. (default: `true`). |
 | `:inline_script`    | If `true`, adds an inline script tag that calls `grecaptcha.execute` for the given `site_key` and `action` and calls the `callback` with the resulting response token. Pass `false` if you want to handle calling `grecaptcha.execute` yourself. (default: `true`) |
 | `:element`          | The element to render, if any (default: `:input`)<br/>`:input`: Renders a hidden `<input type="hidden">` tag. The value of this will be set to the response token by the default `setInputWithRecaptchaResponseTokenFor{action}` callback.<br/>`false`: Doesn't render any tag. You'll have to add a custom callback that does something with the token. |
@@ -435,7 +435,7 @@ result_b = verify_recaptcha(action: 'b')
 ```
 
 Because the response tokens for multiple actions may be submitted together in the same request, they
-are passed as a hash under `params['g-recaptcha-response']` with the action as the key.
+are passed as a hash under `params['g-recaptcha-response-data']` with the action as the key.
 
 It is recommended to pass `external_script: false` on all but one of the calls to
 `recaptcha` since you only need to include the script tag once for a given `site_key`.
