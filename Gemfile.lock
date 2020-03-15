@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    recaptcha (5.3.0)
+    recaptcha (5.4.0)
       json
 
 GEM
