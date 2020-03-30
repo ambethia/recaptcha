@@ -440,6 +440,22 @@ are passed as a hash under `params['g-recaptcha-response-data']` with the action
 It is recommended to pass `external_script: false` on all but one of the calls to
 `recaptcha` since you only need to include the script tag once for a given `site_key`.
 
+## `recaptcha_reply`
+
+After `verify_recaptcha` has been called, you can call `recaptcha_reply` to get the raw reply from recaptcha. This can allow you to get the exact score returned by recaptcha should you need it.
+
+```ruby
+if verify_recaptcha(action: 'login')
+  redirect_to @user
+else
+  score = recaptcha_reply['score']
+  Rails.logger.warn("User #{@user.id} was denied login because of a recaptcha score of #{score}")
+  render 'new'
+end
+```
+
+`recaptcha_reply` will return `nil` if the the reply was not yet fetched.
+
 ## I18n support
 
 reCAPTCHA supports the I18n gem (it comes with English translations)

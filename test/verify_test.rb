@@ -322,6 +322,27 @@ describe 'controller helpers' do
     end
   end
 
+  describe "#recatcha_reply" do
+    let(:default_response_hash) { {
+      success: true,
+      score: 0.97,
+      action: 'homepage',
+    } }
+
+    before do
+      expect_http_post.to_return(body: success_body)
+    end
+
+    it "is initially nil" do
+      assert_nil @controller.recaptcha_reply
+    end
+
+    it "contains the recaptcha reply once verify_recaptcha has been called" do
+      assert verify_recaptcha()
+      assert_equal default_response_hash.to_json, @controller.recaptcha_reply.to_json
+    end
+  end
+
   private
 
   class TestController
@@ -335,6 +356,7 @@ describe 'controller helpers' do
 
     public :verify_recaptcha
     public :verify_recaptcha!
+    public :recaptcha_reply
   end
 
   def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
