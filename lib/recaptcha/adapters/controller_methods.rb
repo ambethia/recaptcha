@@ -24,7 +24,9 @@ module Recaptcha
               options = options.merge(remote_ip: remoteip.to_s) if remoteip
             end
 
-            Recaptcha.verify_via_api_call(recaptcha_response, options)
+            success, @_recaptcha_reply =
+              Recaptcha.verify_via_api_call(recaptcha_response, options.merge(with_reply: true))
+            success
           end
 
           if verified
@@ -56,6 +58,10 @@ module Recaptcha
 
       def verify_recaptcha!(options = {})
         verify_recaptcha(options) || raise(VerifyError)
+      end
+
+      def recaptcha_reply
+        @_recaptcha_reply if defined?(@_recaptcha_reply)
       end
 
       def recaptcha_error(model, attribute, message)
