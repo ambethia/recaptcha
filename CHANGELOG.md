@@ -1,5 +1,14 @@
 ## Next
 
+## 5.5.0
+* add `recaptcha_reply` controller method for better debugging/inspection
+
+## 5.4.1
+* fix v2 vs 'data' postfix
+
+## 5.4.0
+* added 'data' postfix to g-recaptcha-response attribute name to avoid collisions
+
 ## 5.3.0
 * turbolinks support
 
