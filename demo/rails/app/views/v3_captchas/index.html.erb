@@ -31,13 +31,13 @@
 
 <% elsif params[:execute_on_submit] %>
   <%= form_tag "/#{controller_name}" do %>
-    <%= recaptcha_v3 action: 'demo' %>
+    <%= recaptcha_v3 inline_script: true, action: 'demo' %>
     <%= submit_tag %>
   <% end %>
 
   <script type="text/javascript">
     const form = document.forms.item(0)
-    const hiddenInput = document.getElementById('g-recaptcha-response-demo')
+    const hiddenInput = document.getElementById('g-recaptcha-response-data-demo')
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       console.log('Submitted form. Getting fresh reCAPTCHA response token…')
