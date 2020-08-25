@@ -119,7 +119,7 @@ The following options are available:
 Any unrecognized options will be added as attributes on the generated tag.
 
 You can also override the html attributes for the sizes of the generated `textarea` and `iframe`
-elements, if CSS isn't your thing. Inspect the [source of `recaptcha_tags`](https://github.com/ambethia/recaptcha/blob/master/lib/recaptcha/client_helper.rb)
+elements, if CSS isn't your thing. Inspect the [source of `recaptcha_tags`](https://github.com/ambethia/recaptcha/blob/master/lib/recaptcha/helpers.rb)
 to see these options.
 
 Note that you cannot submit/verify the same response token more than once or you will get a
