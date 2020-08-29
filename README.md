@@ -278,7 +278,7 @@ threshold:
   <% if @show_checkbox_recaptcha %>
     <%= recaptcha_tags %>
   <% else %>
-    <%= recaptcha_v3(action: 'login') %>
+    <%= recaptcha_v3(action: 'login', site_key: ENV['RECAPTCHA_SITE_KEY_V3']) %>
   <% end %>
   …
 ```
@@ -286,7 +286,7 @@ threshold:
 ```ruby
 # app/controllers/sessions_controller.rb
 def create
-  success = verify_recaptcha(action: 'login', minimum_score: 0.5)
+  success = verify_recaptcha(action: 'login', minimum_score: 0.5, secret_key: ENV['RECAPTCHA_SECRET_KEY_V3'])
   checkbox_success = verify_recaptcha unless success
   if success || checkbox_success
     # Perform action
