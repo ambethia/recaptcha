@@ -139,7 +139,7 @@ module Recaptcha
       skip_script = (options.delete(:script) == false) || (options.delete(:external_script) == false)
       ui = options.delete(:ui)
 
-      data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size]
+      data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size, :selector]
       data_attribute_keys << :tabindex unless ui == :button
       data_attributes = {}
       data_attribute_keys.each do |data_attribute|
@@ -271,6 +271,8 @@ module Recaptcha
     private_class_method def self.default_callback(options = {})
       nonce = options[:nonce]
       nonce_attr = " nonce='#{nonce}'" if nonce
+      selector_tag = options[:selector]
+      selector_attr = options[:selector] ? "[data-selector='#{selector_tag}']" : '.g-recaptcha'
 
       <<-HTML
         <script#{nonce_attr}>
@@ -283,9 +285,9 @@ module Recaptcha
               return curEle.nodeName === 'FORM' ? curEle : null
             };
 
-            var eles = document.getElementsByClassName('g-recaptcha');
-            if (eles.length > 0) {
-              var form = closestForm(eles[0]);
+            var el = document.querySelector("#{selector_attr}")
+            if (!!el) {
+              var form = closestForm(el);
               if (form) {
                 form.submit();
               }

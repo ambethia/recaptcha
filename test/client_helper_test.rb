@@ -209,6 +209,17 @@ describe 'View helpers' do
       html.wont_include("<button")
     end
 
+    it "includes a custom selector if provided" do
+      html = invisible_recaptcha_tags(selector: 'custom-selector')
+      html.must_include("data-selector=\"custom-selector\"")
+      html.must_include("document.querySelector(\"[data-selector='custom-selector']\")")
+    end
+
+    it "uses default selector if no custom selector has been provided" do
+      html = invisible_recaptcha_tags()
+      html.must_include("document.querySelector(\".g-recaptcha\")")
+    end
+
     it "raises an error on an invalid ui option" do
       assert_raises Recaptcha::RecaptchaError do
         invisible_recaptcha_tags(ui: :foo)
