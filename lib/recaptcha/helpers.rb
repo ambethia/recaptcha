@@ -139,7 +139,7 @@ module Recaptcha
       skip_script = (options.delete(:script) == false) || (options.delete(:external_script) == false)
       ui = options.delete(:ui)
 
-      data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size, :selector]
+      data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size]
       data_attribute_keys << :tabindex unless ui == :button
       data_attributes = {}
       data_attribute_keys.each do |data_attribute|
@@ -271,8 +271,7 @@ module Recaptcha
     private_class_method def self.default_callback(options = {})
       nonce = options[:nonce]
       nonce_attr = " nonce='#{nonce}'" if nonce
-      selector_tag = options[:selector]
-      selector_attr = options[:selector] ? "[data-selector='#{selector_tag}']" : '.g-recaptcha'
+      selector_attr = options[:id] ? "##{options[:id]}" : ".g-recaptcha"
 
       <<-HTML
         <script#{nonce_attr}>

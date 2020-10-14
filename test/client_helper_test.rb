@@ -210,13 +210,13 @@ describe 'View helpers' do
     end
 
     it "includes a custom selector if provided" do
-      html = invisible_recaptcha_tags(selector: 'custom-selector')
-      html.must_include("data-selector=\"custom-selector\"")
-      html.must_include("document.querySelector(\"[data-selector='custom-selector']\")")
+      html = invisible_recaptcha_tags(id: 'custom-selector')
+      html.must_include("id=\"custom-selector\"")
+      html.must_include("document.querySelector(\"#custom-selector\")")
     end
 
     it "uses default selector if no custom selector has been provided" do
-      html = invisible_recaptcha_tags()
+      html = invisible_recaptcha_tags
       html.must_include("document.querySelector(\".g-recaptcha\")")
     end
 
