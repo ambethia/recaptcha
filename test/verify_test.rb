@@ -79,7 +79,7 @@ describe 'controller helpers' do
       secret_key = Recaptcha.configuration.secret_key
       stub_request(
         :get,
-        "https://www.recaptcha.net/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
+        "https://www.google.com/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
       ).to_return(body: '{"success":true}')
 
       assert @controller.verify_recaptcha(skip_remote_ip: true)
@@ -362,7 +362,7 @@ describe 'controller helpers' do
   def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
     stub_request(
       :get,
-      "https://www.recaptcha.net/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
+      "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
     )
   end
 
