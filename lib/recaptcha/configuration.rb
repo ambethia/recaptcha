@@ -35,18 +35,18 @@ module Recaptcha
       'verify_url' => 'https://www.google.com/recaptcha/api/siteverify'
     }.freeze
 
-    attr_accessor :default_env, :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname
-    attr_writer :api_server_url, :verify_url
+    attr_accessor :default_env, :skip_verify_env, :api_server_url, :verify_url, :secret_key, :site_key,
+                  :proxy, :handle_timeouts_gracefully, :hostname
 
     def initialize #:nodoc:
       @default_env = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true
 
+      @api_server_url = ENV['RECAPTCHA_SERVER_URL'] || DEFAULTS.fetch('server_url')
+      @verify_url = ENV['RECAPTCHA_VERIFY_URL'] || DEFAULTS.fetch('verify_url')
       @secret_key = ENV['RECAPTCHA_SECRET_KEY']
       @site_key = ENV['RECAPTCHA_SITE_KEY']
-      @verify_url = nil
-      @api_server_url = nil
     end
 
     def secret_key!
@@ -55,14 +55,6 @@ module Recaptcha
 
     def site_key!
       site_key || raise(RecaptchaError, "No site key specified.")
-    end
-
-    def api_server_url
-      @api_server_url || DEFAULTS.fetch('server_url')
-    end
-
-    def verify_url
-      @verify_url || DEFAULTS.fetch('verify_url')
     end
   end
 end
