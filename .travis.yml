@@ -16,7 +16,6 @@ matrix:
     env: TASK=rubocop
   allow_failures:
     - rvm: truffleruby-head
-    
 script: bundle exec rake $TASK
 branches:
   only: master
