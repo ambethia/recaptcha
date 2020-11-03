@@ -7,7 +7,7 @@ License:   [MIT](http://creativecommons.org/licenses/MIT/)<br/>
 Info:      https://github.com/ambethia/recaptcha<br/>
 Bugs:      https://github.com/ambethia/recaptcha/issues<br/>
 
-This gem provides helper methods for the [reCAPTCHA API](https://www.google.com/recaptcha). In your
+This gem provides helper methods for the [reCAPTCHA API](https://www.google.com/recaptcha/about/). In your
 views you can use the `recaptcha_tags` method to embed the needed javascript, and you can validate
 in your controllers with `verify_recaptcha` or `verify_recaptcha!`, which raises an error on
 failure.
