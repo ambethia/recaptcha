@@ -1,3 +1,4 @@
+
 # reCAPTCHA
 [![Gem Version](https://badge.fury.io/rb/recaptcha.svg)](https://badge.fury.io/rb/recaptcha)
 
@@ -11,6 +12,23 @@ This gem provides helper methods for the [reCAPTCHA API](https://www.google.com/
 views you can use the `recaptcha_tags` method to embed the needed javascript, and you can validate
 in your controllers with `verify_recaptcha` or `verify_recaptcha!`, which raises an error on
 failure.
+
+
+# Table of Contents
+1. [Obtaining a key](#obtaining-a-key)
+2. [Rails Installation](#rails-installation)
+3. [Sinatra / Rack / Ruby Installation](#sinatra--rack--ruby-installation)
+4. [reCAPTCHA V2 API & Usage](#recaptcha-v2-api-and-usage)
+  - [`recaptcha_tags`](#recaptcha_tags)
+  - [`verify_recaptcha`](#verify_recaptcha)
+  - [`invisible_recaptcha_tags`](#invisible_recaptcha_tags)
+5. [reCAPTCHA V3 API & Usage](#recaptcha-v3-api-and-usage)
+  - [`recaptcha_v3`](#recaptcha_v3)
+  - [`verify_recaptcha` (use with v3)](#verify_recaptcha-use-with-v3)
+  - [`recaptcha_reply`](#recaptcha_reply)
+6. [I18n Support](#i18n-support)
+7. [Testing](#testing)
+8. [Alternative API Key Setup](#alternative-api-key-setup)
 
 ## Obtaining a key
 
@@ -71,6 +89,7 @@ else
   render 'new'
 end
 ```
+Please note that this setup uses [`reCAPTCHA_v2`](#recaptcha-v2-api-and-usage). For a `recaptcha_v3` use, please refer to [`reCAPTCHA_v3 setup`](#examples).
 
 ## Sinatra / Rack / Ruby installation
 
