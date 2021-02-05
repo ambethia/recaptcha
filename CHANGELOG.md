@@ -1,5 +1,12 @@
 ## Next
 
+## 5.7.0
+* french locale
+* drop ruby 2.3
+
+## 5.6.0
+* Allow multiple invisible recaptchas on a single page by setting custom selector
+
 ## 5.5.0
 * add `recaptcha_reply` controller method for better debugging/inspection
 
