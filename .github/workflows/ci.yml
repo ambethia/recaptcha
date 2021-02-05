@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Test ruby version matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.4', '2.5', '2.6', '2.7', 'truffleruby-head']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - run: bundle exec rake test
+
+  rubocop:
+    name: Run rubocop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.4'
+          bundler-cache: true
+      - run: bundle exec rake rubocop
