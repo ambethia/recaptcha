@@ -68,6 +68,12 @@ export RECAPTCHA_SITE_KEY   = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
+If you have an Enterprise API key:
+
+```shell
+export RECAPTCHA_ENTERPRISE_API = 'true'
+```
+
 Add `recaptcha_tags` to the forms you want to protect:
 
 ```erb
@@ -376,12 +382,14 @@ then you can either:
 2. write and specify a custom `callback` function. You may also want to pass `element: false` if you
    don't have a use for the hidden input element.
 
-Note that you cannot submit/verify the same response token more than once or you will get a
-`timeout-or-duplicate` error code. If you need reset the captcha and generate a new response token,
-then you need to call `grecaptcha.execute(…)` again. This helper provides a JavaScript method (for
-each action) named `executeRecaptchaFor{action}` to make this easier. That is the same method that
-is invoked immediately. It simply calls `grecaptcha.execute` again and then calls the `callback`
-function with the response token.
+Note that you cannot submit/verify the same response token more than once or you
+will get a `timeout-or-duplicate` error code. If you need reset the captcha and
+generate a new response token, then you need to call `grecaptcha.execute(…)` or
+`grecaptcha.enterprise.execute(…)` again. This helper provides a JavaScript
+method (for each action) named `executeRecaptchaFor{action}` to make this
+easier. That is the same method that is invoked immediately. It simply calls
+`grecaptcha.execute` or `grecaptcha.enterprise.execute` again and then calls the
+`callback` function with the response token.
 
 You will also get a `timeout-or-duplicate` error if too much time has passed between getting the
 response token and verifying it. This can easily happen with large forms that take the user a couple
@@ -506,6 +514,7 @@ Recaptcha.configuration.skip_verify_env.delete("test")
 Recaptcha.configure do |config|
   config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
   config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+  config.enterprise = true
   # Uncomment the following line if you are using a proxy server:
   # config.proxy = 'http://myproxy.com.au:8080'
 end
