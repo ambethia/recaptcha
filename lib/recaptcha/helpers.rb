@@ -174,7 +174,8 @@ module Recaptcha
 
     # v3
 
-    # Renders a script that calls `grecaptcha.execute` for the given `site_key` and `action` and
+    # Renders a script that calls `grecaptcha.execute` or
+    # `grecaptcha.enterprise.execute` for the given `site_key` and `action` and
     # calls the `callback` with the resulting response token.
     private_class_method def self.recaptcha_v3_inline_script(site_key, action, callback, id, options = {})
       nonce = options[:nonce]
@@ -251,8 +252,9 @@ module Recaptcha
       recaptcha_v3_inline_script?(options)
     end
 
-    # Returns the name of the JavaScript function that actually executes the reCAPTCHA code (calls
-    # grecaptcha.execute). You can call it again later to reset it.
+    # Returns the name of the JavaScript function that actually executes the
+    # reCAPTCHA code (calls `grecaptcha.execute` or
+    # `grecaptcha.enterprise.execute`). You can call it again later to reset it.
     def self.recaptcha_v3_execute_function_name(action)
       "executeRecaptchaFor#{sanitize_action_for_js(action)}"
     end
