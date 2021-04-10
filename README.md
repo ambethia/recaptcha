@@ -71,7 +71,7 @@ export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 If you have an Enterprise API key:
 
 ```shell
-export RECAPTCHA_ENTERPRISE_API = 'true'
+export RECAPTCHA_ENTERPRISE = 'true'
 ```
 
 Add `recaptcha_tags` to the forms you want to protect:

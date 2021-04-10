@@ -36,18 +36,18 @@ module Recaptcha
       'verify_url' => 'https://www.recaptcha.net/recaptcha/api/siteverify'
     }.freeze
 
-    attr_accessor :default_env, :skip_verify_env, :proxy, :handle_timeouts_gracefully, :hostname, :enterprise
-    attr_accessor :secret_key, :site_key
+    attr_accessor :default_env, :skip_verify_env, :proxy, :handle_timeouts_gracefully, :hostname
+    attr_accessor :secret_key, :site_key, :enterprise
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
       @default_env = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true
-      @enterprise = ENV.fetch('RECAPTCHA_ENTERPRISE_API', 'false') == 'true'
 
       @secret_key = ENV['RECAPTCHA_SECRET_KEY']
       @site_key = ENV['RECAPTCHA_SITE_KEY']
+      @enterprise = ENV['RECAPTCHA_ENTERPRISE'] == 'true'
       @verify_url = nil
       @api_server_url = nil
     end
