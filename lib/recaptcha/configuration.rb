@@ -44,7 +44,7 @@ module Recaptcha
       @default_env = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true
-      @enterprise = false
+      @enterprise = ENV.fetch('RECAPTCHA_ENTERPRISE_API', 'false') == 'true'
 
       @secret_key = ENV['RECAPTCHA_SECRET_KEY']
       @site_key = ENV['RECAPTCHA_SITE_KEY']
