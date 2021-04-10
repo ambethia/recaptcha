@@ -16,9 +16,11 @@ describe Recaptcha::Configuration do
 
     describe "when api_server_url is overwritten" do
       it "serves the overwritten url" do
-        proxied_api_server_url = 'https://127.0.0.1:8080/recaptcha/api.js'
-        Recaptcha.with_configuration(api_server_url: proxied_api_server_url) do
+        Recaptcha.configuration.api_server_url = proxied_api_server_url = 'https://127.0.0.1:8080/recaptcha/api.js'
+        begin
           Recaptcha.configuration.api_server_url.must_equal proxied_api_server_url
+        ensure
+          Recaptcha.configuration.api_server_url = nil
         end
       end
     end
@@ -31,9 +33,11 @@ describe Recaptcha::Configuration do
 
     describe "when api_server_url is overwritten" do
       it "serves the overwritten url" do
-        proxied_verify_url = 'https://127.0.0.1:8080/recaptcha/api/siteverify'
-        Recaptcha.with_configuration(verify_url: proxied_verify_url) do
+        Recaptcha.configuration.verify_url = proxied_verify_url = 'https://127.0.0.1:8080/recaptcha/api/siteverify'
+        begin
           Recaptcha.configuration.verify_url.must_equal proxied_verify_url
+        ensure
+          Recaptcha.configuration.verify_url = nil
         end
       end
     end
