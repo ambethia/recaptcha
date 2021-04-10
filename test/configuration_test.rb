@@ -2,8 +2,16 @@ require_relative 'helper'
 
 describe Recaptcha::Configuration do
   describe "#api_server_url" do
-    it "serves the default" do
+    it "serves the default (free API)" do
       Recaptcha.configuration.api_server_url.must_equal "https://www.recaptcha.net/recaptcha/api.js"
+    end
+
+    describe "when enterprise is set to true" do
+      it "serves the enterprise API URL" do
+        Recaptcha.with_configuration(enterprise: true) do
+          Recaptcha.configuration.api_server_url.must_equal "https://www.recaptcha.net/recaptcha/enterprise.js"
+        end
+      end
     end
 
     describe "when api_server_url is overwritten" do

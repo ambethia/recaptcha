@@ -186,7 +186,7 @@ module Recaptcha
           // This executes reCAPTCHA and then calls our callback.
           function #{recaptcha_v3_execute_function_name(action)}() {
             grecaptcha.ready(function() {
-              grecaptcha.execute('#{site_key}', {action: '#{action}'}).then(function(token) {
+              #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
                 #{callback}('#{id}', token)
               });
             });
@@ -200,7 +200,7 @@ module Recaptcha
           async function #{recaptcha_v3_async_execute_function_name(action)}() {
             return new Promise((resolve, reject) => {
               grecaptcha.ready(async function() {
-                resolve(await grecaptcha.execute('#{site_key}', {action: '#{action}'}))
+                resolve(await #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}))
               });
             })
           };
@@ -218,7 +218,7 @@ module Recaptcha
         <script#{nonce_attr}>
           function #{recaptcha_v3_execute_function_name(action)}() {
             grecaptcha.ready(function() {
-              grecaptcha.execute('#{site_key}', {action: '#{action}'}).then(function(token) {
+              #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
                 #{callback}('#{id}', token)
               });
             });
@@ -294,6 +294,10 @@ module Recaptcha
           };
         </script>
       HTML
+    end
+
+    def self.recaptcha_execute_method_name
+      Recaptcha.configuration.enterprise ? "grecaptcha.enterprise.execute" : "grecaptcha.execute"
     end
 
     private_class_method def self.default_callback_required?(options)
