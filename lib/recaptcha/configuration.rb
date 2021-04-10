@@ -36,7 +36,8 @@ module Recaptcha
       'verify_url' => 'https://www.recaptcha.net/recaptcha/api/siteverify'
     }.freeze
 
-    attr_accessor :default_env, :skip_verify_env, :secret_key, :site_key, :proxy, :handle_timeouts_gracefully, :hostname, :enterprise
+    attr_accessor :default_env, :skip_verify_env, :proxy, :handle_timeouts_gracefully, :hostname, :enterprise
+    attr_accessor :secret_key, :site_key
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
