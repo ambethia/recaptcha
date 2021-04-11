@@ -60,11 +60,44 @@ module Recaptcha
   end
 
   def self.verify_via_api_call(response, options)
+    if Recaptcha.configuration.enterprise
+      verify_via_api_call_enterprise(response, options)
+    else
+      verify_via_api_call_free(response, options)
+    end
+  end
+
+  def self.verify_via_api_call_enterprise(response, options)
+    site_key = options.fetch(:site_key) { configuration.site_key! }
+    api_key = options.fetch(:api_key) { configuration.api_key! }
+    project_id = options.fetch(:project_id) { configuration.project_id! }
+
+    query_params = { 'key' => api_key }
+    body = { 'event' => { 'token' => response, 'siteKey' => site_key } }
+    body['event']['expectedAction'] = options[:action] if options.key?(:action)
+    body['event']['userIpAddress'] = options[:remote_ip] if options.key?(:remote_ip)
+
+    reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
+    token_properties = reply['tokenProperties']
+    success = !token_properties.nil? &&
+      token_properties['valid'].to_s == 'true' &&
+      hostname_valid?(token_properties['hostname'], options[:hostname]) &&
+      action_valid?(token_properties['action'], options[:action]) &&
+      score_above_threshold?(reply['score'], options[:minimum_score])
+
+    if options[:with_reply] == true
+      return success, reply
+    else
+      return success
+    end
+  end
+
+  def self.verify_via_api_call_free(response, options)
     secret_key = options.fetch(:secret_key) { configuration.secret_key! }
     verify_hash = { 'secret' => secret_key, 'response' => response }
     verify_hash['remoteip'] = options[:remote_ip] if options.key?(:remote_ip)
 
-    reply = api_verification(verify_hash, timeout: options[:timeout])
+    reply = api_verification_free(verify_hash, timeout: options[:timeout])
     success = reply['success'].to_s == 'true' &&
       hostname_valid?(reply['hostname'], options[:hostname]) &&
       action_valid?(reply['action'], options[:action]) &&
@@ -105,7 +138,7 @@ module Recaptcha
     end
   end
 
-  def self.api_verification(verify_hash, timeout: nil)
+  def self.api_verification_free(verify_hash, timeout: nil)
     timeout ||= DEFAULT_TIMEOUT
     http = if configuration.proxy
       proxy_server = URI.parse(configuration.proxy)
@@ -119,6 +152,25 @@ module Recaptcha
     http_instance.read_timeout = http_instance.open_timeout = timeout
     http_instance.use_ssl = true if uri.port == 443
     request = Net::HTTP::Get.new(uri.request_uri)
+    JSON.parse(http_instance.request(request).body)
+  end
+
+  def self.api_verification_enterprise(query_params, body, project_id, timeout: nil)
+    timeout ||= DEFAULT_TIMEOUT
+    http = if configuration.proxy
+             proxy_server = URI.parse(configuration.proxy)
+             Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
+           else
+             Net::HTTP
+           end
+    query = URI.encode_www_form(query_params)
+    uri = URI.parse(configuration.verify_url + "/#{project_id}/assessments" + '?' + query)
+    http_instance = http.new(uri.host, uri.port)
+    http_instance.read_timeout = http_instance.open_timeout = timeout
+    http_instance.use_ssl = true if uri.port == 443
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request['Content-Type'] = 'application/json; charset=utf-8'
+    request.body = JSON.generate(body)
     JSON.parse(http_instance.request(request).body)
   end
 end

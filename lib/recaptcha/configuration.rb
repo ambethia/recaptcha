@@ -33,11 +33,12 @@ module Recaptcha
     DEFAULTS = {
       'free_server_url' => 'https://www.recaptcha.net/recaptcha/api.js',
       'enterprise_server_url' => 'https://www.recaptcha.net/recaptcha/enterprise.js',
-      'verify_url' => 'https://www.recaptcha.net/recaptcha/api/siteverify'
+      'free_verify_url' => 'https://www.recaptcha.net/recaptcha/api/siteverify',
+      'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1beta1/projects'
     }.freeze
 
-    attr_accessor :default_env, :skip_verify_env, :proxy, :handle_timeouts_gracefully, :hostname
-    attr_accessor :secret_key, :site_key, :enterprise
+    attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully, :hostname
+    attr_accessor :enterprise, :api_key, :project_id
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
@@ -47,7 +48,11 @@ module Recaptcha
 
       @secret_key = ENV['RECAPTCHA_SECRET_KEY']
       @site_key = ENV['RECAPTCHA_SITE_KEY']
+
       @enterprise = ENV['RECAPTCHA_ENTERPRISE'] == 'true'
+      @api_key = ENV['RECAPTCHA_ENTERPISE_API_KEY']
+      @project_id = ENV['RECAPTCHA_ENTERPRISE_PROJECT_ID']
+
       @verify_url = nil
       @api_server_url = nil
     end
@@ -60,12 +65,20 @@ module Recaptcha
       site_key || raise(RecaptchaError, "No site key specified.")
     end
 
+    def api_key!
+      api_key || raise(RecaptchaError, "No Enterprise API key specified.")
+    end
+
+    def project_id!
+      project_id || raise(RecaptchaError, "No Enterprise project ID specified.")
+    end
+
     def api_server_url
       @api_server_url || (enterprise ? DEFAULTS.fetch('enterprise_server_url') : DEFAULTS.fetch('free_server_url'))
     end
 
     def verify_url
-      @verify_url || DEFAULTS.fetch('verify_url')
+      @verify_url || (enterprise ? DEFAULTS.fetch('enterprise_verify_url') :  DEFAULTS.fetch('free_verify_url'))
     end
   end
 end
