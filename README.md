@@ -71,7 +71,9 @@ export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 If you have an Enterprise API key:
 
 ```shell
-export RECAPTCHA_ENTERPRISE = 'true'
+export RECAPTCHA_ENTERPRISE            = 'true'
+export RECAPTCHA_ENTERPRISE_API_KEY    = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
+export RECAPTCHA_ENTERPRISE_PROJECT_ID = 'my-project'
 ```
 
 Add `recaptcha_tags` to the forms you want to protect:
@@ -171,6 +173,8 @@ Some of the options available:
 | `:attribute`   | Model attribute to receive errors. (default: `:base`)
 | `:message`     | Custom error message.
 | `:secret_key`  | Override the secret API key from the configuration.
+| `:api_key`     | Override the Enterprise API key from the configuration.
+| `:project_id ` | Override the Enterprise project ID from the configuration.
 | `:timeout`     | The number of seconds to wait for reCAPTCHA servers before give up. (default: `3`)
 | `:response`    | Custom response parameter. (default: `params['g-recaptcha-response-data']`)
 | `:hostname`    | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`, but can be changed by setting `config.hostname`)
@@ -514,9 +518,14 @@ Recaptcha.configuration.skip_verify_env.delete("test")
 Recaptcha.configure do |config|
   config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
   config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
-  config.enterprise = true
+
   # Uncomment the following line if you are using a proxy server:
   # config.proxy = 'http://myproxy.com.au:8080'
+
+  # Uncomment the following lines if you are using the Enterprise API:
+  # config.enterprise = true
+  # config.api_key = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
+  # config.project_id = 'my-project'
 end
 ```
 
