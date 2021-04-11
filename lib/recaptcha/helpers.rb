@@ -186,7 +186,7 @@ module Recaptcha
           // Define function so that we can call it again later if we need to reset it
           // This executes reCAPTCHA and then calls our callback.
           function #{recaptcha_v3_execute_function_name(action)}() {
-            grecaptcha.ready(function() {
+            #{recaptcha_ready_method_name}(function() {
               #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
                 #{callback}('#{id}', token)
               });
@@ -300,6 +300,10 @@ module Recaptcha
 
     def self.recaptcha_execute_method_name
       Recaptcha.configuration.enterprise ? "grecaptcha.enterprise.execute" : "grecaptcha.execute"
+    end
+
+    def self.recaptcha_ready_method_name
+      Recaptcha.configuration.enterprise ? "grecaptcha.enterprise.ready" : "grecaptcha.ready"
     end
 
     private_class_method def self.default_callback_required?(options)
