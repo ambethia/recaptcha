@@ -78,7 +78,7 @@ module Recaptcha
     end
 
     def verify_url
-      @verify_url || (enterprise ? DEFAULTS.fetch('enterprise_verify_url') :  DEFAULTS.fetch('free_verify_url'))
+      @verify_url || (enterprise ? DEFAULTS.fetch('enterprise_verify_url') : DEFAULTS.fetch('free_verify_url'))
     end
   end
 end

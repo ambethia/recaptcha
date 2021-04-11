@@ -158,11 +158,11 @@ module Recaptcha
   def self.api_verification_enterprise(query_params, body, project_id, timeout: nil)
     timeout ||= DEFAULT_TIMEOUT
     http = if configuration.proxy
-             proxy_server = URI.parse(configuration.proxy)
-             Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
-           else
-             Net::HTTP
-           end
+      proxy_server = URI.parse(configuration.proxy)
+      Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
+    else
+      Net::HTTP
+    end
     query = URI.encode_www_form(query_params)
     uri = URI.parse(configuration.verify_url + "/#{project_id}/assessments" + '?' + query)
     http_instance = http.new(uri.host, uri.port)
