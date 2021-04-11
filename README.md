@@ -398,7 +398,7 @@ easier. That is the same method that is invoked immediately. It simply calls
 You will also get a `timeout-or-duplicate` error if too much time has passed between getting the
 response token and verifying it. This can easily happen with large forms that take the user a couple
 minutes to complete. Unlike v2, where you can use the `expired-callback` to be notified when the
-response expries, v3 appears to provide no such callback. See also
+response expires, v3 appears to provide no such callback. See also
 [1](https://github.com/google/recaptcha/issues/281) and
 [2](https://stackoverflow.com/questions/54437745/recaptcha-v3-how-to-deal-with-expired-token-after-idle).
 
@@ -458,7 +458,7 @@ According to https://developers.google.com/recaptcha/docs/v3#placement,
 
 > Note: You can execute reCAPTCHA as many times as you'd like with different actions on the same page.
 
-You will need to verify each action individually with separate call to `verify_recaptcha`.
+You will need to verify each action individually with a separate call to `verify_recaptcha`.
 
 ```ruby
 result_a = verify_recaptcha(action: 'a')
@@ -531,7 +531,7 @@ end
 
 ### Recaptcha.with_configuration
 
-For temporary overwrites (not thread safe).
+For temporary overwrites (not thread-safe).
 
 ```ruby
 Recaptcha.with_configuration(site_key: '12345') do
