@@ -200,7 +200,7 @@ module Recaptcha
           // Returns a Promise that resolves with the response token.
           async function #{recaptcha_v3_async_execute_function_name(action)}() {
             return new Promise((resolve, reject) => {
-              grecaptcha.ready(async function() {
+             #{recaptcha_ready_method_name}(async function() {
                 resolve(await #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}))
               });
             })
