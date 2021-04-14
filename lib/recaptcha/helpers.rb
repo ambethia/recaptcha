@@ -218,7 +218,7 @@ module Recaptcha
       <<-HTML
         <script#{nonce_attr}>
           function #{recaptcha_v3_execute_function_name(action)}() {
-            grecaptcha.ready(function() {
+            #{recaptcha_ready_method_name}(function() {
               #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
                 #{callback}('#{id}', token)
               });
