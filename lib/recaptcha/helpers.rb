@@ -200,7 +200,7 @@ module Recaptcha
           // Returns a Promise that resolves with the response token.
           async function #{recaptcha_v3_async_execute_function_name(action)}() {
             return new Promise((resolve, reject) => {
-              grecaptcha.ready(async function() {
+             #{recaptcha_ready_method_name}(async function() {
                 resolve(await #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}))
               });
             })
@@ -218,7 +218,7 @@ module Recaptcha
       <<-HTML
         <script#{nonce_attr}>
           function #{recaptcha_v3_execute_function_name(action)}() {
-            grecaptcha.ready(function() {
+            #{recaptcha_ready_method_name}(function() {
               #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
                 #{callback}('#{id}', token)
               });
