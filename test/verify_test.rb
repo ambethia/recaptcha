@@ -4,15 +4,7 @@ describe 'controller helpers' do
   before do
     @controller = TestController.new
     @controller.request = stub(remote_ip: "1.1.1.1", format: :html)
-
-    @expected_post_data = {}
-    @expected_post_data["remoteip"]   = @controller.request.remote_ip
-    @expected_post_data["response"]   = "response"
-
     @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
-    @expected_post_data["secret"] = Recaptcha.configuration.secret_key
-
-    @expected_uri = URI.parse(Recaptcha.configuration.verify_url)
   end
 
   describe "#verify_recaptcha!" do
@@ -369,11 +361,6 @@ describe 'controller helpers' do
   def success_body(other = {})
     default_response_hash.
       merge(other).
-      to_json
-  end
-
-  def error_body(error_code = "bad-news")
-    { "error-codes" => [error_code] }.
       to_json
   end
 
