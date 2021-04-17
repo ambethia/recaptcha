@@ -17,8 +17,10 @@ Minitest::Test.send(:prepend, Module.new do
   def setup
     super
     Recaptcha.configure do |config|
-      config.site_key = '0000000000000000000000000000000000000000'
+      config.site_key   = '0000000000000000000000000000000000000000'
       config.secret_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+      config.api_key    = 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
+      config.project_id = 'test-project'
     end
   end
 end)
