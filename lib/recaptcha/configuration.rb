@@ -50,7 +50,7 @@ module Recaptcha
       @site_key = ENV['RECAPTCHA_SITE_KEY']
 
       @enterprise = ENV['RECAPTCHA_ENTERPRISE'] == 'true'
-      @api_key = ENV['RECAPTCHA_ENTERPISE_API_KEY']
+      @api_key = ENV['RECAPTCHA_ENTERPRISE_API_KEY']
       @project_id = ENV['RECAPTCHA_ENTERPRISE_PROJECT_ID']
 
       @verify_url = nil
