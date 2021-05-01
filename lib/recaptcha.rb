@@ -138,7 +138,7 @@ module Recaptcha
     end
   end
 
-  def self.api_verification_free(verify_hash, timeout: nil)
+  def self.http_client_for(uri:, timeout: nil)
     timeout ||= DEFAULT_TIMEOUT
     http = if configuration.proxy
       proxy_server = URI.parse(configuration.proxy)
@@ -146,28 +146,25 @@ module Recaptcha
     else
       Net::HTTP
     end
+    instance = http.new(uri.host, uri.port)
+    instance.read_timeout = instance.open_timeout = timeout
+    instance.use_ssl = true if uri.port == 443
+
+    instance
+  end
+
+  def self.api_verification_free(verify_hash, timeout: nil)
     query = URI.encode_www_form(verify_hash)
     uri = URI.parse(configuration.verify_url + '?' + query)
-    http_instance = http.new(uri.host, uri.port)
-    http_instance.read_timeout = http_instance.open_timeout = timeout
-    http_instance.use_ssl = true if uri.port == 443
+    http_instance = http_client_for(uri: uri, timeout: timeout)
     request = Net::HTTP::Get.new(uri.request_uri)
     JSON.parse(http_instance.request(request).body)
   end
 
   def self.api_verification_enterprise(query_params, body, project_id, timeout: nil)
-    timeout ||= DEFAULT_TIMEOUT
-    http = if configuration.proxy
-      proxy_server = URI.parse(configuration.proxy)
-      Net::HTTP::Proxy(proxy_server.host, proxy_server.port, proxy_server.user, proxy_server.password)
-    else
-      Net::HTTP
-    end
     query = URI.encode_www_form(query_params)
     uri = URI.parse(configuration.verify_url + "/#{project_id}/assessments" + '?' + query)
-    http_instance = http.new(uri.host, uri.port)
-    http_instance.read_timeout = http_instance.open_timeout = timeout
-    http_instance.use_ssl = true if uri.port == 443
+    http_instance = http_client_for(uri: uri, timeout: timeout)
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Content-Type'] = 'application/json; charset=utf-8'
     request.body = JSON.generate(body)
