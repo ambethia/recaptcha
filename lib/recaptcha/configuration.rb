@@ -38,7 +38,7 @@ module Recaptcha
     }.freeze
 
     attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully, :hostname
-    attr_accessor :enterprise, :api_key, :project_id
+    attr_accessor :enterprise, :enterprise_api_key, :enterprise_project_id
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:
@@ -50,8 +50,8 @@ module Recaptcha
       @site_key = ENV['RECAPTCHA_SITE_KEY']
 
       @enterprise = ENV['RECAPTCHA_ENTERPRISE'] == 'true'
-      @api_key = ENV['RECAPTCHA_ENTERPRISE_API_KEY']
-      @project_id = ENV['RECAPTCHA_ENTERPRISE_PROJECT_ID']
+      @enterprise_api_key = ENV['RECAPTCHA_ENTERPRISE_API_KEY']
+      @enterprise_project_id = ENV['RECAPTCHA_ENTERPRISE_PROJECT_ID']
 
       @verify_url = nil
       @api_server_url = nil
@@ -65,12 +65,12 @@ module Recaptcha
       site_key || raise(RecaptchaError, "No site key specified.")
     end
 
-    def api_key!
-      api_key || raise(RecaptchaError, "No Enterprise API key specified.")
+    def enterprise_api_key!
+      enterprise_api_key || raise(RecaptchaError, "No Enterprise API key specified.")
     end
 
-    def project_id!
-      project_id || raise(RecaptchaError, "No Enterprise project ID specified.")
+    def enterprise_project_id!
+      enterprise_project_id || raise(RecaptchaError, "No Enterprise project ID specified.")
     end
 
     def api_server_url

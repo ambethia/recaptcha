@@ -69,8 +69,8 @@ module Recaptcha
 
   def self.verify_via_api_call_enterprise(response, options)
     site_key = options.fetch(:site_key) { configuration.site_key! }
-    api_key = options.fetch(:api_key) { configuration.api_key! }
-    project_id = options.fetch(:project_id) { configuration.project_id! }
+    api_key = options.fetch(:enterprise_api_key) { configuration.enterprise_api_key! }
+    project_id = options.fetch(:enterprise_project_id) { configuration.enterprise_project_id! }
 
     query_params = { 'key' => api_key }
     body = { 'event' => { 'token' => response, 'siteKey' => site_key } }

@@ -39,7 +39,7 @@ describe 'controller helpers (enterprise)' do
     end
 
     it "raises without api key" do
-      Recaptcha.configuration.api_key = nil
+      Recaptcha.configuration.enterprise_api_key = nil
       assert_raises Recaptcha::RecaptchaError do
         @controller.verify_recaptcha
       end
@@ -66,9 +66,9 @@ describe 'controller helpers (enterprise)' do
     it "returns true on success with optional key" do
       key = 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post(api_key: key).to_return(body: '{"tokenProperties":{"valid":true}}')
+      expect_http_post(enterprise_api_key: key).to_return(body: '{"tokenProperties":{"valid":true}}')
 
-      assert @controller.verify_recaptcha(api_key: key)
+      assert @controller.verify_recaptcha(enterprise_api_key: key)
       assert_nil @controller.flash[:recaptcha_error]
     end
 
@@ -370,10 +370,11 @@ describe 'controller helpers (enterprise)' do
     public :recaptcha_reply
   end
 
-  def expect_http_post(api_key: Recaptcha.configuration.api_key, project_id: Recaptcha.configuration.project_id)
+  def expect_http_post(enterprise_api_key: Recaptcha.configuration.enterprise_api_key,
+                       enterprise_project_id: Recaptcha.configuration.enterprise_project_id)
     stub_request(
       :post,
-      "https://recaptchaenterprise.googleapis.com/v1beta1/projects/#{project_id}/assessments?key=#{api_key}"
+      "https://recaptchaenterprise.googleapis.com/v1beta1/projects/#{enterprise_project_id}/assessments?key=#{enterprise_api_key}"
     )
   end
 
