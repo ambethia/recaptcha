@@ -1,4 +1,6 @@
 ## Next
+
+## 5.8.0
 * Add support for the enterprise API
 
 ## 5.7.0
