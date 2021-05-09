@@ -1,10 +1,16 @@
 require_relative 'helper'
 
-describe 'controller helpers' do
+describe 'controller helpers (enterprise)' do
   before do
+    Recaptcha.configuration.enterprise = true
+
     @controller = TestController.new
     @controller.request = stub(remote_ip: "1.1.1.1", format: :html)
     @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
+  end
+
+  after do
+    Recaptcha.configuration.enterprise = false
   end
 
   describe "#verify_recaptcha!" do
@@ -26,14 +32,14 @@ describe 'controller helpers' do
   describe "#verify_recaptcha" do
     it "returns true on success" do
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post.to_return(body: '{"success":true}')
+      expect_http_post.to_return(body: '{"tokenProperties":{"valid":true}}')
 
       assert @controller.verify_recaptcha
       assert_nil @controller.flash[:recaptcha_error]
     end
 
-    it "raises without secret key" do
-      Recaptcha.configuration.secret_key = nil
+    it "raises without api key" do
+      Recaptcha.configuration.enterprise_api_key = nil
       assert_raises Recaptcha::RecaptchaError do
         @controller.verify_recaptcha
       end
@@ -60,19 +66,15 @@ describe 'controller helpers' do
     it "returns true on success with optional key" do
       key = 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post(secret_key: key).to_return(body: '{"success":true}')
+      expect_http_post(enterprise_api_key: key).to_return(body: '{"tokenProperties":{"valid":true}}')
 
-      assert @controller.verify_recaptcha(secret_key: key)
+      assert @controller.verify_recaptcha(enterprise_api_key: key)
       assert_nil @controller.flash[:recaptcha_error]
     end
 
     it "returns true on success without remote_ip" do
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      secret_key = Recaptcha.configuration.secret_key
-      stub_request(
-        :get,
-        "https://www.recaptcha.net/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
-      ).to_return(body: '{"success":true}')
+      expect_http_post.to_return(body: '{"tokenProperties":{"valid":true}}')
 
       assert @controller.verify_recaptcha(skip_remote_ip: true)
       assert_nil @controller.flash[:recaptcha_error]
@@ -178,7 +180,7 @@ describe 'controller helpers' do
       let(:hostname) { 'fake.hostname.com' }
 
       before do
-        expect_http_post.to_return(body: %({"success":true, "hostname": "#{hostname}"}))
+        expect_http_post.to_return(body: %({"tokenProperties":{"valid":true,"hostname":"#{hostname}"}}))
       end
 
       it "passes with nil" do
@@ -244,10 +246,14 @@ describe 'controller helpers' do
     end
 
     describe 'action_valid?' do
-      let(:default_response_hash) { {
-        success: true,
-        action: 'homepage',
-      } }
+      let(:default_response_hash) {
+        {
+          tokenProperties: {
+            valid: true,
+            action: 'homepage'
+          }
+        }
+      }
 
       before do
         expect_http_post.to_return(body: success_body)
@@ -277,37 +283,46 @@ describe 'controller helpers' do
     end
 
     describe 'score_above_threshold?' do
-      let(:default_response_hash) { {
-        success: true,
-        action: 'homepage',
-      } }
-
-      before do
-        expect_http_post.to_return(body: success_body(score: 0.4))
-      end
+      let(:default_response_hash) {
+        {
+          tokenProperties: {
+            valid: true,
+            action: 'homepage'
+          }
+        }
+      }
 
       it "fails when score is below minimum_score" do
+        expect_http_post.to_return(body: success_body(score: 0.4))
+
         refute verify_recaptcha(minimum_score: 0.5)
         assert_flash_error
       end
 
       it "fails when response doesn't include a score" do
-        expect_http_post.to_return(body: success_body())
+        expect_http_post.to_return(body: success_body)
+
         refute verify_recaptcha(minimum_score: 0.4)
         assert_flash_error
       end
 
       it "passes with score exactly at minimum_score" do
+        expect_http_post.to_return(body: success_body(score: 0.4))
+
         assert verify_recaptcha(minimum_score: 0.4)
         assert_nil @controller.flash[:recaptcha_error]
       end
 
       it "passes when minimum_score not specified or nil" do
+        expect_http_post.to_return(body: success_body(score: 0.4))
+
         assert verify_recaptcha()
         assert_nil @controller.flash[:recaptcha_error]
       end
 
       it "passes with false" do
+        expect_http_post.to_return(body: success_body(score: 0.4))
+
         assert verify_recaptcha(minimum_score: false)
         assert_nil @controller.flash[:recaptcha_error]
       end
@@ -315,11 +330,15 @@ describe 'controller helpers' do
   end
 
   describe "#recatcha_reply" do
-    let(:default_response_hash) { {
-      success: true,
-      score: 0.97,
-      action: 'homepage',
-    } }
+    let(:default_response_hash) {
+      {
+        tokenProperties: {
+          valid: true,
+          action: 'homepage'
+        },
+        score: 0.97
+      }
+    }
 
     before do
       expect_http_post.to_return(body: success_body)
@@ -351,17 +370,19 @@ describe 'controller helpers' do
     public :recaptcha_reply
   end
 
-  def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
+  def expect_http_post(enterprise_api_key: Recaptcha.configuration.enterprise_api_key,
+                       enterprise_project_id: Recaptcha.configuration.enterprise_project_id)
     stub_request(
-      :get,
-      "https://www.recaptcha.net/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
+      :post,
+      "https://recaptchaenterprise.googleapis.com/v1beta1/projects/#{enterprise_project_id}/assessments?key=#{enterprise_api_key}"
     )
   end
 
-  def success_body(other = {})
-    default_response_hash.
-      merge(other).
-      to_json
+  def success_body(action: nil, score: nil)
+    result = default_response_hash
+    result[:tokenProperties][:action] = action if action
+    result[:score] = score if score
+    result.to_json
   end
 
   def verify_recaptcha(options = {})

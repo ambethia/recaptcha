@@ -68,6 +68,14 @@ export RECAPTCHA_SITE_KEY   = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
+If you have an Enterprise API key:
+
+```shell
+export RECAPTCHA_ENTERPRISE            = 'true'
+export RECAPTCHA_ENTERPRISE_API_KEY    = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
+export RECAPTCHA_ENTERPRISE_PROJECT_ID = 'my-project'
+```
+
 Add `recaptcha_tags` to the forms you want to protect:
 
 ```erb
@@ -159,16 +167,18 @@ you like.
 
 Some of the options available:
 
-| Option         | Description |
-|----------------|-------------|
-| `:model`       | Model to set errors.
-| `:attribute`   | Model attribute to receive errors. (default: `:base`)
-| `:message`     | Custom error message.
-| `:secret_key`  | Override the secret API key from the configuration.
-| `:timeout`     | The number of seconds to wait for reCAPTCHA servers before give up. (default: `3`)
-| `:response`    | Custom response parameter. (default: `params['g-recaptcha-response-data']`)
-| `:hostname`    | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`, but can be changed by setting `config.hostname`)
-| `:env`         | Current environment. The request to verify will be skipped if the environment is specified in configuration under `skip_verify_env`
+| Option                    | Description |
+|---------------------------|-------------|
+| `:model`                  | Model to set errors.
+| `:attribute`              | Model attribute to receive errors. (default: `:base`)
+| `:message`                | Custom error message.
+| `:secret_key`             | Override the secret API key from the configuration.
+| `:enterprise_api_key`     | Override the Enterprise API key from the configuration.
+| `:enterprise_project_id ` | Override the Enterprise project ID from the configuration.
+| `:timeout`                | The number of seconds to wait for reCAPTCHA servers before give up. (default: `3`)
+| `:response`               | Custom response parameter. (default: `params['g-recaptcha-response-data']`)
+| `:hostname`               | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`, but can be changed by setting `config.hostname`)
+| `:env`                    | Current environment. The request to verify will be skipped if the environment is specified in configuration under `skip_verify_env`
 
 
 ### `invisible_recaptcha_tags`
@@ -376,17 +386,19 @@ then you can either:
 2. write and specify a custom `callback` function. You may also want to pass `element: false` if you
    don't have a use for the hidden input element.
 
-Note that you cannot submit/verify the same response token more than once or you will get a
-`timeout-or-duplicate` error code. If you need reset the captcha and generate a new response token,
-then you need to call `grecaptcha.execute(…)` again. This helper provides a JavaScript method (for
-each action) named `executeRecaptchaFor{action}` to make this easier. That is the same method that
-is invoked immediately. It simply calls `grecaptcha.execute` again and then calls the `callback`
-function with the response token.
+Note that you cannot submit/verify the same response token more than once or you
+will get a `timeout-or-duplicate` error code. If you need reset the captcha and
+generate a new response token, then you need to call `grecaptcha.execute(…)` or
+`grecaptcha.enterprise.execute(…)` again. This helper provides a JavaScript
+method (for each action) named `executeRecaptchaFor{action}` to make this
+easier. That is the same method that is invoked immediately. It simply calls
+`grecaptcha.execute` or `grecaptcha.enterprise.execute` again and then calls the
+`callback` function with the response token.
 
 You will also get a `timeout-or-duplicate` error if too much time has passed between getting the
 response token and verifying it. This can easily happen with large forms that take the user a couple
 minutes to complete. Unlike v2, where you can use the `expired-callback` to be notified when the
-response expries, v3 appears to provide no such callback. See also
+response expires, v3 appears to provide no such callback. See also
 [1](https://github.com/google/recaptcha/issues/281) and
 [2](https://stackoverflow.com/questions/54437745/recaptcha-v3-how-to-deal-with-expired-token-after-idle).
 
@@ -446,7 +458,7 @@ According to https://developers.google.com/recaptcha/docs/v3#placement,
 
 > Note: You can execute reCAPTCHA as many times as you'd like with different actions on the same page.
 
-You will need to verify each action individually with separate call to `verify_recaptcha`.
+You will need to verify each action individually with a separate call to `verify_recaptcha`.
 
 ```ruby
 result_a = verify_recaptcha(action: 'a')
@@ -506,14 +518,20 @@ Recaptcha.configuration.skip_verify_env.delete("test")
 Recaptcha.configure do |config|
   config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
   config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+
   # Uncomment the following line if you are using a proxy server:
   # config.proxy = 'http://myproxy.com.au:8080'
+
+  # Uncomment the following lines if you are using the Enterprise API:
+  # config.enterprise = true
+  # config.enterprise_api_key = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
+  # config.enterprise_project_id = 'my-project'
 end
 ```
 
 ### Recaptcha.with_configuration
 
-For temporary overwrites (not thread safe).
+For temporary overwrites (not thread-safe).
 
 ```ruby
 Recaptcha.with_configuration(site_key: '12345') do

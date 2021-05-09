@@ -1,4 +1,5 @@
 ## Next
+* Add support for the enterprise API
 
 ## 5.7.0
 * french locale
