@@ -186,11 +186,13 @@ module Recaptcha
           // Define function so that we can call it again later if we need to reset it
           // This executes reCAPTCHA and then calls our callback.
           function #{recaptcha_v3_execute_function_name(action)}() {
-            #{recaptcha_ready_method_name}(function() {
-              #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
-                #{callback}('#{id}', token)
+            if(window.grecaptcha){
+              #{recaptcha_ready_method_name}(function() {
+                #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
+                  #{callback}('#{id}', token)
+                });
               });
-            });
+            }
           };
           // Invoke immediately
           #{recaptcha_v3_execute_function_name(action)}()
@@ -218,11 +220,13 @@ module Recaptcha
       <<-HTML
         <script#{nonce_attr}>
           function #{recaptcha_v3_execute_function_name(action)}() {
-            #{recaptcha_ready_method_name}(function() {
-              #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
-                #{callback}('#{id}', token)
+            if(window.grecaptcha){
+              #{recaptcha_ready_method_name}(function() {
+                #{recaptcha_execute_method_name}('#{site_key}', {action: '#{action}'}).then(function(token) {
+                  #{callback}('#{id}', token)
+                });
               });
-            });
+            }
           };
           #{recaptcha_v3_define_default_callback(callback) if recaptcha_v3_define_default_callback?(callback, action, options)}
         </script>
