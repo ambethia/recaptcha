@@ -1,5 +1,8 @@
 ## Next
 
+## 5.8.1
+* added `window.grecaptcha` check to execute recaptcha ready method only if grecaptcha is present
+
 ## 5.8.0
 * Add support for the enterprise API
 
