@@ -335,6 +335,73 @@ describe 'controller helpers' do
     end
   end
 
+  describe "#recaptcha_response_token" do
+    it "returns an empty string when params are empty and no action is provided" do
+      @controller.params = {}
+      assert_equal @controller.recaptcha_response_token, ""
+    end
+
+    it "returns an empty string when g-recaptcha-response-data is invalid and no action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => {} }
+      assert_equal @controller.recaptcha_response_token, ""
+    end
+
+    it "returns an empty string when g-recaptcha-response is invalid and no action is provided" do
+      @controller.params = { "g-recaptcha-response" => {} }
+      assert_equal @controller.recaptcha_response_token, ""
+    end
+
+    it "returns the g-recaptcha-response-data when response is valid and no action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => "recaptcha-response-data" }
+      assert_equal @controller.recaptcha_response_token, "recaptcha-response-data"
+    end
+
+    it "returns the g-recaptcha-response  when response is valid and no action is provided" do
+      @controller.params = { "g-recaptcha-response" => "recaptcha-response" }
+      assert_equal @controller.recaptcha_response_token, "recaptcha-response"
+    end
+
+    it "returns an empty string when params are empty and an action is provided" do
+      @controller.params = {}
+      assert_equal @controller.recaptcha_response_token("test"), ""
+    end
+
+    it "returns an empty string when g-recaptcha-response-data params are invalid and an action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => ["\n"] }
+      assert_equal @controller.recaptcha_response_token("test"), ""
+    end
+
+    it "returns an empty string when g-recaptcha-response-data params are nil and an action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => nil }
+      assert_equal @controller.recaptcha_response_token("test"), ""
+    end
+
+    it "returns an empty string when g-recaptcha-response-data params are empty and an action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => {} }
+      assert_equal @controller.recaptcha_response_token("test"), ""
+    end
+
+    it "returns an empty string when g-recaptcha-response-data params are valid but an invalid action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => { "test2" => "recaptcha-response-data" } }
+      assert_equal @controller.recaptcha_response_token("test"), ""
+    end
+
+    it "returns an empty string when g-recaptcha-response params are valid but an invalid action is provided" do
+      @controller.params = { "g-recaptcha-response" => { "test2" => "recaptcha-response-data" } }
+      assert_equal @controller.recaptcha_response_token("test"), ""
+    end
+
+    it "returns the g-recaptcha-response-data action when params are valid and an action is provided" do
+      @controller.params = { "g-recaptcha-response-data" => { "test" => "recaptcha-response-data" } }
+      assert_equal @controller.recaptcha_response_token("test"), "recaptcha-response-data"
+    end
+
+    it "returns the g-recaptcha-response action when params are valid and an action is provided" do
+      @controller.params = { "g-recaptcha-response" => { "test" => "recaptcha-response" } }
+      assert_equal @controller.recaptcha_response_token("test"), "recaptcha-response"
+    end
+  end
+
   private
 
   class TestController
@@ -349,6 +416,7 @@ describe 'controller helpers' do
     public :verify_recaptcha
     public :verify_recaptcha!
     public :recaptcha_reply
+    public :recaptcha_response_token
   end
 
   def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
