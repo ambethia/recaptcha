@@ -1,4 +1,5 @@
 ## Next
+* Gracefully handle invalid params
 
 ## 5.8.0
 * Add support for the enterprise API
