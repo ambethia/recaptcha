@@ -85,7 +85,7 @@ module Recaptcha
         response_param = params['g-recaptcha-response-data'] || params['g-recaptcha-response']
         response_param = response_param[action] if action && response_param.respond_to?(:key?)
 
-        if String === response_param
+        if response_param.is_a?(String)
           response_param
         else
           ''
