@@ -11,7 +11,7 @@
   <% end %>
   <%= form_tag "/#{controller_name}/create_with_v2_fallback" do %>
     <% if @show_checkbox_recaptcha %>
-      <p>Automatic v3 verification failed. Falling back to a v3 challange...</p>
+      <p>Automatic v3 verification failed. Falling back to a v2 challange...</p>
       <%= recaptcha_tags %>
       <%= submit_tag 'Submit' %>
     <% else %>
