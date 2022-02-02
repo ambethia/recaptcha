@@ -103,6 +103,10 @@ module Recaptcha
       action_valid?(reply['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
 
+    Rails.logger.debug("Verification API Reply:: #{reply.inspect}")
+    Rails.logger.debug("Request Options:: Hostname => #{options[:hostname]}, Action => #{options[:action]}, Minimum Score => #{options[:minimum_score]}")
+    Rails.logger.debug("Captcha Verification:: #{success}")
+ 
     if options[:with_reply] == true
       return success, reply
     else
