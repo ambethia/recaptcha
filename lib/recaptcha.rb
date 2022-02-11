@@ -85,6 +85,8 @@ module Recaptcha
       action_valid?(token_properties['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
 
+    logger(reply)
+
     if options[:with_reply] == true
       return success, reply
     else
@@ -102,6 +104,8 @@ module Recaptcha
       hostname_valid?(reply['hostname'], options[:hostname]) &&
       action_valid?(reply['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
+
+    logger(reply)
 
     if options[:with_reply] == true
       return success, reply
@@ -169,5 +173,17 @@ module Recaptcha
     request['Content-Type'] = 'application/json; charset=utf-8'
     request.body = JSON.generate(body)
     JSON.parse(http_instance.request(request).body)
+  end
+
+  def self.logger(message)
+    Recaptcha.configuration.logger.info(tagged_message(message)) if logger?
+  end
+
+  def self.tagged_message(message)
+    message.is_a?(Hash) ? message.merge(Recaptcha.configuration.logger_tags) : message
+  end
+
+  def self.logger?
+    Recaptcha.configuration.logger?
   end
 end
