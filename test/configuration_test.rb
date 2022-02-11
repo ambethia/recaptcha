@@ -1,6 +1,32 @@
 require_relative 'helper'
 
 describe Recaptcha::Configuration do
+  describe "#logger" do
+    before do
+      @logger = mock('STDOUT')
+    end
+
+    it "is nil" do
+      assert_nil Recaptcha.configuration.logger
+    end
+
+    it "is a Logger class" do
+      Recaptcha.with_configuration(logger: @logger) do
+        Recaptcha.configuration.logger.must_equal @logger
+      end
+    end
+
+    it "has a logger" do
+      Recaptcha.with_configuration(logger: @logger) do
+        Recaptcha.configuration.logger?.must_equal true
+      end
+    end
+
+    it "does not have a logger" do
+      Recaptcha.configuration.logger?.must_equal false
+    end
+  end
+
   describe "#api_server_url" do
     it "serves the default (free API)" do
       Recaptcha.configuration.api_server_url.must_equal "https://www.recaptcha.net/recaptcha/api.js"

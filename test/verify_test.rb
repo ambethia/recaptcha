@@ -7,6 +7,18 @@ describe 'controller helpers' do
     @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
   end
 
+  describe "logger" do
+    it "logs the response" do
+      @logger = mock('STDOUT')
+
+      Recaptcha.with_configuration(logger: @logger) do
+        expect_http_post.to_return(body: '{"success":true}')
+        @logger.expects(:info).with("success" => true)
+        @controller.verify_recaptcha
+      end
+    end
+  end
+
   describe "#verify_recaptcha!" do
     it "raises when it fails" do
       @controller.expects(:verify_recaptcha).returns(false)

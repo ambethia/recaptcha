@@ -60,11 +60,15 @@ module Recaptcha
   end
 
   def self.verify_via_api_call(response, options)
-    if Recaptcha.configuration.enterprise
+    verification = if Recaptcha.configuration.enterprise
       verify_via_api_call_enterprise(response, options)
     else
       verify_via_api_call_free(response, options)
     end
+
+    logger(verification.last)
+
+    verification
   end
 
   def self.verify_via_api_call_enterprise(response, options)
@@ -169,5 +173,13 @@ module Recaptcha
     request['Content-Type'] = 'application/json; charset=utf-8'
     request.body = JSON.generate(body)
     JSON.parse(http_instance.request(request).body)
+  end
+
+  def self.logger(message)
+    Recaptcha.configuration.logger.info(message) if logger?
+  end
+
+  def self.logger?
+    Recaptcha.configuration.logger?
   end
 end
