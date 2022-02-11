@@ -16,10 +16,6 @@ describe Recaptcha::Configuration do
       end
     end
 
-    it "has logger tags" do
-      Recaptcha.configuration.logger_tags.must_equal(event: "recaptcha-response")
-    end
-
     it "has a logger" do
       Recaptcha.with_configuration(logger: @logger) do
         Recaptcha.configuration.logger?.must_equal true
@@ -28,6 +24,22 @@ describe Recaptcha::Configuration do
 
     it "does not have a logger" do
       Recaptcha.configuration.logger?.must_equal false
+    end
+  end
+
+  describe "#logger_tags" do
+    it "has default logger tags" do
+      Recaptcha.configuration.logger_tags.must_equal(event: "recaptcha-response")
+    end
+
+    it "has overwritten logger tags" do
+      tags = { foo: 'bar' }
+      Recaptcha.configuration.logger_tags = tags
+      begin
+        Recaptcha.configuration.logger_tags.must_equal tags
+      ensure
+        Recaptcha.configuration.logger_tags = nil
+      end
     end
   end
 

@@ -34,18 +34,18 @@ module Recaptcha
       'free_server_url' => 'https://www.recaptcha.net/recaptcha/api.js',
       'enterprise_server_url' => 'https://www.recaptcha.net/recaptcha/enterprise.js',
       'free_verify_url' => 'https://www.recaptcha.net/recaptcha/api/siteverify',
-      'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1beta1/projects'
+      'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1beta1/projects',
+      'logger_tags' => { event: 'recaptcha-response' }
     }.freeze
 
     attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully, :hostname
     attr_accessor :enterprise, :enterprise_api_key, :enterprise_project_id, :logger
-    attr_writer :api_server_url, :verify_url
+    attr_writer :api_server_url, :verify_url, :logger_tags
 
     def initialize #:nodoc:
       @default_env = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true
-
       @secret_key = ENV['RECAPTCHA_SECRET_KEY']
       @site_key = ENV['RECAPTCHA_SITE_KEY']
 
@@ -55,10 +55,7 @@ module Recaptcha
 
       @verify_url = nil
       @api_server_url = nil
-    end
-
-    def logger_tags
-      { event: "recaptcha-response" }
+      @logger_tags = nil
     end
 
     def secret_key!
@@ -87,6 +84,10 @@ module Recaptcha
 
     def logger?
       !logger.nil?
+    end
+
+    def logger_tags
+      @logger_tags || DEFAULTS.fetch('logger_tags')
     end
   end
 end
