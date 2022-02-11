@@ -57,6 +57,10 @@ module Recaptcha
       @api_server_url = nil
     end
 
+    def logger_tags
+      { event: "recaptcha-response" }
+    end
+
     def secret_key!
       secret_key || raise(RecaptchaError, "No secret key specified.")
     end

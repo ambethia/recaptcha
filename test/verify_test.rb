@@ -13,7 +13,7 @@ describe 'controller helpers' do
 
       Recaptcha.with_configuration(logger: @logger) do
         expect_http_post.to_return(body: '{"success":true}')
-        @logger.expects(:info).with("success" => true)
+        @logger.expects(:info).with("success" => true, :event => "recaptcha-response")
         @controller.verify_recaptcha
       end
     end

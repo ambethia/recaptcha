@@ -176,7 +176,11 @@ module Recaptcha
   end
 
   def self.logger(message)
-    Recaptcha.configuration.logger.info(message) if logger?
+    Recaptcha.configuration.logger.info(tagged_message(message)) if logger?
+  end
+
+  def self.tagged_message(message)
+    message.is_a?(Hash) ? message.merge(Recaptcha.configuration.logger_tags) : message
   end
 
   def self.logger?

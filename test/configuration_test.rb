@@ -16,6 +16,10 @@ describe Recaptcha::Configuration do
       end
     end
 
+    it "has logger tags" do
+      Recaptcha.configuration.logger_tags.must_equal(event: "recaptcha-response")
+    end
+
     it "has a logger" do
       Recaptcha.with_configuration(logger: @logger) do
         Recaptcha.configuration.logger?.must_equal true
