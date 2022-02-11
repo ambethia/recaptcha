@@ -60,15 +60,11 @@ module Recaptcha
   end
 
   def self.verify_via_api_call(response, options)
-    verification = if Recaptcha.configuration.enterprise
+    if Recaptcha.configuration.enterprise
       verify_via_api_call_enterprise(response, options)
     else
       verify_via_api_call_free(response, options)
     end
-
-    logger(verification.last)
-
-    verification
   end
 
   def self.verify_via_api_call_enterprise(response, options)
@@ -89,6 +85,8 @@ module Recaptcha
       action_valid?(token_properties['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
 
+    logger(reply)
+
     if options[:with_reply] == true
       return success, reply
     else
@@ -106,6 +104,8 @@ module Recaptcha
       hostname_valid?(reply['hostname'], options[:hostname]) &&
       action_valid?(reply['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
+
+    logger(reply)
 
     if options[:with_reply] == true
       return success, reply
