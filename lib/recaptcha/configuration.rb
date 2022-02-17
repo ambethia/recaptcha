@@ -38,7 +38,7 @@ module Recaptcha
     }.freeze
 
     attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully, :hostname
-    attr_accessor :enterprise, :enterprise_api_key, :enterprise_project_id
+    attr_accessor :enterprise, :enterprise_api_key, :enterprise_project_id, :logger
     attr_writer :api_server_url, :verify_url
 
     def initialize #:nodoc:

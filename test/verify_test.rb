@@ -174,6 +174,16 @@ describe 'controller helpers' do
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
     end
 
+    it "can log the response" do
+      logger = mock('STDOUT')
+
+      Recaptcha.with_configuration(logger: logger) do
+        expect_http_post.to_return(body: '{"success":true}')
+        logger.expects(:info).with("success" => true, :event => "recaptcha-response")
+        @controller.verify_recaptcha
+      end
+    end
+
     describe ':hostname' do
       let(:hostname) { 'fake.hostname.com' }
 
