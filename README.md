@@ -526,6 +526,8 @@ Recaptcha.configure do |config|
   # config.enterprise = true
   # config.enterprise_api_key = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
   # config.enterprise_project_id = 'my-project'
+
+  # config.logger = Rails.logger # log the api call replies
 end
 ```
 

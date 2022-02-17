@@ -60,14 +60,22 @@ module Recaptcha
   end
 
   def self.verify_via_api_call(response, options)
-    if Recaptcha.configuration.enterprise
-      verify_via_api_call_enterprise(response, options)
+    success, reply = if Recaptcha.configuration.enterprise
+      verify_via_api_call_enterprise(response, options.merge(with_reply: true))
     else
-      verify_via_api_call_free(response, options)
+      verify_via_api_call_free(response, options.merge(with_reply: true))
+    end
+
+    Recaptcha.configuration.logger&.info(reply.merge(event: 'recaptcha-response'))
+
+    if options[:with_reply]
+      [success, reply]
+    else
+      success
     end
   end
 
-  def self.verify_via_api_call_enterprise(response, options)
+  private_class_method def self.verify_via_api_call_enterprise(response, options)
     site_key = options.fetch(:site_key) { configuration.site_key! }
     api_key = options.fetch(:enterprise_api_key) { configuration.enterprise_api_key! }
     project_id = options.fetch(:enterprise_project_id) { configuration.enterprise_project_id! }
@@ -85,14 +93,10 @@ module Recaptcha
       action_valid?(token_properties['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
 
-    if options[:with_reply] == true
-      return success, reply
-    else
-      return success
-    end
+    [success, reply]
   end
 
-  def self.verify_via_api_call_free(response, options)
+  private_class_method def self.verify_via_api_call_free(response, options)
     secret_key = options.fetch(:secret_key) { configuration.secret_key! }
     verify_hash = { 'secret' => secret_key, 'response' => response }
     verify_hash['remoteip'] = options[:remote_ip] if options.key?(:remote_ip)
@@ -103,11 +107,7 @@ module Recaptcha
       action_valid?(reply['action'], options[:action]) &&
       score_above_threshold?(reply['score'], options[:minimum_score])
 
-    if options[:with_reply] == true
-      return success, reply
-    else
-      return success
-    end
+    [success, reply]
   end
 
   def self.hostname_valid?(hostname, validation)

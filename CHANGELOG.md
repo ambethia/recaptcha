@@ -1,5 +1,6 @@
 ## Next
 * Gracefully handle invalid params
+* support logging api call replies
 
 ## 5.8.0
 * Add support for the enterprise API
