@@ -1,5 +1,6 @@
 ## Next
 * Gracefully handle invalid params
+* allow configuring response limit
 
 ## 5.8.0
 * Add support for the enterprise API
