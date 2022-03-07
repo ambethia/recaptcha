@@ -14,7 +14,6 @@ end
 
 module Recaptcha
   DEFAULT_TIMEOUT = 3
-  RESPONSE_LIMIT = 4000
 
   class RecaptchaError < StandardError
   end
@@ -56,7 +55,7 @@ module Recaptcha
   end
 
   def self.invalid_response?(resp)
-    resp.empty? || resp.length > RESPONSE_LIMIT
+    resp.empty? || resp.length > configuration.response_limit
   end
 
   def self.verify_via_api_call(response, options)
