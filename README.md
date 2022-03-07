@@ -551,6 +551,28 @@ recaptcha_tags site_key: '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
 verify_recaptcha secret_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
+
+## hCaptcha support
+
+[hCaptcha](https://hcaptcha.com) is an alternative service providing reCAPTCHA API.
+
+To use hCaptcha:
+1. Set a site and a secret key as usual
+2. Set two options in `verify_url` and `api_service_url` pointing to hCaptcha API endpoints.
+3. Disable a response limit check by setting a `response_limit` to the negative or large enough value (reCAPTCHA is limited by 4000 characters).
+4. It is not required to change a parameter name as [official docs suggest](https://docs.hcaptcha.com/switch) because API handles standard `g-recaptcha` for compatibility.
+
+```ruby
+# config/initializers/recaptcha.rb
+Recaptcha.configure do |config|
+  config.site_key  = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+  config.secret_key = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+  config.verify_url = 'https://hcaptcha.com/siteverify'
+  config.api_server_url = 'https://hcaptcha.com/1/api.js'
+  config.response_limit = -1
+end
+```
+
 ## Misc
  - Check out the [wiki](https://github.com/ambethia/recaptcha/wiki) and leave whatever you found valuable there.
  - [Add multiple widgets to the same page](https://github.com/ambethia/recaptcha/wiki/Add-multiple-widgets-to-the-same-page)
