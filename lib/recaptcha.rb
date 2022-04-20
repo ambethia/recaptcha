@@ -85,9 +85,9 @@ module Recaptcha
       score_above_threshold?(reply['score'], options[:minimum_score])
 
     if options[:with_reply] == true
-      return success, reply
+      [success, reply]
     else
-      return success
+      success
     end
   end
 
@@ -103,9 +103,9 @@ module Recaptcha
       score_above_threshold?(reply['score'], options[:minimum_score])
 
     if options[:with_reply] == true
-      return success, reply
+      [success, reply]
     else
-      return success
+      success
     end
   end
 
@@ -154,7 +154,7 @@ module Recaptcha
 
   def self.api_verification_free(verify_hash, timeout: nil)
     query = URI.encode_www_form(verify_hash)
-    uri = URI.parse(configuration.verify_url + '?' + query)
+    uri = URI.parse("#{configuration.verify_url}?#{query}")
     http_instance = http_client_for(uri: uri, timeout: timeout)
     request = Net::HTTP::Get.new(uri.request_uri)
     JSON.parse(http_instance.request(request).body)
@@ -162,7 +162,7 @@ module Recaptcha
 
   def self.api_verification_enterprise(query_params, body, project_id, timeout: nil)
     query = URI.encode_www_form(query_params)
-    uri = URI.parse(configuration.verify_url + "/#{project_id}/assessments" + '?' + query)
+    uri = URI.parse("#{configuration.verify_url}/#{project_id}/assessments?#{query}")
     http_instance = http_client_for(uri: uri, timeout: timeout)
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Content-Type'] = 'application/json; charset=utf-8'

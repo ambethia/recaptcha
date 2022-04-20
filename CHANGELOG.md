@@ -1,4 +1,5 @@
 ## Next
+* drop ruby 2.4 2.5 2.6
 
 ## 5.9.0
 * Gracefully handle invalid params
