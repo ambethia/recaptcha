@@ -37,11 +37,11 @@ module Recaptcha
       'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1beta1/projects'
     }.freeze
 
-    attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully, :hostname
-    attr_accessor :enterprise, :enterprise_api_key, :enterprise_project_id, :response_limit
+    attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully,
+                  :hostname, :enterprise, :enterprise_api_key, :enterprise_project_id, :response_limit
     attr_writer :api_server_url, :verify_url
 
-    def initialize #:nodoc:
+    def initialize # :nodoc:
       @default_env = ENV['RAILS_ENV'] || ENV['RACK_ENV'] || (Rails.env if defined? Rails.env)
       @skip_verify_env = %w[test cucumber]
       @handle_timeouts_gracefully = true

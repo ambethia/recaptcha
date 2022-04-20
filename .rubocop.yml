@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.7
   Include:
     - 'lib/**/*'
     - 'Rakefile'
@@ -7,18 +7,17 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'demo/**/*'
+  SuggestExtensions: false
+  NewCops: enable
 
-LineLength:
+Layout/LineLength:
   Max: 120
 
-ClassLength:
+Metrics/ClassLength:
   Enabled: false
 
 Style/StringLiterals:
   Enabled: false
-
-HashSyntax:
-   EnforcedStyle: ruby19
 
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
@@ -50,13 +49,13 @@ Style/StringLiteralsInInterpolation:
 Style/NumericLiterals:
   Enabled: false
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   Enabled: false
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/MultilineOperationIndentation:
