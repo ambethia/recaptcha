@@ -1,10 +1,24 @@
 require_relative 'helper'
 
+class EnterpriseTestController
+  include Recaptcha::Adapters::ControllerMethods
+
+  attr_accessor :request, :params, :flash
+
+  def initialize
+    @flash = {}
+  end
+
+  public :verify_recaptcha
+  public :verify_recaptcha!
+  public :recaptcha_reply
+end
+
 describe 'controller helpers (enterprise)' do
   before do
     Recaptcha.configuration.enterprise = true
 
-    @controller = TestController.new
+    @controller = EnterpriseTestController.new
     @controller.request = stub(remote_ip: "1.1.1.1", format: :html)
     @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
   end
@@ -402,22 +416,10 @@ describe 'controller helpers (enterprise)' do
 
   private
 
-  class TestController
-    include Recaptcha::Adapters::ControllerMethods
-
-    attr_accessor :request, :params, :flash
-
-    def initialize
-      @flash = {}
-    end
-
-    public :verify_recaptcha
-    public :verify_recaptcha!
-    public :recaptcha_reply
-  end
-
-  def expect_http_post(enterprise_api_key: Recaptcha.configuration.enterprise_api_key,
-                       enterprise_project_id: Recaptcha.configuration.enterprise_project_id)
+  def expect_http_post(
+    enterprise_api_key: Recaptcha.configuration.enterprise_api_key,
+    enterprise_project_id: Recaptcha.configuration.enterprise_project_id
+  )
     stub_request(
       :post,
       "https://recaptchaenterprise.googleapis.com/v1beta1/projects/#{enterprise_project_id}/assessments?key=#{enterprise_api_key}"

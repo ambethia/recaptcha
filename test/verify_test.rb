@@ -1,5 +1,20 @@
 require_relative 'helper'
 
+class TestController
+  include Recaptcha::Adapters::ControllerMethods
+
+  attr_accessor :request, :params, :flash
+
+  def initialize
+    @flash = {}
+  end
+
+  public :verify_recaptcha
+  public :verify_recaptcha!
+  public :recaptcha_reply
+  public :recaptcha_response_token
+end
+
 describe 'controller helpers' do
   before do
     @controller = TestController.new
@@ -440,21 +455,6 @@ describe 'controller helpers' do
   end
 
   private
-
-  class TestController
-    include Recaptcha::Adapters::ControllerMethods
-
-    attr_accessor :request, :params, :flash
-
-    def initialize
-      @flash = {}
-    end
-
-    public :verify_recaptcha
-    public :verify_recaptcha!
-    public :recaptcha_reply
-    public :recaptcha_response_token
-  end
 
   def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
     stub_request(
