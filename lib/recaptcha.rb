@@ -82,7 +82,8 @@ module Recaptcha
       token_properties['valid'].to_s == 'true' &&
       hostname_valid?(token_properties['hostname'], options[:hostname]) &&
       action_valid?(token_properties['action'], options[:action]) &&
-      score_above_threshold?(reply['score'], options[:minimum_score])
+      score_above_threshold?(reply['score'], options[:minimum_score]) &&
+      score_below_threshold?(reply['score'], options[:maximum_score])
 
     if options[:with_reply] == true
       [success, reply]
@@ -100,7 +101,8 @@ module Recaptcha
     success = reply['success'].to_s == 'true' &&
       hostname_valid?(reply['hostname'], options[:hostname]) &&
       action_valid?(reply['action'], options[:action]) &&
-      score_above_threshold?(reply['score'], options[:minimum_score])
+      score_above_threshold?(reply['score'], options[:minimum_score]) &&
+      score_below_threshold?(reply['score'], options[:maximum_score])
 
     if options[:with_reply] == true
       [success, reply]
@@ -126,7 +128,7 @@ module Recaptcha
     end
   end
 
-  # Returns true iff score is greater or equal to (>=) minimum_score, or if no minimum_score was specified
+  # Returns true if score is greater or equal to (>=) minimum_score, or if no minimum_score was specified
   def self.score_above_threshold?(score, minimum_score)
     return true if minimum_score.nil?
     return false if score.nil?
@@ -134,6 +136,17 @@ module Recaptcha
     case minimum_score
     when nil, FalseClass then true
     else score >= minimum_score
+    end
+  end
+
+  # Returns true if score is lesser or equal to (<=) maximum_score, or if no maximum_score was specified
+  def self.score_below_threshold?(score, maximum_score)
+    return true if maximum_score.nil?
+    return false if score.nil?
+
+    case maximum_score
+    when nil, FalseClass then true
+    else score <= maximum_score
     end
   end
 
