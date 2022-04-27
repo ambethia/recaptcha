@@ -573,6 +573,16 @@ Recaptcha.configure do |config|
 end
 ```
 
+hCaptcha uses a scoring system (higher number more likely to be a bot) which is inverse of the reCaptcha scoring system (lower number more likely to be a bot). As such, a `maximum_score` attribute is provided for use with hCaptcha.
+
+```ruby
+result = verify_recaptcha(maximum_score: 0.7)
+```
+
+| Option           | Description |
+|------------------|-------------|
+| `:maximum_score` | Provide a threshold to meet or fall below. Threshold should be a float between 0 and 1 which will be tested as `score <= maximum_score`. (Default: `nil`) |
+
 ## Misc
  - Check out the [wiki](https://github.com/ambethia/recaptcha/wiki) and leave whatever you found valuable there.
  - [Add multiple widgets to the same page](https://github.com/ambethia/recaptcha/wiki/Add-multiple-widgets-to-the-same-page)

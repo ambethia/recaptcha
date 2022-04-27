@@ -312,6 +312,43 @@ describe 'controller helpers' do
         assert_nil @controller.flash[:recaptcha_error]
       end
     end
+
+    describe 'score_below_threshold?' do
+      let(:default_response_hash) { {
+        success: true,
+        action: 'homepage',
+      } }
+
+      before do
+        expect_http_post.to_return(body: success_body(score: 0.8))
+      end
+
+      it "fails when score is above maximum_score" do
+        refute verify_recaptcha(maximum_score: 0.7)
+        assert_flash_error
+      end
+
+      it "fails when response doesn't include a score" do
+        expect_http_post.to_return(body: success_body())
+        refute verify_recaptcha(maximum_score: 0.8)
+        assert_flash_error
+      end
+
+      it "passes with score exactly at maximum_score" do
+        assert verify_recaptcha(maximum_score: 0.8)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "passes when maximum_score not specified or nil" do
+        assert verify_recaptcha()
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
+      it "passes with false" do
+        assert verify_recaptcha(maximum_score: false)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+    end
   end
 
   describe "#recatcha_reply" do
