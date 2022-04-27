@@ -1,5 +1,8 @@
 ## Next
+
+## 5.10.0
 * drop ruby 2.4 2.5 2.6
+* add maxiumm score support for hcaptcha
 
 ## 5.9.0
 * Gracefully handle invalid params
