@@ -128,26 +128,12 @@ module Recaptcha
     end
   end
 
-  # Returns true if score is greater or equal to (>=) minimum_score, or if no minimum_score was specified
   def self.score_above_threshold?(score, minimum_score)
-    return true if minimum_score.nil?
-    return false if score.nil?
-
-    case minimum_score
-    when nil, FalseClass then true
-    else score >= minimum_score
-    end
+    !minimum_score || (score && score >= minimum_score)
   end
 
-  # Returns true if score is lesser or equal to (<=) maximum_score, or if no maximum_score was specified
   def self.score_below_threshold?(score, maximum_score)
-    return true if maximum_score.nil?
-    return false if score.nil?
-
-    case maximum_score
-    when nil, FalseClass then true
-    else score <= maximum_score
-    end
+    !maximum_score || (score && score <= maximum_score)
   end
 
   def self.http_client_for(uri:, timeout: nil)
