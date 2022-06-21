@@ -50,6 +50,8 @@ Note: Enter `localhost` or `127.0.0.1` as the domain if using in development wit
 
 ## Rails Installation
 
+**If you are having issues with Rails 7, Turbo, and Stimulus, make sure to check [this Wiki page](https://github.com/ambethia/recaptcha/wiki/Recaptcha-with-Turbo-and-Stimulus)!**
+
 ```ruby
 gem "recaptcha"
 ```
