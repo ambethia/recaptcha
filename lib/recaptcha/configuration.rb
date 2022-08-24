@@ -34,7 +34,7 @@ module Recaptcha
       'free_server_url' => 'https://www.recaptcha.net/recaptcha/api.js',
       'enterprise_server_url' => 'https://www.recaptcha.net/recaptcha/enterprise.js',
       'free_verify_url' => 'https://www.recaptcha.net/recaptcha/api/siteverify',
-      'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1beta1/projects'
+      'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1/projects'
     }.freeze
 
     attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully,

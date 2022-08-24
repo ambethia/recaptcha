@@ -422,7 +422,7 @@ describe 'controller helpers (enterprise)' do
   )
     stub_request(
       :post,
-      "https://recaptchaenterprise.googleapis.com/v1beta1/projects/#{enterprise_project_id}/assessments?key=#{enterprise_api_key}"
+      "https://recaptchaenterprise.googleapis.com/v1/projects/#{enterprise_project_id}/assessments?key=#{enterprise_api_key}"
     )
   end
 
