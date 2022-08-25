@@ -1,5 +1,7 @@
 ## Next
 
+* Added Dutch locale
+
 ## 5.10.1
 * Fix enterprise_verify_url #415
 
