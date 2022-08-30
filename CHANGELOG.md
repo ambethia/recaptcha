@@ -1,4 +1,6 @@
 ## Next
+
+## 5.12.1
 * Fix Japanese locale
 
 ## 5.12.0
