@@ -1,4 +1,4 @@
-en:
+ja:
   recaptcha:
     errors:
       verification_failed: reCAPTCHA認証に失敗しました。もう一度お試しください。
