@@ -1,7 +1,11 @@
 ## Next
+* Fix Japanese locale
 
-* Added Dutch locale
+## 5.12.0
 * Added Japanese locale
+
+## 5.11.0
+* Added Dutch locale
 
 ## 5.10.1
 * Fix enterprise_verify_url #415
