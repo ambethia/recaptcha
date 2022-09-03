@@ -77,13 +77,14 @@ module Recaptcha
     body['event']['userIpAddress'] = options[:remote_ip] if options.key?(:remote_ip)
 
     reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
+    score = reply.dig('riskAnalysis', 'score')
     token_properties = reply['tokenProperties']
     success = !token_properties.nil? &&
       token_properties['valid'].to_s == 'true' &&
       hostname_valid?(token_properties['hostname'], options[:hostname]) &&
       action_valid?(token_properties['action'], options[:action]) &&
-      score_above_threshold?(reply['score'], options[:minimum_score]) &&
-      score_below_threshold?(reply['score'], options[:maximum_score])
+      score_above_threshold?(score, options[:minimum_score]) &&
+      score_below_threshold?(score, options[:maximum_score])
 
     if options[:with_reply] == true
       [success, reply]
