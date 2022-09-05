@@ -1,5 +1,9 @@
 ## Next
 
+## 5.12.3
+* Remove score fallback for enterprise
+* Update enterprise tests to v1 assessment schema
+
 ## 5.12.2
 * Fix minimum score for enterprise
 
