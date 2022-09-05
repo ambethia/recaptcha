@@ -1,5 +1,8 @@
 ## Next
 
+## 5.12.2
+* Fix minimum score for enterprise
+
 ## 5.12.1
 * Fix Japanese locale
 
