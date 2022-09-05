@@ -77,7 +77,7 @@ module Recaptcha
     body['event']['userIpAddress'] = options[:remote_ip] if options.key?(:remote_ip)
 
     reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
-    score = reply.dig('riskAnalysis', 'score') || reply['score']
+    score = reply.dig('riskAnalysis', 'score')
     token_properties = reply['tokenProperties']
     success = !token_properties.nil? &&
       token_properties['valid'].to_s == 'true' &&

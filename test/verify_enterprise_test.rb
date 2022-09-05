@@ -265,6 +265,9 @@ describe 'controller helpers (enterprise)' do
           tokenProperties: {
             valid: true,
             action: 'homepage'
+          },
+          riskAnalysis: {
+            reasons: []
           }
         }
       }
@@ -302,6 +305,9 @@ describe 'controller helpers (enterprise)' do
           tokenProperties: {
             valid: true,
             action: 'homepage'
+          },
+          riskAnalysis: {
+            reasons: []
           }
         }
       }
@@ -348,6 +354,9 @@ describe 'controller helpers (enterprise)' do
           tokenProperties: {
             valid: true,
             action: 'homepage'
+          },
+          riskAnalysis: {
+            reasons: []
           }
         }
       }
@@ -396,7 +405,10 @@ describe 'controller helpers (enterprise)' do
           valid: true,
           action: 'homepage'
         },
-        score: 0.97
+        riskAnalysis: {
+          score: 0.97,
+          reasons: []
+        }
       }
     }
 
@@ -429,7 +441,7 @@ describe 'controller helpers (enterprise)' do
   def success_body(action: nil, score: nil)
     result = default_response_hash
     result[:tokenProperties][:action] = action if action
-    result[:score] = score if score
+    result[:riskAnalysis][:score] = score if score
     result.to_json
   end
 
