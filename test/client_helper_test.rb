@@ -238,6 +238,11 @@ describe 'View helpers' do
       assert html.scan(/script/).length.even?
     end
 
+    it "outputs element checking when ignore_no_element is not set" do
+      output = recaptcha_v3(action: 'foo')
+      assert_includes output, 'if (element !== null)'
+    end
+
     it 'outputs element checking for null when ignore_no_element is true' do
       output = recaptcha_v3(action: 'foo', ignore_no_element: true)
       assert_includes output, 'if (element !== null)'

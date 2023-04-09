@@ -16,7 +16,7 @@ module Recaptcha
       options[:render] = site_key
       options[:script_async] ||= false
       options[:script_defer] ||= false
-      options[:ignore_no_element] ||= false
+      options[:ignore_no_element] = options.key?(:ignore_no_element) ? options[:ignore_no_element] : true 
       element = options.delete(:element)
       element = element == false ? false : :input
       if element == :input
