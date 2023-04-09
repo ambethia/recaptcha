@@ -16,6 +16,7 @@ module Recaptcha
       options[:render] = site_key
       options[:script_async] ||= false
       options[:script_defer] ||= false
+      options[:ignore_no_element] ||= false
       element = options.delete(:element)
       element = element == false ? false : :input
       if element == :input
@@ -138,6 +139,7 @@ module Recaptcha
       nonce = options.delete(:nonce)
       skip_script = (options.delete(:script) == false) || (options.delete(:external_script) == false)
       ui = options.delete(:ui)
+      options.delete(:ignore_no_element)
 
       data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size]
       data_attribute_keys << :tabindex unless ui == :button
@@ -206,7 +208,7 @@ module Recaptcha
             })
           };
 
-          #{recaptcha_v3_define_default_callback(callback) if recaptcha_v3_define_default_callback?(callback, action, options)}
+          #{recaptcha_v3_define_default_callback(callback, options) if recaptcha_v3_define_default_callback?(callback, action, options)}
         </script>
       HTML
     end
@@ -224,7 +226,7 @@ module Recaptcha
               });
             });
           };
-          #{recaptcha_v3_define_default_callback(callback) if recaptcha_v3_define_default_callback?(callback, action, options)}
+          #{recaptcha_v3_define_default_callback(callback, options) if recaptcha_v3_define_default_callback?(callback, action, options)}
         </script>
       HTML
     end
@@ -235,13 +237,24 @@ module Recaptcha
       options[:inline_script] != false
     end
 
-    private_class_method def self.recaptcha_v3_define_default_callback(callback)
-      <<-HTML
-          var #{callback} = function(id, token) {
-            var element = document.getElementById(id);
-            element.value = token;
-          }
-      HTML
+    private_class_method def self.recaptcha_v3_define_default_callback(callback, options)
+      if options[:ignore_no_element]
+        <<-HTML
+            var #{callback} = function(id, token) {
+              var element = document.getElementById(id);
+              if (element !== null) {
+                element.value = token;
+              }
+            }
+        HTML
+      else
+        <<-HTML
+            var #{callback} = function(id, token) {
+              var element = document.getElementById(id);
+              element.value = token;
+            }
+        HTML
+      end
     end
 
     # Returns true if we should be adding the default callback.
