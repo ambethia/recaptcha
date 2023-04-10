@@ -16,6 +16,7 @@ module Recaptcha
       options[:render] = site_key
       options[:script_async] ||= false
       options[:script_defer] ||= false
+      options[:ignore_no_element] = options.key?(:ignore_no_element) ? options[:ignore_no_element] : true
       element = options.delete(:element)
       element = element == false ? false : :input
       if element == :input
@@ -138,6 +139,7 @@ module Recaptcha
       nonce = options.delete(:nonce)
       skip_script = (options.delete(:script) == false) || (options.delete(:external_script) == false)
       ui = options.delete(:ui)
+      options.delete(:ignore_no_element)
 
       data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size]
       data_attribute_keys << :tabindex unless ui == :button
@@ -206,7 +208,7 @@ module Recaptcha
             })
           };
 
-          #{recaptcha_v3_define_default_callback(callback) if recaptcha_v3_define_default_callback?(callback, action, options)}
+          #{recaptcha_v3_define_default_callback(callback, options) if recaptcha_v3_define_default_callback?(callback, action, options)}
         </script>
       HTML
     end
@@ -224,7 +226,7 @@ module Recaptcha
               });
             });
           };
-          #{recaptcha_v3_define_default_callback(callback) if recaptcha_v3_define_default_callback?(callback, action, options)}
+          #{recaptcha_v3_define_default_callback(callback, options) if recaptcha_v3_define_default_callback?(callback, action, options)}
         </script>
       HTML
     end
@@ -235,12 +237,12 @@ module Recaptcha
       options[:inline_script] != false
     end
 
-    private_class_method def self.recaptcha_v3_define_default_callback(callback)
+    private_class_method def self.recaptcha_v3_define_default_callback(callback, options)
       <<-HTML
-          var #{callback} = function(id, token) {
-            var element = document.getElementById(id);
-            element.value = token;
-          }
+        var #{callback} = function(id, token) {
+          var element = document.getElementById(id);
+          #{element_check_condition(options)} element.value = token;
+        }
       HTML
     end
 
@@ -327,6 +329,10 @@ module Recaptcha
 
     private_class_method def self.hash_to_query(hash)
       hash.delete_if { |_, val| val.nil? || val.empty? }.to_a.map { |pair| pair.join('=') }.join('&')
+    end
+
+    private_class_method def self.element_check_condition(options)
+      options[:ignore_no_element] ? "if (element !== null)" : ""
     end
   end
 end
