@@ -16,7 +16,7 @@ module Recaptcha
       options[:render] = site_key
       options[:script_async] ||= false
       options[:script_defer] ||= false
-      options[:ignore_no_element] = options.key?(:ignore_no_element) ? options[:ignore_no_element] : true 
+      options[:ignore_no_element] = options.key?(:ignore_no_element) ? options[:ignore_no_element] : true
       element = options.delete(:element)
       element = element == false ? false : :input
       if element == :input
@@ -238,23 +238,12 @@ module Recaptcha
     end
 
     private_class_method def self.recaptcha_v3_define_default_callback(callback, options)
-      if options[:ignore_no_element]
-        <<-HTML
-            var #{callback} = function(id, token) {
-              var element = document.getElementById(id);
-              if (element !== null) {
-                element.value = token;
-              }
-            }
-        HTML
-      else
-        <<-HTML
-            var #{callback} = function(id, token) {
-              var element = document.getElementById(id);
-              element.value = token;
-            }
-        HTML
-      end
+      <<-HTML
+        var #{callback} = function(id, token) {
+          var element = document.getElementById(id);
+          #{element_check_condition(options)} element.value = token;
+        }
+      HTML
     end
 
     # Returns true if we should be adding the default callback.
@@ -340,6 +329,10 @@ module Recaptcha
 
     private_class_method def self.hash_to_query(hash)
       hash.delete_if { |_, val| val.nil? || val.empty? }.to_a.map { |pair| pair.join('=') }.join('&')
+    end
+
+    private_class_method def self.element_check_condition(options)
+      options[:ignore_no_element] ? "if (element !== null)" : ""
     end
   end
 end
