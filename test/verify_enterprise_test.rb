@@ -288,6 +288,11 @@ describe 'controller helpers (enterprise)' do
         assert_nil @controller.flash[:recaptcha_error]
       end
 
+      it "passes with a symbol that matches" do
+        assert verify_recaptcha(action: :homepage)
+        assert_nil @controller.flash[:recaptcha_error]
+      end
+
       it "passes with nil" do
         assert verify_recaptcha(action: nil)
         assert_nil @controller.flash[:recaptcha_error]

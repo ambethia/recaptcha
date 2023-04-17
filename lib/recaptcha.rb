@@ -125,7 +125,7 @@ module Recaptcha
   def self.action_valid?(action, expected_action)
     case expected_action
     when nil, FalseClass then true
-    else action == expected_action
+    else action == expected_action.to_s
     end
   end
 
