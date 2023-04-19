@@ -1,5 +1,8 @@
 ## Next
 
+## 5.14.0
+* drop json dependency
+
 ## 5.13.1
 * Permit actions as symbol
 
