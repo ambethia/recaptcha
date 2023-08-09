@@ -1,4 +1,5 @@
 ## Next
+* Add 3.2 to the list of Ruby CI versions
 
 ## 5.14.0
 * drop json dependency
