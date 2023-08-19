@@ -1,5 +1,6 @@
 ## Next
 * Add 3.2 to the list of Ruby CI versions
+* Add ability to submit verify_recaptcha via POST with JSON Body with `options[:json] = true`
 
 ## 5.14.0
 * drop json dependency

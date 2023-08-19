@@ -98,7 +98,7 @@ module Recaptcha
     verify_hash = { 'secret' => secret_key, 'response' => response }
     verify_hash['remoteip'] = options[:remote_ip] if options.key?(:remote_ip)
 
-    reply = api_verification_free(verify_hash, timeout: options[:timeout])
+    reply = api_verification_free(verify_hash, timeout: options[:timeout], json: options[:json])
     success = reply['success'].to_s == 'true' &&
       hostname_valid?(reply['hostname'], options[:hostname]) &&
       action_valid?(reply['action'], options[:action]) &&
@@ -152,11 +152,18 @@ module Recaptcha
     instance
   end
 
-  def self.api_verification_free(verify_hash, timeout: nil)
-    query = URI.encode_www_form(verify_hash)
-    uri = URI.parse("#{configuration.verify_url}?#{query}")
+  def self.api_verification_free(verify_hash, timeout: nil, json: false)
+    if json
+      uri = URI.parse(configuration.verify_url)
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request['Content-Type'] = 'application/json; charset=utf-8'
+      request.body = JSON.generate(verify_hash)
+    else
+      query = URI.encode_www_form(verify_hash)
+      uri = URI.parse("#{configuration.verify_url}?#{query}")
+      request = Net::HTTP::Get.new(uri.request_uri)
+    end
     http_instance = http_client_for(uri: uri, timeout: timeout)
-    request = Net::HTTP::Get.new(uri.request_uri)
     JSON.parse(http_instance.request(request).body)
   end
 
