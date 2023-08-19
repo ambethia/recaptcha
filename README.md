@@ -181,6 +181,7 @@ Some of the options available:
 | `:response`               | Custom response parameter. (default: `params['g-recaptcha-response-data']`)
 | `:hostname`               | Expected hostname or a callable that validates the hostname, see [domain validation](https://developers.google.com/recaptcha/docs/domain_validation) and [hostname](https://developers.google.com/recaptcha/docs/verify#api-response) docs. (default: `nil`, but can be changed by setting `config.hostname`)
 | `:env`                    | Current environment. The request to verify will be skipped if the environment is specified in configuration under `skip_verify_env`
+| `:json`                   | Boolean; defaults to false; if true, will submit the verification request by POST with the request data in JSON
 
 
 ### `invisible_recaptcha_tags`
