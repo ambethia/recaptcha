@@ -419,7 +419,7 @@ but only accepts the following options:
 | Option              | Description |
 |---------------------|-------------|
 | `:site_key`         | Override site API key |
-| `:action`           | The name of the [reCAPTCHA action](https://developers.google.com/recaptcha/docs/v3#actions). Actions may only contain alphanumeric characters and slashes, and must not be user-specific. |
+| `:action`           | The name of the [reCAPTCHA action](https://developers.google.com/recaptcha/docs/v3#actions). Actions are not case-sensitive and may only contain alphanumeric characters, slashes, and underscores, and must not be user-specific. |
 | `:nonce`            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default: `nil`) |
 | `:callback`         | Name of callback function to call with the token. When `element` is `:input`, this defaults to a function named `setInputWithRecaptchaResponseTokenFor#{sanitize_action(action)}` that sets the value of the hidden input to the token. |
 | `:id`               | Specify a unique `id` attribute for the `<input>` element if using `element: :input`. (default: `"g-recaptcha-response-data-"` + `action`) |
