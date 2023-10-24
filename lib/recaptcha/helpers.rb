@@ -12,7 +12,7 @@ module Recaptcha
       action = options.delete(:action) || raise(Recaptcha::RecaptchaError, 'action is required')
       id = options.delete(:id) || "g-recaptcha-response-data-#{dasherize_action(action)}"
       name = options.delete(:name) || "g-recaptcha-response-data[#{action}]"
-      turbolinks = options.delete(:turbolinks)
+      turbo = options.delete(:turbo) || options.delete(:turbolinks)
       options[:render] = site_key
       options[:script_async] ||= false
       options[:script_defer] ||= false
@@ -24,11 +24,11 @@ module Recaptcha
       end
       options[:class] = "g-recaptcha-response #{options[:class]}"
 
-      if turbolinks
+      if turbo
         options[:onload] = recaptcha_v3_execute_function_name(action)
       end
       html, tag_attributes = components(options)
-      if turbolinks
+      if turbo
         html << recaptcha_v3_onload_script(site_key, action, callback, id, options)
       elsif recaptcha_v3_inline_script?(options)
         html << recaptcha_v3_inline_script(site_key, action, callback, id, options)

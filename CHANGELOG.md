@@ -1,5 +1,8 @@
 ## Next
 
+## 5.16.0
+* Allow usage of `options[:turbo]` as well as `options[:turbolinks]` for `recaptcha_v3`
+
 ## 5.15.0
 * Add 3.2 to the list of Ruby CI versions
 * Add ability to submit verify_recaptcha via POST with JSON Body with `options[:json] = true`
