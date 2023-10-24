@@ -90,6 +90,19 @@ describe 'View helpers' do
       html.must_include("onload=executeRecaptchaForRequest")
     end
   end
+  
+  describe "turbo" do
+    it "adds onload to defined function" do
+      html = recaptcha_v3(action: 'request', turbo: true)
+      html.must_include("onload=executeRecaptchaForRequest")
+    end
+
+    it "overrides specified onload" do
+      html = recaptcha_v3(action: 'request', onload: "foobar", turbo: true)
+      html.wont_include("onload=foobar")
+      html.must_include("onload=executeRecaptchaForRequest")
+    end
+  end
 
   it "adds :render option to the url" do
     html = recaptcha_tags(render: 'onload')
