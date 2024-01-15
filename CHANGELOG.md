@@ -1,4 +1,5 @@
 ## Next
+* Add key setup to v3 example in README
 
 ## 5.16.0
 * Allow usage of `options[:turbo]` as well as `options[:turbolinks]` for `recaptcha_v3`
