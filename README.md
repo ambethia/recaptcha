@@ -305,6 +305,14 @@ With v3, you can let all users log in without any intervention at all if their s
 threshold, and only show a v2 checkbox recaptcha challenge (fall back to v2) if it is below the
 threshold:
 
+This example sets v2 keys through environment variables. For more information on how to set up keys, please refer to the [documentation here](#alternative-api-key-setup).
+
+```bash
+# .env
+RECAPTCHA_SITE_KEY=6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy
+RECAPTCHA_SECRET_KEY=6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx
+```
+
 ```erb
   …
   <% if @show_checkbox_recaptcha %>
