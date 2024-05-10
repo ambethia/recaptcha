@@ -78,6 +78,10 @@ export RECAPTCHA_ENTERPRISE_API_KEY    = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyup
 export RECAPTCHA_ENTERPRISE_PROJECT_ID = 'my-project'
 ```
 
+_note:_ you'll still have to provide `RECAPTCHA_SITE_KEY`, which will hold the value of your enterprise recaptcha key id. You will not need to provide a `RECAPTCHA_SECRET_KEY`, however. 
+
+`RECAPTCHA_ENTERPRISE_API_KEY` is the enterprise key of your Google Cloud Project, which you can generate here: https://console.cloud.google.com/apis/credentials. 
+
 Add `recaptcha_tags` to the forms you want to protect:
 
 ```erb
