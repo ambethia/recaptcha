@@ -130,7 +130,7 @@ The following options are available:
 | `:site_key`         | Override site API key from configuration |
 | `:error`            | Override the error code returned from the reCAPTCHA API (default: `nil`) |
 | `:size`             | Specify a size (default: `nil`) |
-| `:nonce`            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default: `nil`) |
+| `:nonce`            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. Use `content_security_policy_nonce` if you have `config.content_security_policy_nonce_generator` set in Rails. (default: `nil`) |
 | `:id`               | Specify an html id attribute (default: `nil`) |
 | `:callback`         | Optional. Name of success callback function, executed when the user submits a successful response |
 | `:expired_callback` | Optional. Name of expiration callback function, executed when the reCAPTCHA response expires and the user needs to re-verify. |
@@ -208,7 +208,7 @@ It also accepts most of the options that `recaptcha_tags` accepts, including the
 | Option              | Description |
 |---------------------|-------------|
 | `:site_key`         | Override site API key from configuration |
-| `:nonce`            | Optional. Sets nonce attribute for script tag. Can be generated via `SecureRandom.base64(32)`. (default: `nil`) |
+| `:nonce`            | Optional. Sets nonce attribute for script tag. Can be generated via `SecureRandom.base64(32)`. Use `content_security_policy_nonce` if you have `config.content_security_policy_nonce_generator` set in Rails. (default: `nil`) |
 | `:id`               | Specify an html id attribute (default: `nil`) |
 | `:script`           | Same as setting both `:inline_script` and `:external_script`. If you only need one or the other, use `:inline_script` and `:external_script` instead. |
 | `:callback`         | Optional. Name of success callback function, executed when the user submits a successful response |
@@ -432,7 +432,7 @@ but only accepts the following options:
 |---------------------|-------------|
 | `:site_key`         | Override site API key |
 | `:action`           | The name of the [reCAPTCHA action](https://developers.google.com/recaptcha/docs/v3#actions). Actions are not case-sensitive and may only contain alphanumeric characters, slashes, and underscores, and must not be user-specific. |
-| `:nonce`            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. (default: `nil`) |
+| `:nonce`            | Optional. Sets nonce attribute for script. Can be generated via `SecureRandom.base64(32)`. Use `content_security_policy_nonce` if you have `config.content_security_policy_nonce_generator` set in Rails. (default: `nil`) |
 | `:callback`         | Name of callback function to call with the token. When `element` is `:input`, this defaults to a function named `setInputWithRecaptchaResponseTokenFor#{sanitize_action(action)}` that sets the value of the hidden input to the token. |
 | `:id`               | Specify a unique `id` attribute for the `<input>` element if using `element: :input`. (default: `"g-recaptcha-response-data-"` + `action`) |
 | `:name`             | Specify a unique `name` attribute for the `<input>` element if using `element: :input`. (default: `g-recaptcha-response-data[action]`) |
