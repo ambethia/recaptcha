@@ -140,6 +140,7 @@ module Recaptcha
       skip_script = (options.delete(:script) == false) || (options.delete(:external_script) == false)
       ui = options.delete(:ui)
       options.delete(:ignore_no_element)
+      options.delete(:inline_script)
 
       data_attribute_keys = [:badge, :theme, :type, :callback, :expired_callback, :error_callback, :size]
       data_attribute_keys << :tabindex unless ui == :button
