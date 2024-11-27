@@ -265,5 +265,12 @@ describe 'View helpers' do
       output = recaptcha_v3(action: 'foo', ignore_no_element: false)
       refute_includes output, 'if (element !== null)'
     end
+
+    it 'does not output an inline script attribute' do
+      output = recaptcha_v3(action: 'foo', inline_script: true)
+      refute_includes output, 'inline_script'
+      output = recaptcha_v3(action: 'foo', inline_script: false)
+      refute_includes output, 'inline_script'
+    end
   end
 end
