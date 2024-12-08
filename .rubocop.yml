@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.0 # lowest supported version, see .github/workflows/ci.yml
   Include:
     - 'lib/**/*'
     - 'Rakefile'
