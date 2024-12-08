@@ -76,7 +76,8 @@ describe 'controller helpers' do
 
       refute @controller.verify_recaptcha
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
-      assert_equal "Recaptcha failure after api call. Api reply: {\"foo\"=>\"false\", \"bar\"=>\"invalid-site-secret-key\"}.", @controller.recaptcha_failure_reason
+      reason = @controller.recaptcha_failure_reason.gsub('"=>"', '" => "') # ruby 3.4+ adds spaces
+      assert_equal "Recaptcha failure after api call. Api reply: {\"foo\" => \"false\", \"bar\" => \"invalid-site-secret-key\"}.", reason
     end
 
     it "adds an error to the model" do
