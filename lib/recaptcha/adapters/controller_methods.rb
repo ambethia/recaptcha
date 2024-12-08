@@ -17,6 +17,11 @@ module Recaptcha
 
         begin
           verified = if Recaptcha.invalid_response?(recaptcha_response)
+            @_recaptcha_failure_reason = if recaptcha_response.nil?
+              "No recaptcha response/param(:action) found."
+            else
+              "Recaptcha response/param(:action) was invalid."
+            end
             false
           else
             unless options[:skip_remote_ip]
@@ -26,10 +31,21 @@ module Recaptcha
 
             success, @_recaptcha_reply =
               Recaptcha.verify_via_api_call(recaptcha_response, options.merge(with_reply: true))
+            unless success
+              @_recaptcha_failure_reason = if @_recaptcha_reply["score"] &&
+                                              @_recaptcha_reply["score"].to_f < options[:minimum_score].to_f
+                "Recaptcha score didn't exceed the minimum: #{@_recaptcha_reply["score"]} < #{options[:minimum_score]}."
+              elsif @_recaptcha_reply['error-codes']
+                "Recaptcha api call returned with error-codes: #{@_recaptcha_reply['error-codes']}."
+              else
+                "Recaptcha failure after api call. Api reply: #{@_recaptcha_reply}."
+              end
+            end
             success
           end
 
           if verified
+            @_recaptcha_failure_reason = nil
             flash.delete(:recaptcha_error) if recaptcha_flash_supported? && !model
             true
           else
@@ -41,6 +57,7 @@ module Recaptcha
             false
           end
         rescue Timeout::Error
+          @_recaptcha_failure_reason = "Recaptcha server unreachable."
           if Recaptcha.configuration.handle_timeouts_gracefully
             recaptcha_error(
               model,
@@ -57,11 +74,15 @@ module Recaptcha
       end
 
       def verify_recaptcha!(options = {})
-        verify_recaptcha(options) || raise(VerifyError)
+        verify_recaptcha(options) || raise(VerifyError, @_recaptcha_failure_reason)
       end
 
       def recaptcha_reply
         @_recaptcha_reply if defined?(@_recaptcha_reply)
+      end
+
+      def recaptcha_failure_reason
+        @_recaptcha_failure_reason
       end
 
       def recaptcha_error(model, attribute, message)
