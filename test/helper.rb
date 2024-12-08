@@ -3,8 +3,9 @@ ENV.delete('RAILS_ENV')
 ENV.delete('RACK_ENV')
 
 require 'bundler/setup'
+require 'maxitest/global_must'
 require 'maxitest/autorun'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'webmock/minitest'
 require 'byebug'
 require 'cgi'

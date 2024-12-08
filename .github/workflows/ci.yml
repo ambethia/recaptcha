@@ -2,10 +2,9 @@ name: CI
 
 on:
   pull_request:
+    branches: [ master ]
   push:
-    branches:
-      - master
-
+    branches: [ master ]
 jobs:
   test:
     name: Test ruby version matrix
