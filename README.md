@@ -78,9 +78,9 @@ export RECAPTCHA_ENTERPRISE_API_KEY    = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyup
 export RECAPTCHA_ENTERPRISE_PROJECT_ID = 'my-project'
 ```
 
-_note:_ you'll still have to provide `RECAPTCHA_SITE_KEY`, which will hold the value of your enterprise recaptcha key id. You will not need to provide a `RECAPTCHA_SECRET_KEY`, however. 
+_note:_ you'll still have to provide `RECAPTCHA_SITE_KEY`, which will hold the value of your enterprise recaptcha key id. You will not need to provide a `RECAPTCHA_SECRET_KEY`, however.
 
-`RECAPTCHA_ENTERPRISE_API_KEY` is the enterprise key of your Google Cloud Project, which you can generate here: https://console.cloud.google.com/apis/credentials. 
+`RECAPTCHA_ENTERPRISE_API_KEY` is the enterprise key of your Google Cloud Project, which you can generate here: https://console.cloud.google.com/apis/credentials.
 
 Add `recaptcha_tags` to the forms you want to protect:
 
@@ -488,7 +488,7 @@ are passed as a hash under `params['g-recaptcha-response-data']` with the action
 It is recommended to pass `external_script: false` on all but one of the calls to
 `recaptcha` since you only need to include the script tag once for a given `site_key`.
 
-## `recaptcha_reply`
+## `recaptcha_reply` and `recaptcha_failure_reason`
 
 After `verify_recaptcha` has been called, you can call `recaptcha_reply` to get the raw reply from recaptcha. This can allow you to get the exact score returned by recaptcha should you need it.
 
@@ -503,6 +503,8 @@ end
 ```
 
 `recaptcha_reply` will return `nil` if the the reply was not yet fetched.
+
+`recaptcha_failure_reason` will return information if verification failed. E.g. if params was wrong or api resulted some error-codes.
 
 ## I18n support
 
