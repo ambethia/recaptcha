@@ -4,6 +4,7 @@
 * Update to latest version of rubocop
 * Drop support for Ruby 2.7; add Ruby 3.3
 * Add i18n: de, es, it, pt, pt-BR
+* Added recaptcha_failure_reason
 
 ## 5.16.0
 * Allow usage of `options[:turbo]` as well as `options[:turbolinks]` for `recaptcha_v3`
