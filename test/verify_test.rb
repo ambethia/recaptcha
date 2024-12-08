@@ -13,6 +13,7 @@ class TestController
   public :verify_recaptcha!
   public :recaptcha_reply
   public :recaptcha_response_token
+  public :recaptcha_failure_reason
 end
 
 describe 'controller helpers' do
@@ -35,6 +36,22 @@ describe 'controller helpers' do
       @controller.expects(:verify_recaptcha).returns(:foo)
 
       assert_equal :foo, @controller.verify_recaptcha!
+    end
+
+    it "raise with informative error message when it fails" do
+      response_hash = {
+        success: true,
+        action: 'homepage',
+        score: 0.4
+      }
+
+      expect_http_post.to_return(body: response_hash.to_json)
+
+      error = assert_raises Recaptcha::VerifyError do
+        @controller.verify_recaptcha!(minimum_score: 0.9)
+      end
+
+      assert_equal "Recaptcha score didn't exceed the minimum: 0.4 < 0.9.", error.message
     end
   end
 
@@ -59,6 +76,7 @@ describe 'controller helpers' do
 
       refute @controller.verify_recaptcha
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
+      assert_equal "Recaptcha failure after api call. Api reply: {\"foo\"=>\"false\", \"bar\"=>\"invalid-site-secret-key\"}.", @controller.recaptcha_failure_reason
     end
 
     it "adds an error to the model" do
@@ -79,6 +97,7 @@ describe 'controller helpers' do
 
       assert @controller.verify_recaptcha(secret_key: key)
       assert_nil @controller.flash[:recaptcha_error]
+      assert_nil @controller.recaptcha_failure_reason
     end
 
     it "returns true on success without remote_ip" do
@@ -304,6 +323,7 @@ describe 'controller helpers' do
       it "fails when score is below minimum_score" do
         refute verify_recaptcha(minimum_score: 0.5)
         assert_flash_error
+        assert_equal "Recaptcha score didn't exceed the minimum: 0.4 < 0.5.", @controller.recaptcha_failure_reason
       end
 
       it "fails when response doesn't include a score" do
@@ -384,6 +404,19 @@ describe 'controller helpers' do
     it "contains the recaptcha reply once verify_recaptcha has been called" do
       assert verify_recaptcha()
       assert_equal default_response_hash.to_json, @controller.recaptcha_reply.to_json
+    end
+  end
+
+  describe "recaptcha_failure_reason" do
+    let(:default_response_hash) { {
+      success: true,
+      score: 0.97,
+      'error-codes': ['some-api-error']
+    } }
+    it "contains the error-codes when reply has those" do
+      expect_http_post.to_return(body: success_body)
+      refute verify_recaptcha()
+      assert_equal "Recaptcha api call returned with error-codes: [\"some-api-error\"].", @controller.recaptcha_failure_reason
     end
   end
 
