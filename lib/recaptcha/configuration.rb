@@ -56,7 +56,7 @@ module Recaptcha
       @verify_url = nil
       @api_server_url = nil
 
-      @response_limit = 4000
+      @response_limit = { max: 4000, min:100 }
     end
 
     def secret_key!
