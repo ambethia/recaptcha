@@ -55,7 +55,7 @@ module Recaptcha
   end
 
   def self.invalid_response?(resp)
-    resp.empty? || resp.length > configuration.response_limit
+    resp.empty? || resp.length > configuration.response_limit[:max] || resp.length < configuration.response_limit[:min]
   end
 
   def self.verify_via_api_call(response, options)
