@@ -1,4 +1,11 @@
 ## Next
+
+
+
+## 5.19.0
+* require a minimum lenght of 100 for responses, configured via response_minimum
+
+## 5.18.0
 * Add key setup to v3 example in README
 * Remove unnecessary id from textarea - This was unused and may cause accessability concerns if there is more than one recaptcha on the page due to multiple elements with the same id
 * Update to latest version of rubocop
