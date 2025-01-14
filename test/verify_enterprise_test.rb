@@ -180,7 +180,7 @@ describe 'controller helpers (enterprise)' do
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
     end
 
-    it "does not verify via http call when response length exceeds G_RESPONSE_MAX_LIMIT" do
+    it "does not verify via http call when response length exceeds limit" do
       # this returns a 400 or 413 instead of a 200 response with error code
       # typical response length is less than 400 characters
       str = "a" * 4001
@@ -190,7 +190,7 @@ describe 'controller helpers (enterprise)' do
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
     end
 
-    it "does not verify via http call when response length exceeds G_RESPONSE_MIN_LIMIT" do
+    it "does not verify via http call when response length below limit" do
       # this returns a 400 or 413 instead of a 200 response with error code
       # typical response length is less than 100 characters
       str = "a" * 99
