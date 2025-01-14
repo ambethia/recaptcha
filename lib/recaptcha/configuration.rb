@@ -38,7 +38,7 @@ module Recaptcha
     }.freeze
 
     attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully,
-                  :hostname, :enterprise, :enterprise_api_key, :enterprise_project_id, :response_limit
+                  :hostname, :enterprise, :enterprise_api_key, :enterprise_project_id, :response_limit, :response_minimum
     attr_writer :api_server_url, :verify_url
 
     def initialize # :nodoc:
@@ -57,6 +57,7 @@ module Recaptcha
       @api_server_url = nil
 
       @response_limit = 4000
+      @response_minimum = 100
     end
 
     def secret_key!

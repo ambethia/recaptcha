@@ -589,6 +589,7 @@ Recaptcha.configure do |config|
   config.verify_url = 'https://hcaptcha.com/siteverify'
   config.api_server_url = 'https://hcaptcha.com/1/api.js'
   config.response_limit = 100000
+  config.response_minimum = 100
 end
 ```
 
