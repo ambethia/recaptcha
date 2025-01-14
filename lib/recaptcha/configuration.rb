@@ -37,8 +37,10 @@ module Recaptcha
       'enterprise_verify_url' => 'https://recaptchaenterprise.googleapis.com/v1/projects'
     }.freeze
 
-    attr_accessor :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully,
-                  :hostname, :enterprise, :enterprise_api_key, :enterprise_project_id, :response_limit, :response_minimum
+    attr_accessor(
+      :default_env, :skip_verify_env, :proxy, :secret_key, :site_key, :handle_timeouts_gracefully,
+      :hostname, :enterprise, :enterprise_api_key, :enterprise_project_id, :response_limit, :response_minimum
+    )
     attr_writer :api_server_url, :verify_url
 
     def initialize # :nodoc:
