@@ -20,7 +20,7 @@ describe 'controller helpers' do
   before do
     @controller = TestController.new
     @controller.request = stub(remote_ip: "1.1.1.1", format: :html)
-    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
+    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => "a" * 200}
   end
 
   describe "#verify_recaptcha!" do
@@ -106,7 +106,7 @@ describe 'controller helpers' do
       secret_key = Recaptcha.configuration.secret_key
       stub_request(
         :get,
-        "https://www.recaptcha.net/recaptcha/api/siteverify?response=string&secret=#{secret_key}"
+        "https://www.recaptcha.net/recaptcha/api/siteverify?response=#{"a" * 200}&secret=#{secret_key}"
       ).to_return(body: '{"success":true}')
 
       assert @controller.verify_recaptcha(skip_remote_ip: true)
@@ -453,8 +453,7 @@ describe 'controller helpers' do
     end
 
     it "returns the g-recaptcha-response  when response is valid and no action is provided" do
-      @controller.params = { "g-recaptcha-response" => "recaptcha-response" }
-      assert_equal @controller.recaptcha_response_token, "recaptcha-response"
+      assert_equal @controller.recaptcha_response_token, "a" * 200
     end
 
     it "returns an empty string when params are empty and an action is provided" do
@@ -503,7 +502,7 @@ describe 'controller helpers' do
   def expect_http_post(secret_key: Recaptcha.configuration.secret_key)
     stub_request(
       :get,
-      "https://www.recaptcha.net/recaptcha/api/siteverify?remoteip=1.1.1.1&response=string&secret=#{secret_key}"
+      "https://www.recaptcha.net/recaptcha/api/siteverify?remoteip=1.1.1.1&response=#{"a" * 200}&secret=#{secret_key}"
     )
   end
 

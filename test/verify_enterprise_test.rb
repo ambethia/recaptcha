@@ -20,7 +20,7 @@ describe 'controller helpers (enterprise)' do
 
     @controller = EnterpriseTestController.new
     @controller.request = stub(remote_ip: "1.1.1.1", format: :html)
-    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => 'string'}
+    @controller.params = {:recaptcha_response_field => "response", 'g-recaptcha-response-data' => "a" * 200}
   end
 
   after do
@@ -184,7 +184,7 @@ describe 'controller helpers (enterprise)' do
       # this returns a 400 or 413 instead of a 200 response with error code
       # typical response length is less than 400 characters
       str = "a" * 4001
-      @controller.params = { 'g-recaptcha-response' => "#{str}"}
+      @controller.params = { 'g-recaptcha-response' => str}
       assert_not_requested :get, %r{\.google\.com}
       assert_equal false, @controller.verify_recaptcha
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
@@ -192,9 +192,9 @@ describe 'controller helpers (enterprise)' do
 
     it "does not verify via http call when response length below limit" do
       # this returns a 400 or 413 instead of a 200 response with error code
-      # typical response length is less than 100 characters
+      # typical response length is more than 100 characters
       str = "a" * 99
-      @controller.params = { 'g-recaptcha-response' => "#{str}"}
+      @controller.params = { 'g-recaptcha-response' => str}
       assert_not_requested :get, %r{\.google\.com}
       assert_equal false, @controller.verify_recaptcha
       assert_equal "reCAPTCHA verification failed, please try again.", @controller.flash[:recaptcha_error]
