@@ -70,8 +70,8 @@ module Recaptcha
       raw_reply.to_s
     end
 
-    def to_json
-      raw_reply.to_json
+    def to_json(*args)
+      raw_reply.to_json(*args)
     end
   end
 end
