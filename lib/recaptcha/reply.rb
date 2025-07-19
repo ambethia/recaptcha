@@ -7,12 +7,6 @@ module Recaptcha
       @enterprise = enterprise
     end
 
-    def [](key)
-      return send(key.to_sym) if respond_to?(key.to_sym)
-
-      raw_reply[key]
-    end
-
     def token_properties
       raw_reply['tokenProperties'] if enterprise?
     end
@@ -59,6 +53,10 @@ module Recaptcha
       return [] if enterprise?
 
       raw_reply['error-codes'] || []
+    end
+
+    def error_codes?
+      !error_codes.empty?
     end
 
     def challenge_ts
