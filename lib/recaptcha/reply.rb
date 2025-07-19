@@ -17,14 +17,24 @@ module Recaptcha
       raw_reply['tokenProperties'] if enterprise?
     end
 
-    def success?
-      success = if enterprise?
-                  token_properties&.dig('valid')
-                else
-                  raw_reply['success']
-                end
+    def success?(options = {})
+      result = success.to_s == 'true' &&
+        hostname_valid?(options[:hostname]) &&
+        action_valid?(options[:action]) &&
+        score_above_threshold?(options[:minimum_score]) &&
+        score_below_threshold?(options[:maximum_score])
 
-      success.to_s == 'true'
+      if options[:with_reply] == true
+        [result, self]
+      else
+        result
+      end
+    end
+
+    def success
+      return raw_reply['success'] unless enterprise?
+
+      token_properties&.dig('valid')
     end
 
     def hostname
@@ -51,11 +61,40 @@ module Recaptcha
       raw_reply['error-codes'] || []
     end
 
-    # Returns the challenge timestamp
     def challenge_ts
       return raw_reply['challenge_ts'] unless enterprise?
 
       token_properties&.dig('createTime')
+    end
+
+    def hostname_valid?(validation)
+      validation ||= Recaptcha.configuration.hostname
+
+      case validation
+      when nil, FalseClass
+        true
+      when String
+        validation == hostname
+      else
+        validation.call(hostname)
+      end
+    end
+
+    def action_valid?(expected_action)
+      case expected_action
+      when nil, FalseClass
+        true
+      else
+        action == expected_action.to_s
+      end
+    end
+
+    def score_above_threshold?(minimum_score)
+      !minimum_score || (score && score >= minimum_score)
+    end
+
+    def score_below_threshold?(maximum_score)
+      !maximum_score || (score && score <= maximum_score)
     end
 
     def enterprise?

@@ -80,17 +80,7 @@ module Recaptcha
     raw_reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
     reply = Reply.new(raw_reply, enterprise: true)
 
-    success = reply.success? &&
-      hostname_valid?(reply.hostname, options[:hostname]) &&
-      action_valid?(reply.action, options[:action]) &&
-      score_above_threshold?(reply.score, options[:minimum_score]) &&
-      score_below_threshold?(reply.score, options[:maximum_score])
-
-    if options[:with_reply] == true
-      [success, reply]
-    else
-      success
-    end
+    reply.success?(options)
   end
 
   def self.verify_via_api_call_free(response, options)
@@ -101,42 +91,7 @@ module Recaptcha
     raw_reply = api_verification_free(verify_hash, timeout: options[:timeout], json: options[:json])
     reply = Reply.new(raw_reply, enterprise: false)
 
-    success = reply.success? &&
-      hostname_valid?(reply.hostname, options[:hostname]) &&
-      action_valid?(reply.action, options[:action]) &&
-      score_above_threshold?(reply.score, options[:minimum_score]) &&
-      score_below_threshold?(reply.score, options[:maximum_score])
-
-    if options[:with_reply] == true
-      [success, reply]
-    else
-      success
-    end
-  end
-
-  def self.hostname_valid?(hostname, validation)
-    validation ||= configuration.hostname
-
-    case validation
-    when nil, FalseClass then true
-    when String then validation == hostname
-    else validation.call(hostname)
-    end
-  end
-
-  def self.action_valid?(action, expected_action)
-    case expected_action
-    when nil, FalseClass then true
-    else action == expected_action.to_s
-    end
-  end
-
-  def self.score_above_threshold?(score, minimum_score)
-    !minimum_score || (score && score >= minimum_score)
-  end
-
-  def self.score_below_threshold?(score, maximum_score)
-    !maximum_score || (score && score <= maximum_score)
+    reply.success?(options)
   end
 
   def self.http_client_for(uri:, timeout: nil)
