@@ -18,7 +18,11 @@ module Recaptcha
     end
 
     def success?
-      success = enterprise? ? token_properties&.dig('valid') : raw_reply['success']
+      success = if enterprise?
+                  token_properties&.dig('valid')
+                else
+                  raw_reply['success']
+                end
 
       success.to_s == 'true'
     end
