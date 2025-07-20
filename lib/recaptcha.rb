@@ -6,6 +6,7 @@ require 'uri'
 
 require 'recaptcha/configuration'
 require 'recaptcha/helpers'
+require 'recaptcha/reply'
 require 'recaptcha/adapters/controller_methods'
 require 'recaptcha/adapters/view_methods'
 if defined?(Rails)
@@ -76,21 +77,10 @@ module Recaptcha
     body['event']['expectedAction'] = options[:action] if options.key?(:action)
     body['event']['userIpAddress'] = options[:remote_ip] if options.key?(:remote_ip)
 
-    reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
-    score = reply.dig('riskAnalysis', 'score')
-    token_properties = reply['tokenProperties']
-    success = !token_properties.nil? &&
-      token_properties['valid'].to_s == 'true' &&
-      hostname_valid?(token_properties['hostname'], options[:hostname]) &&
-      action_valid?(token_properties['action'], options[:action]) &&
-      score_above_threshold?(score, options[:minimum_score]) &&
-      score_below_threshold?(score, options[:maximum_score])
+    raw_reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
+    reply = Reply.new(raw_reply, enterprise: true)
 
-    if options[:with_reply] == true
-      [success, reply]
-    else
-      success
-    end
+    reply.success?(options)
   end
 
   def self.verify_via_api_call_free(response, options)
@@ -98,43 +88,10 @@ module Recaptcha
     verify_hash = { 'secret' => secret_key, 'response' => response }
     verify_hash['remoteip'] = options[:remote_ip] if options.key?(:remote_ip)
 
-    reply = api_verification_free(verify_hash, timeout: options[:timeout], json: options[:json])
-    success = reply['success'].to_s == 'true' &&
-      hostname_valid?(reply['hostname'], options[:hostname]) &&
-      action_valid?(reply['action'], options[:action]) &&
-      score_above_threshold?(reply['score'], options[:minimum_score]) &&
-      score_below_threshold?(reply['score'], options[:maximum_score])
+    raw_reply = api_verification_free(verify_hash, timeout: options[:timeout], json: options[:json])
+    reply = Reply.new(raw_reply, enterprise: false)
 
-    if options[:with_reply] == true
-      [success, reply]
-    else
-      success
-    end
-  end
-
-  def self.hostname_valid?(hostname, validation)
-    validation ||= configuration.hostname
-
-    case validation
-    when nil, FalseClass then true
-    when String then validation == hostname
-    else validation.call(hostname)
-    end
-  end
-
-  def self.action_valid?(action, expected_action)
-    case expected_action
-    when nil, FalseClass then true
-    else action == expected_action.to_s
-    end
-  end
-
-  def self.score_above_threshold?(score, minimum_score)
-    !minimum_score || (score && score >= minimum_score)
-  end
-
-  def self.score_below_threshold?(score, maximum_score)
-    !maximum_score || (score && score <= maximum_score)
+    reply.success?(options)
   end
 
   def self.http_client_for(uri:, timeout: nil)

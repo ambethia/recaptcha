@@ -31,16 +31,18 @@ module Recaptcha
 
             success, @_recaptcha_reply =
               Recaptcha.verify_via_api_call(recaptcha_response, options.merge(with_reply: true))
+
             unless success
-              @_recaptcha_failure_reason = if @_recaptcha_reply["score"] &&
-                                              @_recaptcha_reply["score"].to_f < options[:minimum_score].to_f
-                "Recaptcha score didn't exceed the minimum: #{@_recaptcha_reply["score"]} < #{options[:minimum_score]}."
-              elsif @_recaptcha_reply['error-codes']
-                "Recaptcha api call returned with error-codes: #{@_recaptcha_reply['error-codes']}."
+              @_recaptcha_failure_reason = if @_recaptcha_reply.score &&
+                                              @_recaptcha_reply.score.to_f < options[:minimum_score].to_f
+                "Recaptcha score didn't exceed the minimum: #{@_recaptcha_reply.score} < #{options[:minimum_score]}."
+              elsif @_recaptcha_reply.error_codes?
+                "Recaptcha api call returned with error-codes: #{@_recaptcha_reply.error_codes}."
               else
                 "Recaptcha failure after api call. Api reply: #{@_recaptcha_reply}."
               end
             end
+
             success
           end
 
