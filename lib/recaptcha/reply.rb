@@ -1,6 +1,6 @@
 module Recaptcha
   class Reply
-    def initialize(raw_reply, enterprise: false)
+    def initialize(raw_reply, enterprise:)
       @raw_reply = raw_reply
       @enterprise = enterprise
     end
