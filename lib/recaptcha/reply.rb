@@ -97,10 +97,6 @@ module Recaptcha
       @enterprise
     end
 
-    def free?
-      !enterprise?
-    end
-
     def to_h
       @raw_reply
     end
