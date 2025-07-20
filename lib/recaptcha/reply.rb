@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recaptcha
   class Reply
     def initialize(raw_reply, enterprise:)
