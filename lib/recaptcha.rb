@@ -79,8 +79,8 @@ module Recaptcha
 
     raw_reply = api_verification_enterprise(query_params, body, project_id, timeout: options[:timeout])
     reply = Reply.new(raw_reply, enterprise: true)
-
-    reply.success?(options)
+    result = reply.success?(options)
+    options[:with_reply] == true ? [result, reply] : result
   end
 
   def self.verify_via_api_call_free(response, options)
@@ -90,8 +90,8 @@ module Recaptcha
 
     raw_reply = api_verification_free(verify_hash, timeout: options[:timeout], json: options[:json])
     reply = Reply.new(raw_reply, enterprise: false)
-
-    reply.success?(options)
+    result = reply.success?(options)
+    options[:with_reply] == true ? [result, reply] : result
   end
 
   def self.http_client_for(uri:, timeout: nil)

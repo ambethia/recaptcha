@@ -7,56 +7,56 @@ module Recaptcha
       @enterprise = enterprise
     end
 
-    def token_properties
-      @raw_reply['tokenProperties'] if enterprise?
-    end
-
     def success?(options = {})
-      result = success.to_s == 'true' &&
+      success.to_s == 'true' &&
         hostname_valid?(options[:hostname]) &&
         action_valid?(options[:action]) &&
         score_above_threshold?(options[:minimum_score]) &&
         score_below_threshold?(options[:maximum_score])
+    end
 
-      if options[:with_reply] == true
-        [result, self]
-      else
-        result
-      end
+    def token_properties
+      @raw_reply['tokenProperties'] if enterprise?
     end
 
     def success
-      return @raw_reply['success'] unless enterprise?
-
-      token_properties&.dig('valid')
+      if enterprise?
+        token_properties&.dig('valid')
+      else
+        @raw_reply['success']
+      end
     end
 
     def hostname
-      return @raw_reply['hostname'] unless enterprise?
-
-      token_properties&.dig('hostname')
+      if enterprise?
+        token_properties&.dig('hostname')
+      else
+        @raw_reply['hostname']
+      end
     end
 
     def action
-      return @raw_reply['action'] unless enterprise?
-
-      token_properties&.dig('action')
+      if enterprise?
+        token_properties&.dig('action')
+      else
+        @raw_reply['action']
+      end
     end
 
     def score
-      return @raw_reply['score'] unless enterprise?
-
-      @raw_reply.dig('riskAnalysis', 'score')
+      if enterprise?
+        @raw_reply.dig('riskAnalysis', 'score')
+      else
+        @raw_reply['score'] unless enterprise?
+      end
     end
 
     def error_codes
-      return [] if enterprise?
-
-      @raw_reply['error-codes'] || []
-    end
-
-    def error_codes?
-      !error_codes.empty?
+      if enterprise?
+        []
+      else
+        @raw_reply['error-codes'] || []
+      end
     end
 
     def challenge_ts
