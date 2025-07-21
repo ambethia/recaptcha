@@ -1,6 +1,7 @@
 ## Next
 
-
+## 5.20.0
+* turn recpatch reply into a object with logic
 
 ## 5.19.0
 * require a minimum lenght of 100 for responses, configured via response_minimum
