@@ -7,6 +7,10 @@ module Recaptcha
       @enterprise = enterprise
     end
 
+    def [](key)
+      @raw_reply[key.to_s]
+    end
+
     def success?(options = {})
       success.to_s == 'true' &&
         hostname_valid?(options[:hostname]) &&
