@@ -129,6 +129,7 @@ module Recaptcha
     uri = URI.parse("#{configuration.verify_url}/#{project_id}/assessments?#{query}")
     http_instance = http_client_for(uri: uri, timeout: timeout)
     request = Net::HTTP::Post.new(uri.request_uri)
+    request['Referer'] = Rails.application.default_url_options[:host] if defined? Rails.application
     request['Content-Type'] = 'application/json; charset=utf-8'
     request.body = JSON.generate(body)
     JSON.parse(http_instance.request(request).body)
