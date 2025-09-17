@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Recaptcha
-  VERSION = '5.21.0'
+  VERSION = '5.21.1'
 end
