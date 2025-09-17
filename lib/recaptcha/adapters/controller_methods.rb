@@ -96,7 +96,9 @@ module Recaptcha
       end
 
       def recaptcha_flash_supported?
-        request.respond_to?(:format) && request.format == :html && respond_to?(:flash)
+        request.respond_to?(:format) && respond_to?(:flash) && (
+          request.format == :html || request.format == :turbo_stream
+        )
       end
 
       # Extracts response token from params. params['g-recaptcha-response-data'] for recaptcha_v3 or
