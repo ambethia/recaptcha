@@ -1,4 +1,5 @@
 ## Next
+* Fix flash not being updated when responding to :turbo_stream requests
 
 ## 5.20.0
 * turn recpatch reply into a object with logic
