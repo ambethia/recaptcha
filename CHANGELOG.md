@@ -1,6 +1,6 @@
 ## Next
 
-## 5.20.1 
+## 5.21.1
 * Fix flash not being updated when responding to :turbo_stream requests
 
 ## 5.20.0
