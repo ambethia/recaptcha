@@ -3,6 +3,9 @@
 ## 5.21.1
 * Fix flash not being updated when responding to :turbo_stream requests
 
+## 5.21.0
+* add referer header to #api_verification_entreprise
+
 ## 5.20.0
 * turn recpatch reply into a object with logic
 
