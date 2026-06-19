@@ -22,6 +22,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubocop"
 
   s.metadata = {
+    "bug_tracker_uri" => "https://github.com/ambethia/recaptcha/issues",
+    "changelog_uri" => "https://github.com/ambethia/recaptcha/blob/master/CHANGELOG.md",
     "source_code_uri" => "https://github.com/ambethia/recaptcha",
     "rubygems_mfa_required" => "true"
   }
