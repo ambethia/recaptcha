@@ -66,16 +66,16 @@ keys. See also the
 documentation.
 
 ```shell
-export RECAPTCHA_SITE_KEY   = '6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
-export RECAPTCHA_SECRET_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
+export RECAPTCHA_SITE_KEY='6Lc6BAAAAAAAAChqRbQZcn_yyyyyyyyyyyyyyyyy'
+export RECAPTCHA_SECRET_KEY='6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
 If you have an Enterprise API key:
 
 ```shell
-export RECAPTCHA_ENTERPRISE            = 'true'
-export RECAPTCHA_ENTERPRISE_API_KEY    = 'AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
-export RECAPTCHA_ENTERPRISE_PROJECT_ID = 'my-project'
+export RECAPTCHA_ENTERPRISE='true'
+export RECAPTCHA_ENTERPRISE_API_KEY='AIzvFyE3TU-g4K_Kozr9F1smEzZSGBVOfLKyupA'
+export RECAPTCHA_ENTERPRISE_PROJECT_ID='my-project'
 ```
 
 _note:_ you'll still have to provide `RECAPTCHA_SITE_KEY`, which will hold the value of your enterprise recaptcha key id. You will not need to provide a `RECAPTCHA_SECRET_KEY`, however.
